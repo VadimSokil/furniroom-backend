@@ -1,0 +1,6 @@
+@FurniroomAPI_HostAddress = http://localhost:5123
+
+GET {{FurniroomAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
