@@ -7,21 +7,20 @@ WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-
 # Этот этап используется для сборки проекта службы
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["InformationService/InformationService.csproj", "InformationService/"]
-RUN dotnet restore "./InformationService/InformationService.csproj"
+COPY ["API/InformationService/InformationService.csproj", "API/InformationService/"]
+RUN dotnet restore "API/InformationService/InformationService.csproj"
 COPY . .
-WORKDIR "/src/InformationService"
-RUN dotnet build "./InformationService.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/API/InformationService"
+RUN dotnet build "InformationService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Этот этап используется для публикации проекта службы, который будет скопирован на последний этап
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./InformationService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "InformationService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Этот этап используется в рабочей среде или при запуске из VS в обычном режиме (по умолчанию, когда конфигурация отладки не используется)
 FROM base AS final
