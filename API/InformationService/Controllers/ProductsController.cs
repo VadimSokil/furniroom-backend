@@ -17,14 +17,14 @@ namespace InformationService.Controllers
             _subcategoryService = subcategoryService;
         }
 
-        [HttpGet]
+        [HttpGet("categories")]
         public async Task<ActionResult<List<CategoryModel>>> GetAllCategory()
         {
             var category = await _categoryService.GetAllCategories();
             return Ok(category);
         }
 
-        [HttpGet]
+        [HttpGet("subcategories")]
         public async Task<ActionResult<List<SubcategoryModel>>> GetAllSubcategory()
         {
             var subcategory = await _subcategoryService.GetAllSubcategories();
