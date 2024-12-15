@@ -8,18 +8,27 @@ namespace InformationService.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly ICategoryService _apiService;
+        private readonly ICategoryService _categoryService;
+        private readonly ISubcategoryService _subcategoryService;
 
-        public ProductsController(ICategoryService apiService)
+        public ProductsController(ICategoryService categoryService, ISubcategoryService subcategoryService)
         {
-            _apiService = apiService;
+            _categoryService = categoryService;
+            _subcategoryService = subcategoryService;
         }
 
         [HttpGet]
         public async Task<ActionResult<List<CategoryModel>>> GetAllCategory()
         {
-            var notes = await _apiService.GetAllCategories();
-            return Ok(notes);
+            var category = await _categoryService.GetAllCategories();
+            return Ok(category);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<SubcategoryModel>>> GetAllSubcategory()
+        {
+            var subcategory = await _subcategoryService.GetAllSubcategories();
+            return Ok(subcategory);
         }
 
     }

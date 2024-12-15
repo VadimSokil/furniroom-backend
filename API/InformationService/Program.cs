@@ -21,6 +21,7 @@ namespace InformationService
             }
 
             builder.Services.AddScoped<ICategoryService, CategoryService>(provider => new CategoryService(connectionString, sqlRequests));
+            builder.Services.AddScoped<ISubcategoryService, SubcategoryService>(privider => new SubcategoryService(connectionString, sqlRequests));
 
             builder.Services.AddCors(options =>
             {
