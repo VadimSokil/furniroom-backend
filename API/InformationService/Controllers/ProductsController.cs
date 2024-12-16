@@ -10,11 +10,13 @@ namespace InformationService.Controllers
     {
         private readonly ICategoryService _categoryService;
         private readonly ISubcategoryService _subcategoryService;
+        private readonly IProductTypeService _productTypeService;
 
-        public ProductsController(ICategoryService categoryService, ISubcategoryService subcategoryService)
+        public ProductsController(ICategoryService categoryService, ISubcategoryService subcategoryService, IProductTypeService productTypeService)
         {
             _categoryService = categoryService;
             _subcategoryService = subcategoryService;
+            _productTypeService = productTypeService;
         }
 
         [HttpGet("categories")]
@@ -31,5 +33,11 @@ namespace InformationService.Controllers
             return Ok(subcategory);
         }
 
+        [HttpGet("products")]
+        public async Task<ActionResult<List<ProductTypeModel>>> GetAllProducts()
+        {
+            var products = await _productTypeService.GetAllProducts();
+            return Ok(products);
+        }
     }
 }

@@ -34,8 +34,7 @@ namespace InformationService.Services
                             {
                                 category_id = reader.GetInt32("category_id"),
                                 subcategory_id = reader.GetInt32("subcategory_id"),
-                                subcategory_name = reader.GetString("subcategory_name"),
-                                subcategory_img_url = reader.GetString("subcategory_img_url")
+                                subcategory_name = reader.GetString("subcategory_name")
                             });
                         }
                     }
