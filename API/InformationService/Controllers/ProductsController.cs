@@ -11,12 +11,18 @@ namespace InformationService.Controllers
         private readonly ICategoryService _categoryService;
         private readonly ISubcategoryService _subcategoryService;
         private readonly IProductTypeService _productTypeService;
+        private readonly IProductSubcategoryService _productSubcategoryService;
+        private readonly IProductGalleryService _productGalleryService;
+        private readonly IProductDrawingsService _productDrawingsService;
 
-        public ProductsController(ICategoryService categoryService, ISubcategoryService subcategoryService, IProductTypeService productTypeService)
+        public ProductsController(ICategoryService categoryService, ISubcategoryService subcategoryService, IProductTypeService productTypeService, IProductSubcategoryService productSubcategoryService, IProductGalleryService productGalleryService, IProductDrawingsService productDrawingsService)
         {
             _categoryService = categoryService;
             _subcategoryService = subcategoryService;
             _productTypeService = productTypeService;
+            _productSubcategoryService = productSubcategoryService;
+            _productGalleryService = productGalleryService;
+            _productDrawingsService = productDrawingsService;
         }
 
         [HttpGet("categories")]
@@ -38,6 +44,27 @@ namespace InformationService.Controllers
         {
             var products = await _productTypeService.GetAllProducts();
             return Ok(products);
+        }
+
+        [HttpGet("product-subcategories")]
+        public async Task<ActionResult<List<ProductSubcategoryModel>>> GetAllProductSubcategory()
+        {
+            var productsubcategory = await _subcategoryService.GetAllSubcategories();
+            return Ok(productsubcategory);
+        }
+
+        [HttpGet("product-gallery")]
+        public async Task<ActionResult<List<ProductGalleryModel>>> GetAllProductGallery()
+        {
+            var productgallery = await _productGalleryService.GetAllProductGallery();
+            return Ok(productgallery);
+        }
+
+        [HttpGet("product-drawings")]
+        public async Task<ActionResult<List<ProductDrawingsModel>>> GetAllProductDrawings()
+        {
+            var productdrawings = await _productDrawingsService.GetAllProductDrawings();
+            return Ok(productdrawings);
         }
     }
 }

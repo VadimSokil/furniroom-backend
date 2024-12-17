@@ -23,6 +23,9 @@ namespace InformationService
             builder.Services.AddScoped<ICategoryService, CategoryService>(provider => new CategoryService(connectionString, sqlRequests));
             builder.Services.AddScoped<ISubcategoryService, SubcategoryService>(privider => new SubcategoryService(connectionString, sqlRequests));
             builder.Services.AddScoped<IProductTypeService, ProductTypeService>(provider => new ProductTypeService(connectionString, sqlRequests));
+            builder.Services.AddScoped<IProductSubcategoryService, ProductSubcategoryService>(provider => new ProductSubcategoryService(connectionString, sqlRequests));
+            builder.Services.AddScoped<IProductGalleryService, ProductGalleryService>(provider => new ProductGalleryService(connectionString, sqlRequests));
+            builder.Services.AddScoped<IProductDrawingsService, ProductDrawingsService>(provider => new ProductDrawingsService(connectionString, sqlRequests));
 
             builder.Services.AddCors(options =>
             {
