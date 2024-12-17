@@ -33,8 +33,7 @@ namespace InformationService.Services
                             categories.Add(new CategoryModel
                             {
                                 category_id = reader.GetInt32("category_id"),
-                                category_name = reader.GetString("category_name"),
-                                category_img_url = reader.GetString("category_img_url")
+                                category_name = reader.GetString("category_name")
                             });
                         }
                     }
