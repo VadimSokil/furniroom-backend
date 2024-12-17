@@ -29,5 +29,29 @@ namespace FurniroomAPI.Controllers
             var subcategories = await _subcategoryService.GetAllSubcategories();
             return Ok(subcategories);
         }
+
+        //[HttpGet("products")]
+        //public async Task<IActionResult> GetAllProducts()
+        //{
+        //    //
+        //}
+
+        //[HttpGet("product-subcategories")]
+        //public async Task<IActionResult> GetAllProductSubcategory()
+        //{
+        //    //
+        //}
+
+        //[HttpGet("product-gallery")]
+        //public async Task<IActionResult> GetAllProductGallery()
+        //{
+        //    //
+        //}
+
+        //[HttpGet("product-drawings")]
+        //public async Task<IActionResult> GetAllProductDrawings()
+        //{
+        //    //
+        //}
     }
 }
