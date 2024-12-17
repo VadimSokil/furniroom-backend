@@ -20,6 +20,10 @@ namespace FurniroomAPI
 
             builder.Services.AddHttpClient<ICategoryService, CategoryService>();
             builder.Services.AddHttpClient<ISubcategoryService, SubcategoryService>();
+            builder.Services.AddHttpClient<IProductService, ProductService>();
+            builder.Services.AddHttpClient<IProductSubcategoryService, ProductSubcategoryService>();
+            builder.Services.AddHttpClient<IProductGalleryService, ProductGalleryService>();
+            builder.Services.AddHttpClient<IProductDrawingsService, ProductDrawingsService>();
             builder.Services.AddSingleton(endpointURL);
 
             builder.Services.AddCors(options =>
