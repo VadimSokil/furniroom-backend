@@ -49,7 +49,7 @@ namespace InformationService.Controllers
         [HttpGet("product-subcategories")]
         public async Task<ActionResult<List<ProductSubcategoryModel>>> GetAllProductSubcategory()
         {
-            var productsubcategory = await _subcategoryService.GetAllSubcategories();
+            var productsubcategory = await _productSubcategoryService.GetAllProductSubcategories();
             return Ok(productsubcategory);
         }
 

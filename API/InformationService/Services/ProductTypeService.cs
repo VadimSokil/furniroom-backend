@@ -35,7 +35,7 @@ namespace InformationService.Services
                                 product_id = reader.GetInt32("product_id"),
                                 product_name = reader.GetString("product_name"),
                                 product_description = reader.GetString("product_description"),
-                                product_img_url = reader.GetString("product_description")
+                                product_img_url = reader.GetString("product_img_url")
                             });
                         }
                     }
