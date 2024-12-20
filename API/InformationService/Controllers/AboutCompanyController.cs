@@ -10,7 +10,7 @@ namespace InformationService.Controllers
     {
         private readonly IAboutCompanyService _aboutCompanyService;
 
-        AboutCompanyController(IAboutCompanyService aboutCompanyService)
+        public AboutCompanyController(IAboutCompanyService aboutCompanyService)
         {
             _aboutCompanyService = aboutCompanyService;
         }

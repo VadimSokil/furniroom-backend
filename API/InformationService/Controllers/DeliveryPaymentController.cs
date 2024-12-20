@@ -11,7 +11,7 @@ namespace InformationService.Controllers
         private readonly IDeliveryService _deliveryService;
         private readonly IPaymentService _paymentService;
 
-        DeliveryPaymentController(IDeliveryService deliveryService, IPaymentService paymentService)
+        public DeliveryPaymentController(IDeliveryService deliveryService, IPaymentService paymentService)
         {
             _deliveryService = deliveryService;
             _paymentService = paymentService;
