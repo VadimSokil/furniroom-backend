@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InformationService", "InformationService\InformationService.csproj", "{B22F6087-CE4B-4B5E-A5AD-23633D4F9D86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InformationService", "InformationService\InformationService.csproj", "{B22F6087-CE4B-4B5E-A5AD-23633D4F9D86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FurniroomAPI", "FurniroomAPI\FurniroomAPI.csproj", "{FA163151-8C06-4B5B-99DF-A5C6ADE5C63A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FurniroomAPI", "FurniroomAPI\FurniroomAPI.csproj", "{FA163151-8C06-4B5B-99DF-A5C6ADE5C63A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthorizationService", "AuthorizationService\AuthorizationService.csproj", "{10EC3CBA-B3D2-418B-87B6-1A51FAC3F51A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{FA163151-8C06-4B5B-99DF-A5C6ADE5C63A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA163151-8C06-4B5B-99DF-A5C6ADE5C63A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA163151-8C06-4B5B-99DF-A5C6ADE5C63A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10EC3CBA-B3D2-418B-87B6-1A51FAC3F51A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10EC3CBA-B3D2-418B-87B6-1A51FAC3F51A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10EC3CBA-B3D2-418B-87B6-1A51FAC3F51A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10EC3CBA-B3D2-418B-87B6-1A51FAC3F51A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
