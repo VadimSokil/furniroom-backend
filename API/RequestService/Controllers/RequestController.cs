@@ -6,11 +6,11 @@ namespace RequestService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RequestsController : ControllerBase
+    public class RequestController : ControllerBase
     {
-        private readonly IRequestsService _requestsService;
+        private readonly IRequestService _requestsService;
 
-        public RequestsController(IRequestsService requestsService)
+        public RequestController(IRequestService requestsService)
         {
             _requestsService = requestsService;
         }

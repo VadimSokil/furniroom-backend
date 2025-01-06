@@ -2,7 +2,7 @@
 
 namespace RequestService.Interfaces
 {
-    public interface IRequestsService
+    public interface IRequestService
     {
         public Task AddOrderAsync(OrderModel order);
         public Task AddQuestionAsync(QuestionModel question);

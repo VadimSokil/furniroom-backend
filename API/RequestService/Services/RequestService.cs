@@ -4,12 +4,12 @@ using RequestService.Models;
 
 namespace RequestService.Services
 {
-    public class RequestsService : IRequestsService
+    public class RequestService : IRequestService
     {
         private readonly string _connectionString;
         private readonly Dictionary<string, string> _requests;
 
-        public RequestsService(string connectionString, Dictionary<string, string> requests)
+        public RequestService(string connectionString, Dictionary<string, string> requests)
         {
             _connectionString = connectionString;
             _requests = requests;

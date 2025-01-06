@@ -1,4 +1,3 @@
-using RequestService.Services;
 using RequestService.Interfaces;
 
 namespace RequestService
@@ -20,7 +19,7 @@ namespace RequestService
                 requests[request.Key] = request.Value;
             }
 
-            builder.Services.AddScoped<IRequestsService, RequestsService>(provider => new RequestsService(connectionString, requests));
+            builder.Services.AddScoped<IRequestService, Services.RequestService>(provider => new Services.RequestService(connectionString, requests));
 
             builder.Services.AddCors(options =>
             {
