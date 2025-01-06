@@ -71,7 +71,7 @@ namespace InformationService.Services
             return notes;
         }
 
-        public async Task<List<CompanyModel>> GetPaymentInfromationAsync()
+        public async Task<List<CompanyModel>> GetPaymentInformationAsync()
         {
             var notes = new List<CompanyModel>();
 
