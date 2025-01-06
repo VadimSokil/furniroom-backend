@@ -20,7 +20,7 @@ namespace InformationService
                 requests[request.Key] = request.Value;
             }
 
-            builder.Services.AddScoped<CompanyService, CompanyService>(provider => new CompanyService(connectionString, requests));
+            builder.Services.AddScoped<ICompanyService, CompanyService>(provider => new CompanyService(connectionString, requests));
             builder.Services.AddScoped<IProductsService, ProductsService>(provider => new ProductsService(connectionString, requests));
             
 
