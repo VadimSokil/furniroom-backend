@@ -79,7 +79,7 @@ namespace InformationService.Services
             {
                 await connection.OpenAsync();
 
-                using (var command = new MySqlCommand(_requests["GetPaymentInfromation"], connection))
+                using (var command = new MySqlCommand(_requests["GetPaymentInformation"], connection))
                 {
                     using (var reader = await command.ExecuteReaderAsync())
                     {
