@@ -136,7 +136,7 @@ namespace InformationService.Services
             {
                 await connection.OpenAsync();
 
-                using (var command = new MySqlCommand(_requests["GetAllSubcategories"], connection))
+                using (var command = new MySqlCommand(_requests["GetAllDrawings"], connection))
                 {
                     using (var reader = await command.ExecuteReaderAsync())
                     {
