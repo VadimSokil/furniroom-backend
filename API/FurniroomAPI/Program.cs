@@ -29,6 +29,7 @@ namespace FurniroomAPI
             builder.Services.AddHttpClient<IPaymentService, PaymentService>();
             builder.Services.AddHttpClient<IOrderService, OrderService>();
             builder.Services.AddHttpClient<IQuestionService, QuestionService>();
+            builder.Services.AddHttpClient<IAuthorizationService, AuthorizationService>();
             builder.Services.AddSingleton(endpointURL);
 
             builder.Services.AddCors(options =>
