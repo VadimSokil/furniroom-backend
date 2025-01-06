@@ -11,19 +11,19 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["API/AuthorizationService/AuthorizationService.csproj", "API/AuthorizationService/"]
-RUN dotnet restore "API/AuthorizationService/AuthorizationService.csproj"
+COPY ["API/AccountsService/AccountsService.csproj", "API/AccountsService/"]
+RUN dotnet restore "API/AccountsService/AccountsService.csproj"
 COPY . .
-WORKDIR "/src/API/AuthorizationService"
-RUN dotnet build "AuthorizationService.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/API/AccountsService"
+RUN dotnet build "AccountsService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Этот этап используется для публикации проекта службы, который будет скопирован на последний этап
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "AuthorizationService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "AccountsService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Этот этап используется в рабочей среде или при запуске из VS в обычном режиме (по умолчанию, когда конфигурация отладки не используется)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "AuthorizationService.dll"]
+ENTRYPOINT ["dotnet", "AccountsService.dll"]

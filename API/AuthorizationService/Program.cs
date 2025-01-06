@@ -1,6 +1,7 @@
-using AuthorizationService.Interfaces;
+using AccountsService.Interfaces;
+using AccountsService.Services;
 
-namespace AuthorizationService
+namespace AccountsService
 {
     public class Program
     {
@@ -13,13 +14,13 @@ namespace AuthorizationService
             var servicePassword = Environment.GetEnvironmentVariable("servicePassword");
             var requestsSection = configuration.GetSection("Requests");
 
-            var sqlRequests = new Dictionary<string, string>();
+            var requests = new Dictionary<string, string>();
             foreach (var request in requestsSection.GetChildren())
             {
-                sqlRequests[request.Key] = request.Value;
+                requests[request.Key] = request.Value;
             }
 
-            builder.Services.AddScoped<IAuthorizationService, Services.AuthorizationService>(provider => new Services.AuthorizationService(connectionString, serviceEmail, servicePassword, sqlRequests));
+            builder.Services.AddScoped<IAuthorizationService, AuthorizationService>(provider => new AuthorizationService(connectionString, serviceEmail, servicePassword, requests));
 
             builder.Services.AddCors(options =>
             {
@@ -47,7 +48,7 @@ namespace AuthorizationService
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Authorization service");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Accounts service");
                     c.RoutePrefix = string.Empty;
                 });
             }

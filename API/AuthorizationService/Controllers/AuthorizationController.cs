@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using AuthorizationService.Interfaces;
-using AuthorizationService.Models;
+using AccountsService.Interfaces;
+using AccountsService.Models;
 
-namespace AuthorizationService.Controllers
+namespace AccountsService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -14,74 +14,39 @@ namespace AuthorizationService.Controllers
             _authorizationService = authorizationService;
         }
 
-        [HttpPost("check-email")]
-        public IActionResult CheckEmail([FromBody] string email)
-        {
-            bool emailExists = _authorizationService.CheckEmailExists(email);
-
-            if (emailExists)
-            {
-                return Ok(new { message = "Така пошта вже є в базі." });
-            }
-            else
-            {
-                return Ok(new { message = "Чудово, такої пошти ще немає в базі." });
-            }
-        }
-
-        [HttpPost("add-user")]
-        public IActionResult AddUser([FromBody] RegisterModel register)
-        {
-            bool userAdded = _authorizationService.AddNewUser(register);
-
-            if (userAdded)
-            {
-                return Ok(new { message = "Користувача успішно додано." });
-            }
-            else
-            {
-                return BadRequest(new { message = "Помилка: неможливо додати користувача." });
-            }
-        }
-
         [HttpPost("generate-code")]
-        public IActionResult GenerateCode([FromBody] string email)
+        public async Task<IActionResult> GenerateCode([FromBody] string email)
         {
-            int verificationCode = _authorizationService.GenerateVerificationCode(email);
-
-            return Ok(new
-            {
-                message = "Код успішно згенеровано.",
-                code = verificationCode
-            });
+            var result = await _authorizationService.GenerateCodeAsync(email);
+            return Ok(result);
         }
 
         [HttpPost("reset-password")]
-        public IActionResult ResetPassword([FromBody] string email)
+        public async Task<IActionResult> ResetPassword([FromBody] string email)
         {
-            string code = _authorizationService.ResetPassword(email);
-
-            return Ok(new
-            {
-                message = "Ваш пароль скинуто, ось новий:",
-                code = code
-
-            });
+            var result = await _authorizationService.ResetPasswordAsync(email);
+            return Ok(result);
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginModel loginModel)
+        public async Task<IActionResult> Login([FromBody] LoginModel login)
         {
-            var response = _authorizationService.Login(loginModel);
+            var result = await _authorizationService.LoginAsync(login);
+            return Ok(result);
+        }
 
-            if (response == "Вхід виконано.")
-            {
-                return Ok(new { message = response });
-            }
-            else
-            {
-                return Unauthorized(new { message = response });
-            }
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterModel register)
+        {
+            var result = await _authorizationService.RegisterAsync(register);
+            return Ok(result);
+        }
+
+        [HttpGet("check-email")]
+        public async Task<IActionResult> CheckEmail([FromQuery] string email)
+        {
+            var result = await _authorizationService.CheckEmailAsync(email);
+            return Ok(result);
         }
 
     }

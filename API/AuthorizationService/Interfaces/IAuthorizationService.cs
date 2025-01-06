@@ -1,14 +1,13 @@
-﻿using AuthorizationService.Models;
+﻿using AccountsService.Models;
 
-namespace AuthorizationService.Interfaces
+namespace AccountsService.Interfaces
 {
     public interface IAuthorizationService
     {
-        bool CheckEmailExists(string email);
-        int GenerateVerificationCode(string email);
-        bool AddNewUser(RegisterModel register);
-        string Login(LoginModel login);
-        string ResetPassword(string email);
-
+        public Task<bool> CheckEmailAsync(string email);
+        public Task<string> GenerateCodeAsync(string email);
+        public Task<string> ResetPasswordAsync(string email);
+        public Task<string> RegisterAsync(RegisterModel register);
+        public Task<bool> LoginAsync(LoginModel login);
     }
 }

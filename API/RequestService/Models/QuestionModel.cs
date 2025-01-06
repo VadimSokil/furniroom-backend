@@ -2,9 +2,11 @@
 {
     public class QuestionModel
     {
-        public int question_id { get; set; }
-        public string user_name { get; set; }
-        public string phone_number { get; set; }
-        public string question_text { get; set; }
+        public int QuestionId { get; set; }
+        public string QuestionDate { get; set; }
+        public string UserName { get; set; }
+        public string PhoneNumber { get; set; }
+        public string QuestionText { get; set; }
+
     }
 }

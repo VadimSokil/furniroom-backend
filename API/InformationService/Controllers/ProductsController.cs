@@ -1,5 +1,5 @@
 ﻿using InformationService.Interfaces;
-using InformationService.Models;
+using InformationService.Models.Products;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InformationService.Controllers
@@ -8,63 +8,46 @@ namespace InformationService.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly ICategoryService _categoryService;
-        private readonly ISubcategoryService _subcategoryService;
-        private readonly IProductTypeService _productTypeService;
-        private readonly IProductSubcategoryService _productSubcategoryService;
-        private readonly IProductGalleryService _productGalleryService;
-        private readonly IProductDrawingsService _productDrawingsService;
+        private readonly IProductsService _productsService;
 
-        public ProductsController(ICategoryService categoryService, ISubcategoryService subcategoryService, IProductTypeService productTypeService, IProductSubcategoryService productSubcategoryService, IProductGalleryService productGalleryService, IProductDrawingsService productDrawingsService)
+        public ProductsController(IProductsService productsService)
         {
-            _categoryService = categoryService;
-            _subcategoryService = subcategoryService;
-            _productTypeService = productTypeService;
-            _productSubcategoryService = productSubcategoryService;
-            _productGalleryService = productGalleryService;
-            _productDrawingsService = productDrawingsService;
+            _productsService = productsService;
         }
 
-        [HttpGet("categories")]
-        public async Task<ActionResult<List<CategoryModel>>> GetAllCategory()
+        [HttpGet("categories-list")]
+        public async Task<ActionResult<List<CategoryModel>>> GetAllCategories()
         {
-            var category = await _categoryService.GetAllCategories();
-            return Ok(category);
+            var note = await _productsService.GetAllCategoriesAsync();
+            return Ok(note);
         }
 
-        [HttpGet("subcategories")]
-        public async Task<ActionResult<List<SubcategoryModel>>> GetAllSubcategory()
+        [HttpGet("subcategories-list")]
+        public async Task<ActionResult<List<SubcategoryModel>>> GetAllSubcategories()
         {
-            var subcategory = await _subcategoryService.GetAllSubcategories();
-            return Ok(subcategory);
+            var note = await _productsService.GetAllSubcategoriesAsync();
+            return Ok(note);
         }
 
-        [HttpGet("products")]
-        public async Task<ActionResult<List<ProductTypeModel>>> GetAllProducts()
+        [HttpGet("products-list")]
+        public async Task<ActionResult<List<ProductModel>>> GetAllProducts()
         {
-            var products = await _productTypeService.GetAllProducts();
-            return Ok(products);
+            var note = await _productsService.GetAllProductsAsync();
+            return Ok(note);
         }
 
-        [HttpGet("product-subcategories")]
-        public async Task<ActionResult<List<ProductSubcategoryModel>>> GetAllProductSubcategory()
+        [HttpGet("images-list")]
+        public async Task<ActionResult<List<ImageModel>>> GetAllImages()
         {
-            var productsubcategory = await _productSubcategoryService.GetAllProductSubcategories();
-            return Ok(productsubcategory);
+            var note = await _productsService.GetAllImagesAsync();
+            return Ok(note);
         }
 
-        [HttpGet("product-gallery")]
-        public async Task<ActionResult<List<ProductGalleryModel>>> GetAllProductGallery()
+        [HttpGet("drawings-list")]
+        public async Task<ActionResult<List<DrawingModel>>> GetAllDrawings()
         {
-            var productgallery = await _productGalleryService.GetAllProductGallery();
-            return Ok(productgallery);
-        }
-
-        [HttpGet("product-drawings")]
-        public async Task<ActionResult<List<ProductDrawingsModel>>> GetAllProductDrawings()
-        {
-            var productdrawings = await _productDrawingsService.GetAllProductDrawings();
-            return Ok(productdrawings);
+            var note = await _productsService.GetAllDrawingsAsync();
+            return Ok(note);
         }
     }
 }

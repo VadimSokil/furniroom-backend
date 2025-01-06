@@ -14,14 +14,13 @@ namespace RequestService
             var configuration = builder.Configuration;
             var requestsSection = configuration.GetSection("Requests");
 
-            var sqlRequests = new Dictionary<string, string>();
+            var  requests = new Dictionary<string, string>();
             foreach (var request in requestsSection.GetChildren())
             {
-                sqlRequests[request.Key] = request.Value;
+                requests[request.Key] = request.Value;
             }
 
-            builder.Services.AddScoped<IOrdersService, OrdersService>(provider => new OrdersService(connectionString, sqlRequests));
-            builder.Services.AddScoped<IQuestionsService, QuestionsService>(privider => new QuestionsService(connectionString, sqlRequests));
+            builder.Services.AddScoped<IRequestsService, RequestsService>(provider => new RequestsService(connectionString, requests));
 
             builder.Services.AddCors(options =>
             {
@@ -49,7 +48,7 @@ namespace RequestService
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Request service");
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Requests service");
                     c.RoutePrefix = string.Empty;
                 });
             }

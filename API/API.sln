@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FurniroomAPI", "FurniroomAP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthorizationService", "AuthorizationService\AuthorizationService.csproj", "{10EC3CBA-B3D2-418B-87B6-1A51FAC3F51A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RequestService", "RequestService\RequestService.csproj", "{ABEB86F0-C362-40CA-B8B6-28E8090BB93A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RequestsService", "RequestService\RequestsService.csproj", "{ABEB86F0-C362-40CA-B8B6-28E8090BB93A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

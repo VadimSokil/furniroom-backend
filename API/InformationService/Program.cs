@@ -14,21 +14,15 @@ namespace InformationService
             var configuration = builder.Configuration;
             var requestsSection = configuration.GetSection("Requests");
 
-            var sqlRequests = new Dictionary<string, string>();
+            var requests = new Dictionary<string, string>();
             foreach (var request in requestsSection.GetChildren())
             {
-                sqlRequests[request.Key] = request.Value;
+                requests[request.Key] = request.Value;
             }
 
-            builder.Services.AddScoped<ICategoryService, CategoryService>(provider => new CategoryService(connectionString, sqlRequests));
-            builder.Services.AddScoped<ISubcategoryService, SubcategoryService>(privider => new SubcategoryService(connectionString, sqlRequests));
-            builder.Services.AddScoped<IProductTypeService, ProductTypeService>(provider => new ProductTypeService(connectionString, sqlRequests));
-            builder.Services.AddScoped<IProductSubcategoryService, ProductSubcategoryService>(provider => new ProductSubcategoryService(connectionString, sqlRequests));
-            builder.Services.AddScoped<IProductGalleryService, ProductGalleryService>(provider => new ProductGalleryService(connectionString, sqlRequests));
-            builder.Services.AddScoped<IProductDrawingsService, ProductDrawingsService>(provider => new ProductDrawingsService(connectionString, sqlRequests));
-            builder.Services.AddScoped<IAboutCompanyService, AboutCompanyService>(provider => new AboutCompanyService(connectionString, sqlRequests));
-            builder.Services.AddScoped<IDeliveryService, DeliveryService>(provider => new DeliveryService(connectionString, sqlRequests));
-            builder.Services.AddScoped<IPaymentService, PaymentService>(provider => new PaymentService(connectionString, sqlRequests));
+            builder.Services.AddScoped<CompanyService, CompanyService>(provider => new CompanyService(connectionString, requests));
+            builder.Services.AddScoped<IProductsService, ProductsService>(provider => new ProductsService(connectionString, requests));
+            
 
             builder.Services.AddCors(options =>
             {
