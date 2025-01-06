@@ -6,6 +6,6 @@ namespace InformationService.Interfaces
     {
         public Task<List<CompanyModel>> GetCompanyInformationAsync();
         public Task<List<CompanyModel>> GetDeliveryInformationAsync();
-        public Task<List<CompanyModel>> GetPaymentInfromationAsync();
+        public Task<List<CompanyModel>> GetPaymentInformationAsync();
     }
 }
