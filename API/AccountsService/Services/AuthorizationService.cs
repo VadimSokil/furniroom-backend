@@ -141,7 +141,7 @@ namespace AccountsService.Services
                     command.Parameters.AddWithValue("@AccountId", register.AccountId);
                     command.Parameters.AddWithValue("@AccountName", register.AccountName);
                     command.Parameters.AddWithValue("@Email", register.Email);
-                    command.Parameters.AddWithValue("@PasswodHash", register.PasswordHash);
+                    command.Parameters.AddWithValue("@PasswordHash", register.PasswordHash);
 
                     try
                     {
