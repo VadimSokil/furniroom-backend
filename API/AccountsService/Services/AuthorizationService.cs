@@ -108,18 +108,15 @@ namespace AccountsService.Services
 
                     var result = await command.ExecuteScalarAsync();
 
-                    if (result != null)
-                    {
-                        string storedHashPassword = result.ToString();
+                    if (result == null)
+                        return false;
 
-                        string hashedInputPassword = HashPasswordWithMD5(login.PasswordHash);
-
-                        return storedHashPassword == hashedInputPassword;
-                    }
+                    string storedHashPassword = result.ToString();
+                    return storedHashPassword == login.PasswordHash;
                 }
             }
-            return false;
         }
+
 
         public async Task<string> RegisterAsync(RegisterModel register)
         {
