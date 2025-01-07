@@ -26,12 +26,12 @@ namespace AccountsService.Services
         private const string SmtpHost = "smtp.gmail.com";
         private const int SmtpPort = 587;
 
-        public async Task SendEmailAsync(string recipientEmail, string messageBody)
+        private async Task SendEmailAsync(string recipientEmail, string messageBody, string subject)
         {
             var message = new MailMessage
             {
                 From = new MailAddress(_serviceEmail, "Furniroom"),
-                Subject = "Secure Notification",
+                Subject = subject,
                 Body = messageBody,
                 IsBodyHtml = false
             };
@@ -87,7 +87,7 @@ namespace AccountsService.Services
             try
             {
                 string messageBody = $"Hi, your verification code: {verificationCode}";
-                await SendEmailAsync(email, messageBody);
+                await SendEmailAsync(email, messageBody, "Verification code");
                 return $"Код отправлен на {email}. Ваш код: {verificationCode}";
             }
             catch (Exception ex)
@@ -183,8 +183,8 @@ namespace AccountsService.Services
 
                 try
                 {
-                    await SendEmailAsync(email, newPassword);
-                    return "Новый пароль успешно отправлен на указанный email.";
+                    await SendEmailAsync(email, $"Hi, your new password: {newPassword}", "ResetPassword");
+                    return $"Пароль отправлен на {email}. Ваш новый пароль: {newPassword}";
                 }
                 catch (Exception ex)
                 {
