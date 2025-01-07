@@ -106,16 +106,18 @@ namespace AccountsService.Services
                 {
                     command.Parameters.AddWithValue("@Email", login.Email);
 
-                    var result = await command.ExecuteScalarAsync();
+                    var passwordHashFromDb = await command.ExecuteScalarAsync() as string;
 
-                    if (result == null)
+                    if (string.IsNullOrEmpty(passwordHashFromDb) || passwordHashFromDb != login.PasswordHash)
+                    {
                         return false;
+                    }
 
-                    string storedHashPassword = result.ToString();
-                    return storedHashPassword == login.PasswordHash;
+                    return true; 
                 }
             }
         }
+
 
 
         public async Task<string> RegisterAsync(RegisterModel register)
