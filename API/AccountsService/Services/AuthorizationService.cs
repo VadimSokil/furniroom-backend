@@ -172,7 +172,7 @@ namespace AccountsService.Services
                 using (var updateCommand = new MySqlCommand(_requests["ResetPassword"], connection))
                 {
                     updateCommand.Parameters.AddWithValue("@Email", email);
-                    updateCommand.Parameters.AddWithValue("@Password", hashedPassword);
+                    updateCommand.Parameters.AddWithValue("@PasswordHash", hashedPassword);
 
                     int rowsAffected = await updateCommand.ExecuteNonQueryAsync();
                     if (rowsAffected <= 0)
