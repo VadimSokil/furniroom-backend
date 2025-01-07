@@ -68,23 +68,21 @@ namespace AccountsService.Services
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
-                connection.OpenAsync();
+                await connection.OpenAsync();
 
                 using (var command = new MySqlCommand(_requests["EmailCheck"], connection))
                 {
                     command.Parameters.AddWithValue("@Email", email);
 
-                    var result = Convert.ToInt32(command.ExecuteScalar());
+                    var result = Convert.ToInt32(await command.ExecuteScalarAsync());
                     return result > 0;
                 }
             }
-
         }
 
         public async Task<string> GenerateCodeAsync(string email)
         {
-            Random random = new Random();
-            int verificationCode = random.Next(1000, 9999);
+            int verificationCode = Random.Shared.Next(1000, 9999);
 
             try
             {
@@ -98,18 +96,17 @@ namespace AccountsService.Services
             }
         }
 
-
         public async Task<bool> LoginAsync(LoginModel login)
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
-                connection.OpenAsync();
+                await connection.OpenAsync();
 
                 using (var command = new MySqlCommand(_requests["Login"], connection))
                 {
                     command.Parameters.AddWithValue("@Email", login.Email);
 
-                    var result = command.ExecuteScalar();
+                    var result = await command.ExecuteScalarAsync();
 
                     if (result != null)
                     {
@@ -117,24 +114,18 @@ namespace AccountsService.Services
 
                         string hashedInputPassword = HashPasswordWithMD5(login.PasswordHash);
 
-                        if (storedHashPassword == hashedInputPassword)
-                        {
-                            return true;
-                        }
+                        return storedHashPassword == hashedInputPassword;
                     }
-
                 }
             }
             return false;
-
-
         }
 
         public async Task<string> RegisterAsync(RegisterModel register)
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 using (var command = new MySqlCommand(_requests["AddNewUser"], connection))
                 {
@@ -146,14 +137,7 @@ namespace AccountsService.Services
                     try
                     {
                         int rowsAffected = await command.ExecuteNonQueryAsync();
-                        if (rowsAffected > 0)
-                        {
-                            return "Пользователь успешно добавлен";
-                        }
-                        else
-                        {
-                            return "Не удалось добавить пользователя";
-                        }
+                        return rowsAffected > 0 ? "Пользователь успешно добавлен" : "Не удалось добавить пользователя";
                     }
                     catch (Exception ex)
                     {
@@ -167,13 +151,13 @@ namespace AccountsService.Services
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
-                connection.OpenAsync();
+                await connection.OpenAsync();
 
                 using (var checkCommand = new MySqlCommand(_requests["EmailCheck"], connection))
                 {
                     checkCommand.Parameters.AddWithValue("@Email", email);
 
-                    var result = Convert.ToInt32(checkCommand.ExecuteScalar());
+                    var result = Convert.ToInt32(await checkCommand.ExecuteScalarAsync());
                     if (result <= 0)
                     {
                         return "Email не найден в базе данных.";
@@ -181,9 +165,8 @@ namespace AccountsService.Services
                 }
 
                 const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-                Random random = new Random();
                 string newPassword = new string(Enumerable.Repeat(chars, 8)
-                    .Select(s => s[random.Next(s.Length)]).ToArray());
+                    .Select(s => s[Random.Shared.Next(s.Length)]).ToArray());
 
                 string hashedPassword = HashPasswordWithMD5(newPassword);
 
@@ -192,7 +175,7 @@ namespace AccountsService.Services
                     updateCommand.Parameters.AddWithValue("@Email", email);
                     updateCommand.Parameters.AddWithValue("@Password", hashedPassword);
 
-                    int rowsAffected = updateCommand.ExecuteNonQuery();
+                    int rowsAffected = await updateCommand.ExecuteNonQueryAsync();
                     if (rowsAffected <= 0)
                     {
                         return "Не удалось сбросить пароль.";
@@ -210,6 +193,7 @@ namespace AccountsService.Services
                 }
             }
         }
+
 
     }
 }
