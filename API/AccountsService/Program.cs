@@ -21,6 +21,7 @@ namespace AccountsService
             }
 
             builder.Services.AddScoped<IAuthorizationService, AuthorizationService>(provider => new AuthorizationService(connectionString, serviceEmail, servicePassword, requests));
+            builder.Services.AddScoped<IAccountService, AccountService>(provider => new AccountService(connectionString, requests));
 
             builder.Services.AddCors(options =>
             {

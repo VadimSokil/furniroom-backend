@@ -1,4 +1,4 @@
-﻿using AccountsService.Models;
+﻿using AccountsService.Models.Authorization;
 
 namespace AccountsService.Interfaces
 {
@@ -8,6 +8,6 @@ namespace AccountsService.Interfaces
         public Task<string> GenerateCodeAsync(string email);
         public Task<string> ResetPasswordAsync(string email);
         public Task<string> RegisterAsync(RegisterModel register);
-        public Task<bool> LoginAsync(LoginModel login);
+        public Task<string> LoginAsync(LoginModel login);
     }
 }

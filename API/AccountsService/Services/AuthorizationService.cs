@@ -1,5 +1,5 @@
 ﻿using AccountsService.Interfaces;
-using AccountsService.Models;
+using AccountsService.Models.Authorization;
 using System.Net.Mail;
 using System.Net;
 using MySql.Data.MySqlClient;
@@ -96,7 +96,7 @@ namespace AccountsService.Services
             }
         }
 
-        public async Task<bool> LoginAsync(LoginModel login)
+        public async Task<string> LoginAsync(LoginModel login)
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -105,15 +105,11 @@ namespace AccountsService.Services
                 using (var command = new MySqlCommand(_requests["Login"], connection))
                 {
                     command.Parameters.AddWithValue("@Email", login.Email);
+                    command.Parameters.AddWithValue("@PasswordHash", login.PasswordHash);
 
-                    var passwordHashFromDb = await command.ExecuteScalarAsync() as string;
+                    var accountId = await command.ExecuteScalarAsync() as string;
 
-                    if (string.IsNullOrEmpty(passwordHashFromDb) || passwordHashFromDb != login.PasswordHash)
-                    {
-                        return false;
-                    }
-
-                    return true; 
+                    return string.IsNullOrEmpty(accountId) ? null : accountId;
                 }
             }
         }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AccountsService.Interfaces;
-using AccountsService.Models;
+using AccountsService.Models.Authorization;
 
 namespace AccountsService.Controllers
 {

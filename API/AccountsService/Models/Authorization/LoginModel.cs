@@ -1,4 +1,4 @@
-﻿namespace AccountsService.Models
+﻿namespace AccountsService.Models.Authorization
 {
     public class LoginModel
     {
