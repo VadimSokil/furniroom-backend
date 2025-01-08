@@ -64,20 +64,20 @@ namespace AccountsService.Services
                             orders.Add(new AccountOrdersModel
                             {
                                 OrderId = reader.GetInt32("OrderId"),
-                                OrderDate = reader.GetString("OrderDate"),
+                                OrderDate = !reader.IsDBNull(reader.GetOrdinal("OrderDate")) ? reader.GetString("OrderDate") : null,
                                 CustomerId = reader.GetInt32("CustomerId"),
-                                PhoneNumber = reader.GetString("PhoneNumber"),
-                                Country = reader.GetString("Country"),
-                                Region = reader.GetString("Region"),
-                                District = reader.GetString("District"),
-                                City = reader.GetString("City"),
-                                Village = reader.GetString("Village"),
-                                Street = reader.GetString("Street"),
-                                HouseNumber = reader.GetString("HouseNumber"),
-                                ApartmentNumber = reader.GetString("ApartmentNumber"),
-                                OrderText = reader.GetString("OrderText"),
-                                DeliveryType = reader.GetString("DeliveryType"),
-                                OrderStatus = reader.GetString("OrderStatus")
+                                PhoneNumber = !reader.IsDBNull(reader.GetOrdinal("PhoneNumber")) ? reader.GetString("PhoneNumber") : null,
+                                Country = !reader.IsDBNull(reader.GetOrdinal("Country")) ? reader.GetString("Country") : null,
+                                Region = !reader.IsDBNull(reader.GetOrdinal("Region")) ? reader.GetString("Region") : null,
+                                District = !reader.IsDBNull(reader.GetOrdinal("District")) ? reader.GetString("District") : null,
+                                City = !reader.IsDBNull(reader.GetOrdinal("City")) ? reader.GetString("City") : null,
+                                Village = !reader.IsDBNull(reader.GetOrdinal("Village")) ? reader.GetString("Village") : null,
+                                Street = !reader.IsDBNull(reader.GetOrdinal("Street")) ? reader.GetString("Street") : null,
+                                HouseNumber = !reader.IsDBNull(reader.GetOrdinal("HouseNumber")) ? reader.GetString("HouseNumber") : null,
+                                ApartmentNumber = !reader.IsDBNull(reader.GetOrdinal("ApartmentNumber")) ? reader.GetString("ApartmentNumber") : null,
+                                OrderText = !reader.IsDBNull(reader.GetOrdinal("OrderText")) ? reader.GetString("OrderText") : null,
+                                DeliveryType = !reader.IsDBNull(reader.GetOrdinal("DeliveryType")) ? reader.GetString("DeliveryType") : null,
+                                OrderStatus = !reader.IsDBNull(reader.GetOrdinal("OrderStatus")) ? reader.GetString("OrderStatus") : null
                             });
                         }
                     }
