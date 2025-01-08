@@ -107,14 +107,19 @@ namespace AccountsService.Services
                     command.Parameters.AddWithValue("@Email", login.Email);
                     command.Parameters.AddWithValue("@PasswordHash", login.PasswordHash);
 
-                    var accountId = await command.ExecuteScalarAsync() as string;
+                    var result = await command.ExecuteScalarAsync();
 
-                    return string.IsNullOrEmpty(accountId) ? null : accountId;
+                    if (result != null)
+                    {
+                        return result.ToString(); 
+                    }
+                    else
+                    {
+                        return "Пользователь не найден."; 
+                    }
                 }
             }
         }
-
-
 
         public async Task<string> RegisterAsync(RegisterModel register)
         {
