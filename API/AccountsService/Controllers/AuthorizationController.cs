@@ -14,14 +14,14 @@ namespace AccountsService.Controllers
             _authorizationService = authorizationService;
         }
 
-        [HttpPost("generate-code")]
+        [HttpGet("generate-code")]
         public async Task<IActionResult> GenerateCode([FromBody] string email)
         {
             var result = await _authorizationService.GenerateCodeAsync(email);
             return Ok(result);
         }
 
-        [HttpPost("reset-password")]
+        [HttpGet("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] string email)
         {
             var result = await _authorizationService.ResetPasswordAsync(email);
