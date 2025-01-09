@@ -92,38 +92,78 @@ namespace AccountsService.Services
             using (var connection = new MySqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                using (var command = new MySqlCommand(_requests["ChangeName"], connection))
-                {
-                    command.Parameters.AddWithValue("@OldName", oldName);
-                    command.Parameters.AddWithValue("@NewName", newName);
 
-                    int affectedRows = await command.ExecuteNonQueryAsync();
+                using (var commandCheck = new MySqlCommand(_requests["CheckAccountNames"], connection))
+                {
+                    commandCheck.Parameters.AddWithValue("@OldName", oldName);
+                    commandCheck.Parameters.AddWithValue("@NewName", newName);
+
+                    using (var reader = await commandCheck.ExecuteReaderAsync())
+                    {
+                        await reader.ReadAsync();
+
+                        var oldNameExists = reader.GetInt32("OldNameExists");
+                        var newNameExists = reader.GetInt32("NewNameExists");
+
+                        if (oldNameExists == 0)
+                            return "Имя пользователя не найдено.";
+                        if (newNameExists > 0)
+                            return "Новое имя пользователя уже занято.";
+                    }
+                }
+
+                using (var commandUpdate = new MySqlCommand(_requests["ChangeAccountName"], connection))
+                {
+                    commandUpdate.Parameters.AddWithValue("@OldName", oldName);
+                    commandUpdate.Parameters.AddWithValue("@NewName", newName);
+
+                    int affectedRows = await commandUpdate.ExecuteNonQueryAsync();
                     if (affectedRows > 0)
                         return "Имя успешно изменено.";
                     else
-                        return "Имя не найдено или новое имя уже занято.";
+                        return "Не удалось изменить имя пользователя.";
                 }
             }
         }
+
 
         public async Task<string> ChangeEmailAsync(string oldEmail, string newEmail)
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-                using (var command = new MySqlCommand(_requests["ChangeEmail"], connection))
-                {
-                    command.Parameters.AddWithValue("@OldEmail", oldEmail);
-                    command.Parameters.AddWithValue("@NewEmail", newEmail);
 
-                    int affectedRows = await command.ExecuteNonQueryAsync();
-                    if (affectedRows > 0)
-                        return "Email успешно изменен.";
-                    else
-                        return "Email не найден или новый email уже используется.";
+                using (var checkOldEmailCommand = new MySqlCommand(_requests["CheckOldEmail"], connection))
+                {
+                    checkOldEmailCommand.Parameters.AddWithValue("@OldEmail", oldEmail);
+                    object oldEmailResult = await checkOldEmailCommand.ExecuteScalarAsync();
+                    if (oldEmailResult == null || Convert.ToInt32(oldEmailResult) == 0)
+                    {
+                        return "Указанный старый email не найден.";
+                    }
+                }
+
+                using (var checkNewEmailCommand = new MySqlCommand(_requests["CheckNewEmail"], connection))
+                {
+                    checkNewEmailCommand.Parameters.AddWithValue("@NewEmail", newEmail);
+                    object newEmailResult = await checkNewEmailCommand.ExecuteScalarAsync();
+                    if (newEmailResult != null && Convert.ToInt32(newEmailResult) > 0)
+                    {
+                        return "Новый email уже используется.";
+                    }
+                }
+
+                using (var changeEmailCommand = new MySqlCommand(_requests["ChangeEmail"], connection))
+                {
+                    changeEmailCommand.Parameters.AddWithValue("@OldEmail", oldEmail);
+                    changeEmailCommand.Parameters.AddWithValue("@NewEmail", newEmail);
+                    int affectedRows = await changeEmailCommand.ExecuteNonQueryAsync();
+
+                    return affectedRows > 0 ? "Email успешно изменен." : "Ошибка при изменении email.";
                 }
             }
         }
+
 
         public async Task<string> ChangePasswordAsync(string oldPasswordHash, string newPasswordHash)
         {
