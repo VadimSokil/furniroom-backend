@@ -87,5 +87,81 @@ namespace AccountsService.Services
             return orders;
         }
 
+        public async Task<string> ChangeNameAsync(string oldName, string newName)
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                using (var command = new MySqlCommand(_requests["ChangeName"], connection))
+                {
+                    command.Parameters.AddWithValue("@OldName", oldName);
+                    command.Parameters.AddWithValue("@NewName", newName);
+
+                    int affectedRows = await command.ExecuteNonQueryAsync();
+                    if (affectedRows > 0)
+                        return "Имя успешно изменено.";
+                    else
+                        return "Имя не найдено или новое имя уже занято.";
+                }
+            }
+        }
+
+        public async Task<string> ChangeEmailAsync(string oldEmail, string newEmail)
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                using (var command = new MySqlCommand(_requests["ChangeEmail"], connection))
+                {
+                    command.Parameters.AddWithValue("@OldEmail", oldEmail);
+                    command.Parameters.AddWithValue("@NewEmail", newEmail);
+
+                    int affectedRows = await command.ExecuteNonQueryAsync();
+                    if (affectedRows > 0)
+                        return "Email успешно изменен.";
+                    else
+                        return "Email не найден или новый email уже используется.";
+                }
+            }
+        }
+
+        public async Task<string> ChangePasswordAsync(string oldPasswordHash, string newPasswordHash)
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                using (var command = new MySqlCommand(_requests["ChangePassword"], connection))
+                {
+                    command.Parameters.AddWithValue("@OldPasswordHash", oldPasswordHash);
+                    command.Parameters.AddWithValue("@NewPasswordHash", newPasswordHash);
+
+                    int affectedRows = await command.ExecuteNonQueryAsync();
+                    if (affectedRows > 0)
+                        return "Пароль успешно изменен.";
+                    else
+                        return "Старый пароль не найден.";
+                }
+            }
+        }
+
+        public async Task<string> DeleteAccountAsync(int accountId)
+        {
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                using (var command = new MySqlCommand(_requests["DeleteAccount"], connection))
+                {
+                    command.Parameters.AddWithValue("@AccountId", accountId);
+
+                    int affectedRows = await command.ExecuteNonQueryAsync();
+                    if (affectedRows > 0)
+                        return "Аккаунт и связанные заказы успешно удалены.";
+                    else
+                        return "Аккаунт не найден.";
+                }
+            }
+        }
+
+
     }
 }
