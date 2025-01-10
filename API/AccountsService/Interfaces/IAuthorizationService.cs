@@ -8,6 +8,6 @@ namespace AccountsService.Interfaces
         public Task<string> GenerateCodeAsync(string email);
         public Task<string> ResetPasswordAsync(string email);
         public Task RegisterAsync(RegisterModel register);
-        public Task<string> LoginAsync(LoginModel login);
+        public Task<(string message, string userId)> LoginAsync(LoginModel login);
     }
 }

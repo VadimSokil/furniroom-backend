@@ -59,20 +59,21 @@ namespace AccountsService.Controllers
         {
             try
             {
-                var result = await _authorizationService.LoginAsync(login);
-                if (string.IsNullOrEmpty(result))
+                var (userId, message) = await _authorizationService.LoginAsync(login);
+
+                if (userId == null)
                 {
-                    return Unauthorized(new { message = "Неверный логин или пароль." }); 
+                    return Unauthorized(new { message }); 
                 }
 
-                return Ok(new { message = "Вход выполнен успешно.", userId = result }); 
+                return Ok(new { message, userId }); 
             }
             catch (MySqlException ex) when (ex.Number == 1042)
             {
-                return StatusCode(503, new { message = "Соединение с базой данных отсутствует." }); 
+                return StatusCode(503, new { message = "Соединение с базой данных отсутствует." });
             }
-            
         }
+
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel register)

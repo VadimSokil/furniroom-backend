@@ -120,12 +120,12 @@ namespace AccountsService.Services
             }
         }
 
-        public async Task<string> LoginAsync(LoginModel login)
+        public async Task<(string message, string userId)> LoginAsync(LoginModel login)
         {
             var loginErrors = _loginValidator.Validate(login);
             if (loginErrors.Count > 0)
             {
-                return string.Join(", ", loginErrors);
+                return (null, string.Join(", ", loginErrors));
             }
 
             using (var connection = new MySqlConnection(_connectionString))
@@ -140,13 +140,14 @@ namespace AccountsService.Services
                     var result = await command.ExecuteScalarAsync();
                     if (result == null)
                     {
-                        return "Неверный логин или пароль.";
+                        return (null, "Неверный логин или пароль."); 
                     }
 
-                    return result.ToString();
+                    return (result.ToString(), "Вход выполнен успешно."); 
                 }
             }
         }
+
 
 
         public async Task RegisterAsync(RegisterModel register)
