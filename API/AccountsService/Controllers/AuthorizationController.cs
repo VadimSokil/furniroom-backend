@@ -20,7 +20,7 @@ namespace AccountsService.Controllers
         }
 
         [HttpGet("check-email")]
-        public async Task<ActionResult> CheckEmail([FromQuery] string email)
+        public async Task<ActionResult> CheckEmail([FromQuery(Name = "email")] string email)
         {
             var validationResult = _emailValidator.Validate(email);
             if (!validationResult.IsValid)
@@ -40,7 +40,7 @@ namespace AccountsService.Controllers
         }
 
         [HttpGet("generate-code")]
-        public async Task<ActionResult> GenerateCode([FromQuery] string email)
+        public async Task<ActionResult> GenerateCode([FromQuery(Name = "email")] string email)
         {
             var validationResult = _emailValidator.Validate(email);
             if (!validationResult.IsValid)
@@ -60,7 +60,7 @@ namespace AccountsService.Controllers
         }
 
         [HttpGet("reset-password")]
-        public async Task<ActionResult> ResetPassword([FromQuery] string email)
+        public async Task<ActionResult> ResetPassword([FromQuery(Name = "email")] string email)
         {
             var validationResult = _emailValidator.Validate(email);
             if (!validationResult.IsValid)
