@@ -24,6 +24,8 @@ namespace AccountsService
                 requests[request.Key] = request.Value;
             }
 
+            builder.Services.AddSingleton<string>(provider => connectionString);
+
             builder.Services.AddScoped<IAuthorizationService, AuthorizationService>(provider => new AuthorizationService(connectionString, serviceEmail, servicePassword, requests));
             builder.Services.AddScoped<IAccountService, AccountService>(provider => new AccountService(connectionString, requests));
             builder.Services.AddScoped<IRequestService, RequestService>(provider => new RequestService(connectionString, requests));
