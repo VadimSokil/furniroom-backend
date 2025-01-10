@@ -41,7 +41,7 @@ namespace AccountsService.Validators.Authorization
                 }
             }
 
-            return errors;
+            return errors; 
         }
     }
 }

@@ -56,7 +56,6 @@ namespace AccountsService.Services
             }
         }
 
-
         private string HashPasswordWithMD5(string password)
         {
             using (MD5 md5 = MD5.Create())
@@ -75,10 +74,10 @@ namespace AccountsService.Services
 
         public async Task<string> CheckEmailAsync(string email)
         {
-            var emailErrors = new EmailValidator().Validate(email);
+            var emailErrors = _emailValidator.Validate(email);
             if (emailErrors.Count > 0)
             {
-                return string.Join(", ", emailErrors); 
+                return string.Join(", ", emailErrors);
             }
 
             using (var connection = new MySqlConnection(_connectionString))
@@ -89,17 +88,19 @@ namespace AccountsService.Services
                 {
                     command.Parameters.AddWithValue("@Email", email);
                     var result = Convert.ToInt32(await command.ExecuteScalarAsync());
+                    if (result > 0)
+                    {
+                        return "Пользователь с указанным Email уже существует."; 
+                    }
                 }
             }
 
-            return null; 
+            return null;
         }
-
-
 
         public async Task<string> GenerateCodeAsync(string email)
         {
-            var emailErrors = new EmailValidator().Validate(email);
+            var emailErrors = _emailValidator.Validate(email);
             if (emailErrors.Count > 0)
             {
                 return string.Join(", ", emailErrors);
@@ -137,8 +138,7 @@ namespace AccountsService.Services
                     command.Parameters.AddWithValue("@PasswordHash", login.PasswordHash);
 
                     var result = await command.ExecuteScalarAsync();
-
-                    return result?.ToString();
+                    return result?.ToString(); 
                 }
             }
         }
@@ -148,7 +148,7 @@ namespace AccountsService.Services
             var registerErrors = _registerValidator.Validate(register);
             if (registerErrors.Count > 0)
             {
-                throw new ArgumentException(string.Join(", ", registerErrors));
+                throw new ArgumentException(string.Join(", ", registerErrors)); 
             }
 
             using (var connection = new MySqlConnection(_connectionString))
@@ -162,7 +162,7 @@ namespace AccountsService.Services
                     command.Parameters.AddWithValue("@Email", register.Email);
                     command.Parameters.AddWithValue("@PasswordHash", register.PasswordHash);
 
-                    await command.ExecuteNonQueryAsync();
+                    await command.ExecuteNonQueryAsync(); 
                 }
             }
         }
@@ -172,7 +172,7 @@ namespace AccountsService.Services
             var resetPasswordErrors = await _resetPasswordValidator.ValidateAsync(email);
             if (resetPasswordErrors.Count > 0)
             {
-                return string.Join(", ", resetPasswordErrors);
+                return string.Join(", ", resetPasswordErrors); 
             }
 
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -193,23 +193,20 @@ namespace AccountsService.Services
                     int rowsAffected = await updateCommand.ExecuteNonQueryAsync();
                     if (rowsAffected <= 0)
                     {
-                        return "Не удалось сбросить пароль.";
+                        return "Не удалось сбросить пароль."; 
                     }
                 }
 
                 try
                 {
                     await SendEmailAsync(email, $"Hi, your new password: {newPassword}", "Reset Password");
-                    return $"Пароль отправлен на {email}. Ваш новый пароль: {newPassword}";
+                    return $"Пароль отправлен на {email}. Ваш новый пароль: {newPassword}"; 
                 }
                 catch (Exception ex)
                 {
-                    return $"Ошибка при отправке письма: {ex.Message}";
+                    return $"Ошибка при отправке письма: {ex.Message}"; 
                 }
             }
         }
-
-
-
     }
 }
