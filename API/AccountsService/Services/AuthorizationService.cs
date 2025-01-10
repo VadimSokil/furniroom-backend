@@ -5,7 +5,6 @@ using System.Net;
 using MySql.Data.MySqlClient;
 using System.Security.Cryptography;
 using System.Text;
-using AccountsService.Validators.Authorization;
 
 namespace AccountsService.Services
 {
