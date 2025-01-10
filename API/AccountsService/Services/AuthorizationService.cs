@@ -69,7 +69,7 @@ namespace AccountsService.Services
             {
                 await connection.OpenAsync();
 
-                using (var command = new MySqlCommand(_requests["EmailCheck"], connection))
+                using (var command = new MySqlCommand(_requests["CheckEmail"], connection))
                 {
                     command.Parameters.AddWithValue("@Email", email);
                     var result = Convert.ToInt32(await command.ExecuteScalarAsync());
@@ -79,9 +79,8 @@ namespace AccountsService.Services
                     }
                 }
             }
-            return "Email is available"; 
+            return "Email is available";
         }
-
 
         public async Task<string> GenerateCodeAsync(string email)
         {
@@ -106,7 +105,7 @@ namespace AccountsService.Services
                     var result = await command.ExecuteScalarAsync();
                     if (result == null)
                     {
-                        return 0; 
+                        return 0;
                     }
 
                     return Convert.ToInt32(result);
@@ -114,13 +113,44 @@ namespace AccountsService.Services
             }
         }
 
-
-
         public async Task<string> RegisterAsync(RegisterModel register)
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
+
+                using (var checkIdCommand = new MySqlCommand(_requests["CheckAccountId"], connection))
+                {
+                    checkIdCommand.Parameters.AddWithValue("@AccountId", register.AccountId);
+                    var idExists = Convert.ToInt32(await checkIdCommand.ExecuteScalarAsync()) > 0;
+
+                    if (idExists)
+                    {
+                        return "AccountId is already taken.";
+                    }
+                }
+
+                using (var checkEmailCommand = new MySqlCommand(_requests["CheckEmail"], connection))
+                {
+                    checkEmailCommand.Parameters.AddWithValue("@Email", register.Email);
+                    var emailExists = Convert.ToInt32(await checkEmailCommand.ExecuteScalarAsync()) > 0;
+
+                    if (emailExists)
+                    {
+                        return "Email is already taken.";
+                    }
+                }
+
+                using (var checkNameCommand = new MySqlCommand(_requests["CheckAccountName"], connection))
+                {
+                    checkNameCommand.Parameters.AddWithValue("@AccountName", register.AccountName);
+                    var nameExists = Convert.ToInt32(await checkNameCommand.ExecuteScalarAsync()) > 0;
+
+                    if (nameExists)
+                    {
+                        return "AccountName is already taken.";
+                    }
+                }
 
                 using (var command = new MySqlCommand(_requests["AddNewUser"], connection))
                 {
@@ -136,25 +166,35 @@ namespace AccountsService.Services
             return "Account successfully added";
         }
 
-
         public async Task<string> ResetPasswordAsync(string email)
         {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            string newPassword = new string(Enumerable.Repeat(chars, 8)
-                .Select(s => s[Random.Shared.Next(s.Length)]).ToArray());
-
-            string hashedPassword = HashPasswordWithMD5(newPassword);
-
             using (var connection = new MySqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
+
+                using (var checkEmailCommand = new MySqlCommand(_requests["CheckEmail"], connection))
+                {
+                    checkEmailCommand.Parameters.AddWithValue("@Email", email);
+                    var emailExists = Convert.ToInt32(await checkEmailCommand.ExecuteScalarAsync()) > 0;
+
+                    if (!emailExists)
+                    {
+                        return "Email does not exist in the database.";
+                    }
+                }
+
+                const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                string newPassword = new string(Enumerable.Repeat(chars, 8)
+                    .Select(s => s[Random.Shared.Next(s.Length)]).ToArray());
+
+                string hashedPassword = HashPasswordWithMD5(newPassword);
 
                 using (var updateCommand = new MySqlCommand(_requests["ResetPassword"], connection))
                 {
                     updateCommand.Parameters.AddWithValue("@Email", email);
                     updateCommand.Parameters.AddWithValue("@PasswordHash", hashedPassword);
 
-                    int rowsAffected = await updateCommand.ExecuteNonQueryAsync();
+                    await updateCommand.ExecuteNonQueryAsync();
                 }
 
                 await SendEmailAsync(email, $"Hi, your new password: {newPassword}", "Reset Password");

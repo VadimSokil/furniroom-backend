@@ -11,12 +11,17 @@ namespace AccountsService.Controllers
     public class AuthorizationController : ControllerBase
     {
         private readonly IAuthorizationService _authorizationService;
-        private readonly EmailModelValidator _emailValidator; 
+
+        private readonly EmailModelValidator _emailValidator;
+        private readonly RegisterModelValidator _registerValidator;
+        private readonly LoginModelValidator _loginValidator;
 
         public AuthorizationController(IAuthorizationService authorizationService)
         {
             _authorizationService = authorizationService;
-            _emailValidator = new EmailModelValidator(); 
+            _emailValidator = new EmailModelValidator();
+            _registerValidator = new RegisterModelValidator();
+            _loginValidator = new LoginModelValidator();
         }
 
         [HttpGet("check-email")]
@@ -59,19 +64,19 @@ namespace AccountsService.Controllers
             }
         }
 
-        [HttpGet("reset-password")]
-        public async Task<ActionResult> ResetPassword([FromQuery] string Email)
+        [HttpPost("reset-password")]
+        public async Task<ActionResult> ResetPassword([FromQuery] string email)
         {
-            var validationResult = _emailValidator.Validate(Email);
-            if (!validationResult.IsValid)
+            var resultMessage = await _authorizationService.ResetPasswordAsync(email);
+
+            if (resultMessage == "Email does not exist in the database.")
             {
-                return BadRequest(new { errors = validationResult.Errors });
+                return BadRequest(new { errors = resultMessage }); 
             }
 
             try
             {
-                var result = await _authorizationService.ResetPasswordAsync(Email); 
-                return Ok(new { message = result });
+                return Ok(new { message = resultMessage });
             }
             catch (MySqlException ex)
             {
@@ -82,10 +87,15 @@ namespace AccountsService.Controllers
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] RegisterModel register)
         {
+            var resultMessage = await _authorizationService.RegisterAsync(register);
+            if (!resultMessage.StartsWith("Account successfully added"))
+            {
+                return BadRequest(new { errors = resultMessage });
+            }
+
             try
             {
-                var result = await _authorizationService.RegisterAsync(register);
-                return Ok(new { message = result });
+                return Ok(new { message = resultMessage });
             }
             catch (MySqlException ex)
             {
@@ -96,6 +106,12 @@ namespace AccountsService.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> Login([FromBody] LoginModel login)
         {
+            var validationResult = _loginValidator.Validate(login);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(new { errors = validationResult.Errors });
+            }
+
             try
             {
                 var accountId = await _authorizationService.LoginAsync(login);
