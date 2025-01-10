@@ -1,7 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using AccountsService.Interfaces;
 using AccountsService.Models.Request;
-using AccountsService.Validators.Request;
 
 namespace AccountsService.Services
 {
@@ -9,26 +8,15 @@ namespace AccountsService.Services
     {
         private readonly string _connectionString;
         private readonly Dictionary<string, string> _requests;
-        private readonly OrderValidator _orderValidator;
-        private readonly QuestionValidator _questionValidator;
 
         public RequestService(string connectionString, Dictionary<string, string> requests)
         {
             _connectionString = connectionString;
             _requests = requests;
-
-            _orderValidator = new OrderValidator(connectionString, requests);
-            _questionValidator = new QuestionValidator(connectionString, requests);
         }
 
         public async Task AddOrderAsync(OrderModel order)
         {
-            var orderErrors = _orderValidator.Validate(order);
-            if (orderErrors.Count > 0)
-            {
-                throw new ArgumentException($"Ошибка валидации заказа: {string.Join(", ", orderErrors)}");
-            }
-
             using (var connection = new MySqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
@@ -57,12 +45,6 @@ namespace AccountsService.Services
 
         public async Task AddQuestionAsync(QuestionModel question)
         {
-            var questionErrors = _questionValidator.Validate(question);
-            if (questionErrors.Count > 0)
-            {
-                throw new ArgumentException($"Ошибка валидации вопроса: {string.Join(", ", questionErrors)}");
-            }
-
             using (var connection = new MySqlConnection(_connectionString))
             {
                 await connection.OpenAsync();

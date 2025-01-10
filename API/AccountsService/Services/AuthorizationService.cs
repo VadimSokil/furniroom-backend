@@ -15,10 +15,6 @@ namespace AccountsService.Services
         private readonly string _serviceEmail;
         private readonly string _servicePassword;
         private readonly Dictionary<string, string> _requests;
-        private readonly RegisterValidator _registerValidator;
-        private readonly LoginValidator _loginValidator;
-        private readonly EmailValidator _emailValidator;
-        private readonly ResetPasswordValidator _resetPasswordValidator;
 
         public AuthorizationService(string connectionString, string serviceEmail, string servicePassword, Dictionary<string, string> requests)
         {
@@ -26,10 +22,6 @@ namespace AccountsService.Services
             _serviceEmail = serviceEmail;
             _servicePassword = servicePassword;
             _requests = requests;
-            _registerValidator = new RegisterValidator(connectionString, requests);
-            _loginValidator = new LoginValidator(connectionString, requests);
-            _emailValidator = new EmailValidator();
-            _resetPasswordValidator = new ResetPasswordValidator(connectionString, requests);
         }
 
         private const string SmtpHost = "smtp.gmail.com";
@@ -74,12 +66,6 @@ namespace AccountsService.Services
 
         public async Task<string> CheckEmailAsync(string email)
         {
-            var emailErrors = new EmailValidator().Validate(email);
-            if (emailErrors.Count > 0)
-            {
-                return string.Join(", ", emailErrors);
-            }
-
             using (var connection = new MySqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
@@ -100,12 +86,6 @@ namespace AccountsService.Services
 
         public async Task<string> GenerateCodeAsync(string email)
         {
-            var emailErrors = new EmailValidator().Validate(email);
-            if (emailErrors.Count > 0)
-            {
-                return string.Join(", ", emailErrors);
-            }
-
             int verificationCode = Random.Shared.Next(1000, 9999);
 
             try
@@ -122,12 +102,6 @@ namespace AccountsService.Services
 
         public async Task<(string message, string userId)> LoginAsync(LoginModel login)
         {
-            var loginErrors = _loginValidator.Validate(login);
-            if (loginErrors.Count > 0)
-            {
-                return (null, string.Join(", ", loginErrors));
-            }
-
             using (var connection = new MySqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
@@ -152,12 +126,6 @@ namespace AccountsService.Services
 
         public async Task RegisterAsync(RegisterModel register)
         {
-            var registerErrors = _registerValidator.Validate(register);
-            if (registerErrors.Count > 0)
-            {
-                throw new ArgumentException(string.Join(", ", registerErrors));
-            }
-
             using (var connection = new MySqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
@@ -176,13 +144,6 @@ namespace AccountsService.Services
 
         public async Task<string> ResetPasswordAsync(string email)
         {
-            var resetPasswordErrors = await _resetPasswordValidator.ValidateAsync(email);
-
-            if (resetPasswordErrors.Count > 0)
-            {
-                return string.Join(", ", resetPasswordErrors);
-            }
-
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             string newPassword = new string(Enumerable.Repeat(chars, 8)
                 .Select(s => s[Random.Shared.Next(s.Length)]).ToArray());
