@@ -138,10 +138,16 @@ namespace AccountsService.Services
                     command.Parameters.AddWithValue("@PasswordHash", login.PasswordHash);
 
                     var result = await command.ExecuteScalarAsync();
-                    return result?.ToString();
+                    if (result == null)
+                    {
+                        return "Неверный логин или пароль.";
+                    }
+
+                    return result.ToString();
                 }
             }
         }
+
 
         public async Task RegisterAsync(RegisterModel register)
         {
@@ -171,10 +177,9 @@ namespace AccountsService.Services
         {
             var resetPasswordErrors = await _resetPasswordValidator.ValidateAsync(email);
 
-            // Проверяем на наличие ошибок валидации и возвращаем их
             if (resetPasswordErrors.Count > 0)
             {
-                return string.Join(", ", resetPasswordErrors); // Возвращаем ошибки в виде строки
+                return string.Join(", ", resetPasswordErrors);
             }
 
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
