@@ -17,7 +17,7 @@ namespace AccountsService.Controllers
         }
 
         [HttpGet("generate-code")]
-        public async Task<IActionResult> GenerateCode([FromBody] string email)
+        public async Task<IActionResult> GenerateCode([FromQuery] string email) 
         {
             try
             {
@@ -39,7 +39,7 @@ namespace AccountsService.Controllers
         }
 
         [HttpGet("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] string email)
+        public async Task<IActionResult> ResetPassword([FromQuery] string email)
         {
             try
             {
