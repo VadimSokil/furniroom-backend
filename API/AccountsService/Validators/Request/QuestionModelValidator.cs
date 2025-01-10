@@ -5,27 +5,27 @@ namespace AccountsService.Validators.Request
 {
     public class QuestionModelValidator : AbstractValidator<QuestionModel>
     {
-        public QuestionModelValidator() 
+        public QuestionModelValidator()
         {
             RuleFor(x => x.QuestionId)
-                .NotEmpty().WithMessage("QuestionId не может быть пустым.")
-                .GreaterThan(0).WithMessage("QuestionId должен быть положительным числом.");
+                .NotEmpty().WithMessage("QuestionId cannot be empty.")
+                .GreaterThan(0).WithMessage("QuestionId must be a positive number.");
 
             RuleFor(x => x.QuestionDate)
-                .NotEmpty().WithMessage("QuestionDate не может быть пустым.")
-                .MaximumLength(20).WithMessage("QuestionDate не может превышать 20 символов.");
+                .NotEmpty().WithMessage("QuestionDate cannot be empty.")
+                .MaximumLength(20).WithMessage("QuestionDate cannot exceed 20 characters.");
 
             RuleFor(x => x.UserName)
-                .NotEmpty().WithMessage("UserName не может быть пустым.")
-                .MaximumLength(255).WithMessage("UserName не может превышать 255 символов.");
+                .NotEmpty().WithMessage("UserName cannot be empty.")
+                .MaximumLength(255).WithMessage("UserName cannot exceed 255 characters.");
 
             RuleFor(x => x.PhoneNumber)
-                .NotEmpty().WithMessage("PhoneNumber не может быть пустым.")
-                .MaximumLength(20).WithMessage("PhoneNumber не может превышать 20 символов.");
+                .NotEmpty().WithMessage("PhoneNumber cannot be empty.")
+                .MaximumLength(20).WithMessage("PhoneNumber cannot exceed 20 characters.");
 
             RuleFor(x => x.QuestionText)
-                .NotEmpty().WithMessage("QuestionText не может быть пустым.")
-                .MaximumLength(20000).WithMessage("QuestionText не может превышать 20000 символов.");
+                .NotEmpty().WithMessage("QuestionText cannot be empty.")
+                .MaximumLength(20000).WithMessage("QuestionText cannot exceed 20000 characters.");
         }
     }
 }

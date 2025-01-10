@@ -75,11 +75,11 @@ namespace AccountsService.Services
                     var result = Convert.ToInt32(await command.ExecuteScalarAsync());
                     if (result > 0)
                     {
-                        return "Почта занята.";
+                        return "Email is already taken";
                     }
                 }
             }
-            return "Почта свободна."; 
+            return "Email is available"; 
         }
 
 
@@ -89,7 +89,7 @@ namespace AccountsService.Services
 
             string messageBody = $"Hi, your verification code: {verificationCode}";
             await SendEmailAsync(email, messageBody, "Verification code");
-            return $"Код отправлен на {email}. Ваш код: {verificationCode}";
+            return $"{verificationCode}";
         }
 
         public async Task<int> LoginAsync(LoginModel login)
@@ -133,7 +133,7 @@ namespace AccountsService.Services
                 }
             }
 
-            return "Аккаунт успешно добавлен.";
+            return "Account successfully added";
         }
 
 
@@ -155,14 +155,10 @@ namespace AccountsService.Services
                     updateCommand.Parameters.AddWithValue("@PasswordHash", hashedPassword);
 
                     int rowsAffected = await updateCommand.ExecuteNonQueryAsync();
-                    if (rowsAffected <= 0)
-                    {
-                        return "Не удалось сбросить пароль.";
-                    }
                 }
 
                 await SendEmailAsync(email, $"Hi, your new password: {newPassword}", "Reset Password");
-                return $"Пароль отправлен на {email}. Ваш новый пароль: {newPassword}";
+                return $"{newPassword}";
             }
         }
     }

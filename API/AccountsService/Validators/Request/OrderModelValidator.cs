@@ -8,48 +8,48 @@ namespace AccountsService.Validators.Request
         public OrderModelValidator()
         {
             RuleFor(x => x.OrderId)
-                .NotEmpty().WithMessage("OrderId не может быть пустым.")
-                .GreaterThan(0).WithMessage("OrderId должен быть положительным числом.");
+                .NotEmpty().WithMessage("OrderId cannot be empty.")
+                .GreaterThan(0).WithMessage("OrderId must be a positive number.");
 
             RuleFor(x => x.OrderDate)
-                .NotEmpty().WithMessage("OrderDate не может быть пустым.")
-                .MaximumLength(20).WithMessage("OrderDate не может превышать 20 символов.");
+                .NotEmpty().WithMessage("OrderDate cannot be empty.")
+                .MaximumLength(20).WithMessage("OrderDate cannot exceed 20 characters.");
 
             RuleFor(x => x.AccountId)
-                .NotEmpty().WithMessage("AccountId не может быть пустым.")
-                .GreaterThan(0).WithMessage("AccountId должен быть положительным числом.");
+                .NotEmpty().WithMessage("AccountId cannot be empty.")
+                .GreaterThan(0).WithMessage("AccountId must be a positive number.");
 
             RuleFor(x => x.PhoneNumber)
-                .NotEmpty().WithMessage("PhoneNumber не может быть пустым.")
-                .MaximumLength(20).WithMessage("PhoneNumber не может превышать 20 символов.");
+                .NotEmpty().WithMessage("PhoneNumber cannot be empty.")
+                .MaximumLength(20).WithMessage("PhoneNumber cannot exceed 20 characters.");
 
             RuleFor(x => x.Country)
-                .NotEmpty().WithMessage("Country не может быть пустым.")
-                .MaximumLength(500).WithMessage("Country не может превышать 500 символов.");
+                .NotEmpty().WithMessage("Country cannot be empty.")
+                .MaximumLength(500).WithMessage("Country cannot exceed 500 characters.");
 
             RuleFor(x => x.Region)
-                .NotEmpty().WithMessage("Region не может быть пустым.")
-                .MaximumLength(500).WithMessage("Region не может превышать 500 символов.");
+                .NotEmpty().WithMessage("Region cannot be empty.")
+                .MaximumLength(500).WithMessage("Region cannot exceed 500 characters.");
 
             RuleFor(x => x.District)
-                .NotEmpty().WithMessage("District не может быть пустым.")
-                .MaximumLength(500).WithMessage("District не может превышать 500 символов.");
+                .NotEmpty().WithMessage("District cannot be empty.")
+                .MaximumLength(500).WithMessage("District cannot exceed 500 characters.");
 
             RuleFor(x => x.Street)
-                .NotEmpty().WithMessage("Street не может быть пустым.")
-                .MaximumLength(500).WithMessage("Street не может превышать 500 символов.");
+                .NotEmpty().WithMessage("Street cannot be empty.")
+                .MaximumLength(500).WithMessage("Street cannot exceed 500 characters.");
 
             RuleFor(x => x.HouseNumber)
-                .NotEmpty().WithMessage("HouseNumber не может быть пустым.")
-                .MaximumLength(10).WithMessage("HouseNumber не может превышать 10 символов.");
+                .NotEmpty().WithMessage("HouseNumber cannot be empty.")
+                .MaximumLength(10).WithMessage("HouseNumber cannot exceed 10 characters.");
 
             RuleFor(x => x.OrderText)
-                .NotEmpty().WithMessage("OrderText не может быть пустым.")
-                .MaximumLength(20000).WithMessage("OrderText не может превышать 20000 символов.");
+                .NotEmpty().WithMessage("OrderText cannot be empty.")
+                .MaximumLength(20000).WithMessage("OrderText cannot exceed 20000 characters.");
 
             RuleFor(x => x.DeliveryType)
-                .NotEmpty().WithMessage("DeliveryType не может быть пустым.")
-                .MaximumLength(10).WithMessage("DeliveryType не может превышать 10 символов.");
+                .NotEmpty().WithMessage("DeliveryType cannot be empty.")
+                .MaximumLength(10).WithMessage("DeliveryType cannot exceed 10 characters.");
         }
     }
 }

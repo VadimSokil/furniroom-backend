@@ -27,7 +27,7 @@ namespace AccountsService.Controllers
                     id = order.OrderId
                 }, new
                 {
-                    message = "Заказ успешно добавлен."
+                    message = "Order successfully added"
                 });
             }
             catch (MySqlException ex)
@@ -50,7 +50,7 @@ namespace AccountsService.Controllers
                     id = question.QuestionId
                 }, new
                 {
-                    message = "Вопрос успешно добавлен."
+                    message = "Question successfully added"
                 });
             }
             catch (MySqlException ex)

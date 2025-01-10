@@ -20,9 +20,9 @@ namespace AccountsService.Controllers
         }
 
         [HttpGet("check-email")]
-        public async Task<ActionResult> CheckEmail([FromQuery(Name = "email")] string email)
+        public async Task<ActionResult> CheckEmail([FromQuery(Name = "email")] string Email)
         {
-            var validationResult = _emailValidator.Validate(email);
+            var validationResult = _emailValidator.Validate(Email);
             if (!validationResult.IsValid)
             {
                 return BadRequest(new { errors = validationResult.Errors });
@@ -30,7 +30,7 @@ namespace AccountsService.Controllers
 
             try
             {
-                var result = await _authorizationService.CheckEmailAsync(email); 
+                var result = await _authorizationService.CheckEmailAsync(Email); 
                 return Ok(new { message = result });
             }
             catch (MySqlException ex)
@@ -40,9 +40,9 @@ namespace AccountsService.Controllers
         }
 
         [HttpGet("generate-code")]
-        public async Task<ActionResult> GenerateCode([FromQuery(Name = "email")] string email)
+        public async Task<ActionResult> GenerateCode([FromQuery(Name = "email")] string Email)
         {
-            var validationResult = _emailValidator.Validate(email);
+            var validationResult = _emailValidator.Validate(Email);
             if (!validationResult.IsValid)
             {
                 return BadRequest(new { errors = validationResult.Errors });
@@ -50,7 +50,7 @@ namespace AccountsService.Controllers
 
             try
             {
-                var code = await _authorizationService.GenerateCodeAsync(email); 
+                var code = await _authorizationService.GenerateCodeAsync(Email); 
                 return Ok(new { code });
             }
             catch (MySqlException ex)
@@ -60,9 +60,9 @@ namespace AccountsService.Controllers
         }
 
         [HttpGet("reset-password")]
-        public async Task<ActionResult> ResetPassword([FromQuery(Name = "email")] string email)
+        public async Task<ActionResult> ResetPassword([FromQuery(Name = "email")] string Email)
         {
-            var validationResult = _emailValidator.Validate(email);
+            var validationResult = _emailValidator.Validate(Email);
             if (!validationResult.IsValid)
             {
                 return BadRequest(new { errors = validationResult.Errors });
@@ -70,7 +70,7 @@ namespace AccountsService.Controllers
 
             try
             {
-                var result = await _authorizationService.ResetPasswordAsync(email); 
+                var result = await _authorizationService.ResetPasswordAsync(Email); 
                 return Ok(new { message = result });
             }
             catch (MySqlException ex)

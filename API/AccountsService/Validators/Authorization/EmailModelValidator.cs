@@ -7,9 +7,8 @@ namespace AccountsService.Validators.Authorization
         public EmailModelValidator() 
         {
             RuleFor(x => x)
-                .NotEmpty().WithMessage("Email не может быть пустым.")
-                .MaximumLength(100).WithMessage("Email не может превышать 100 символов.")
-                .EmailAddress().WithMessage("Некорректный формат электронной почты.");
+                .MaximumLength(100).WithMessage("Email cannot exceed 100 characters")
+                .EmailAddress().WithMessage("Invalid email format");
         }
     }
 }

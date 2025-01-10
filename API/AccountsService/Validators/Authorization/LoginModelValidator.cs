@@ -5,16 +5,16 @@ namespace AccountsService.Validators.Authorization
 {
     public class LoginModelValidator : AbstractValidator<LoginModel>
     {
-        public LoginModelValidator() 
+        public LoginModelValidator()
         {
             RuleFor(x => x.Email)
-                .NotEmpty().WithMessage("Email не может быть пустым.")
-                .MaximumLength(100).WithMessage("Email не может превышать 100 символов.")
-                .EmailAddress().WithMessage("Некорректный формат электронной почты.");
+                .NotEmpty().WithMessage("Email cannot be empty.")
+                .MaximumLength(100).WithMessage("Email cannot exceed 100 characters.")
+                .EmailAddress().WithMessage("Invalid email format.");
 
             RuleFor(x => x.PasswordHash)
-                .NotEmpty().WithMessage("PasswordHash не может быть пустым.")
-                .MaximumLength(500).WithMessage("PasswordHash не может превышать 500 символов.");
+                .NotEmpty().WithMessage("PasswordHash cannot be empty.")
+                .MaximumLength(500).WithMessage("PasswordHash cannot exceed 500 characters.");
         }
     }
 }
