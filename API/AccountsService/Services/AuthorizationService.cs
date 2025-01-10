@@ -63,43 +63,40 @@ namespace AccountsService.Services
             }
         }
 
-        public async Task<string> CheckEmailAsync(string email)
+        public async Task<string> CheckEmailAsync(EmailModel email)
         {
+            var emailAddress = email.Email;
+
             using (var connection = new MySqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
                 using (var command = new MySqlCommand(_requests["EmailCheck"], connection))
                 {
-                    command.Parameters.AddWithValue("@Email", email);
+                    command.Parameters.AddWithValue("@Email", emailAddress);
                     var result = Convert.ToInt32(await command.ExecuteScalarAsync());
                     if (result > 0)
                     {
-                        return "Пользователь с указанным Email уже существует.";
+                        return "Почта занята.";
                     }
                 }
             }
-
-            return null;
+            return "Почта свободна."; 
         }
 
-        public async Task<string> GenerateCodeAsync(string email)
+
+        public async Task<string> GenerateCodeAsync(EmailModel email)
         {
+            var emailAddress = email.Email;
+
             int verificationCode = Random.Shared.Next(1000, 9999);
 
-            try
-            {
-                string messageBody = $"Hi, your verification code: {verificationCode}";
-                await SendEmailAsync(email, messageBody, "Verification code");
-                return $"Код отправлен на {email}. Ваш код: {verificationCode}";
-            }
-            catch (Exception ex)
-            {
-                return $"Ошибка при отправке письма: {ex.Message}";
-            }
+            string messageBody = $"Hi, your verification code: {verificationCode}";
+            await SendEmailAsync(emailAddress, messageBody, "Verification code");
+            return $"Код отправлен на {emailAddress}. Ваш код: {verificationCode}";
         }
 
-        public async Task<(string message, string userId)> LoginAsync(LoginModel login)
+        public async Task<int> LoginAsync(LoginModel login)
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -113,17 +110,17 @@ namespace AccountsService.Services
                     var result = await command.ExecuteScalarAsync();
                     if (result == null)
                     {
-                        return (null, "Неверный логин или пароль."); 
+                        return 0; 
                     }
 
-                    return (result.ToString(), "Вход выполнен успешно."); 
+                    return Convert.ToInt32(result);
                 }
             }
         }
 
 
 
-        public async Task RegisterAsync(RegisterModel register)
+        public async Task<string> RegisterAsync(RegisterModel register)
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -139,10 +136,15 @@ namespace AccountsService.Services
                     await command.ExecuteNonQueryAsync();
                 }
             }
+
+            return "Аккаунт успешно добавлен.";
         }
 
-        public async Task<string> ResetPasswordAsync(string email)
+
+        public async Task<string> ResetPasswordAsync(EmailModel email)
         {
+            var emailAddress = email.Email;
+
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             string newPassword = new string(Enumerable.Repeat(chars, 8)
                 .Select(s => s[Random.Shared.Next(s.Length)]).ToArray());
@@ -155,7 +157,7 @@ namespace AccountsService.Services
 
                 using (var updateCommand = new MySqlCommand(_requests["ResetPassword"], connection))
                 {
-                    updateCommand.Parameters.AddWithValue("@Email", email);
+                    updateCommand.Parameters.AddWithValue("@Email", emailAddress);
                     updateCommand.Parameters.AddWithValue("@PasswordHash", hashedPassword);
 
                     int rowsAffected = await updateCommand.ExecuteNonQueryAsync();
@@ -165,15 +167,8 @@ namespace AccountsService.Services
                     }
                 }
 
-                try
-                {
-                    await SendEmailAsync(email, $"Hi, your new password: {newPassword}", "Reset Password");
-                    return $"Пароль отправлен на {email}. Ваш новый пароль: {newPassword}";
-                }
-                catch (Exception ex)
-                {
-                    return $"Ошибка при отправке письма: {ex.Message}";
-                }
+                await SendEmailAsync(emailAddress, $"Hi, your new password: {newPassword}", "Reset Password");
+                return $"Пароль отправлен на {emailAddress}. Ваш новый пароль: {newPassword}";
             }
         }
     }

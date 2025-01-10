@@ -50,46 +50,6 @@ namespace AccountsService.Validators.Request
             RuleFor(x => x.DeliveryType)
                 .NotEmpty().WithMessage("DeliveryType не может быть пустым.")
                 .MaximumLength(10).WithMessage("DeliveryType не может превышать 10 символов.");
-
-            RuleFor(x => x).Custom((model, context) =>
-            {
-                var expectedProperties = new HashSet<string>
-                {
-                    nameof(model.OrderId),
-                    nameof(model.OrderDate),
-                    nameof(model.AccountId),
-                    nameof(model.PhoneNumber),
-                    nameof(model.Country),
-                    nameof(model.Region),
-                    nameof(model.District),
-                    nameof(model.Street),
-                    nameof(model.HouseNumber),
-                    nameof(model.OrderText),
-                    nameof(model.DeliveryType)
-                };
-
-                var actualProperties = model.GetType().GetProperties()
-                    .Select(prop => prop.Name);
-
-                foreach (var property in actualProperties)
-                {
-                    if (!expectedProperties.Contains(property) &&
-                        property != nameof(model.City) &&
-                        property != nameof(model.Village) &&
-                        property != nameof(model.ApartmentNumber))
-                    {
-                        context.AddFailure($"Лишнее поле: {property}");
-                    }
-                }
-
-                foreach (var property in expectedProperties)
-                {
-                    if (!actualProperties.Contains(property))
-                    {
-                        context.AddFailure($"Отсутствует обязательное поле: {property}");
-                    }
-                }
-            });
         }
     }
 }

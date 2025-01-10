@@ -2,6 +2,7 @@ using AccountsService.Interfaces;
 using AccountsService.Services;
 using FluentValidation.AspNetCore;
 using AccountsService.Validators.Request;
+using AccountsService.Validators.Authorization;
 using FluentValidation;
 
 namespace AccountsService
@@ -44,6 +45,9 @@ namespace AccountsService
 
             builder.Services.AddValidatorsFromAssemblyContaining<OrderModelValidator>();
             builder.Services.AddValidatorsFromAssemblyContaining<QuestionModelValidator>();
+            builder.Services.AddValidatorsFromAssemblyContaining<RegisterModelValidator>();
+            builder.Services.AddValidatorsFromAssemblyContaining<LoginModelValidator>();
+            builder.Services.AddValidatorsFromAssemblyContaining<EmailModelValidator>();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

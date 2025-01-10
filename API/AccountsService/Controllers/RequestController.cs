@@ -19,27 +19,47 @@ namespace AccountsService.Controllers
         [HttpPost("add-order")]
         public async Task<ActionResult> AddOrder([FromBody] OrderModel order)
         {
-            await _requestsService.AddOrderAsync(order);
-            return CreatedAtAction(nameof(AddOrder), new
+            try
             {
-                id = order.OrderId
-            }, new
+                await _requestsService.AddOrderAsync(order);
+                return CreatedAtAction(nameof(AddOrder), new
+                {
+                    id = order.OrderId
+                }, new
+                {
+                    message = "Заказ успешно добавлен."
+                });
+            }
+            catch (MySqlException ex)
             {
-                message = "Заказ успешно добавлен."
-            });
+                return StatusCode(500, new
+                {
+                    message = "Не удалось установить связь с базой данных."
+                });
+            }
         }
 
         [HttpPost("add-question")]
         public async Task<ActionResult> AddQuestion([FromBody] QuestionModel question)
         {
-            await _requestsService.AddQuestionAsync(question);
-            return CreatedAtAction(nameof(AddQuestion), new
+            try
             {
-                id = question.QuestionId
-            }, new
+                await _requestsService.AddQuestionAsync(question);
+                return CreatedAtAction(nameof(AddQuestion), new
+                {
+                    id = question.QuestionId
+                }, new
+                {
+                    message = "Вопрос успешно добавлен."
+                });
+            }
+            catch (MySqlException ex)
             {
-                message = "Вопрос успешно добавлен."
-            });
+                return StatusCode(500, new
+                {
+                    message = "Не удалось установить связь с базой данных."
+                });
+            }
         }
     }
 }

@@ -26,37 +26,6 @@ namespace AccountsService.Validators.Request
             RuleFor(x => x.QuestionText)
                 .NotEmpty().WithMessage("QuestionText не может быть пустым.")
                 .MaximumLength(20000).WithMessage("QuestionText не может превышать 20000 символов.");
-
-            RuleFor(x => x).Custom((model, context) =>
-            {
-                var expectedProperties = new HashSet<string>
-                {
-                    nameof(model.QuestionId),
-                    nameof(model.QuestionDate),
-                    nameof(model.UserName),
-                    nameof(model.PhoneNumber),
-                    nameof(model.QuestionText)
-                };
-
-                var actualProperties = model.GetType().GetProperties()
-                    .Select(prop => prop.Name);
-
-                foreach (var property in actualProperties)
-                {
-                    if (!expectedProperties.Contains(property))
-                    {
-                        context.AddFailure($"Лишнее поле: {property}");
-                    }
-                }
-
-                foreach (var property in expectedProperties)
-                {
-                    if (!actualProperties.Contains(property))
-                    {
-                        context.AddFailure($"Отсутствует обязательное поле: {property}");
-                    }
-                }
-            });
         }
     }
 }

@@ -16,103 +16,74 @@ namespace AccountsService.Controllers
             _authorizationService = authorizationService;
         }
 
-        [HttpGet("generate-code")]
-        public async Task<IActionResult> GenerateCode([FromQuery] string email) 
-        {
-            try
-            {
-                var result = await _authorizationService.GenerateCodeAsync(email);
-                if (result.Contains("Ошибка"))
-                {
-                    return BadRequest(new { message = result }); 
-                }
-                return Ok(new { message = result }); 
-            }
-            catch (MySqlException ex) when (ex.Number == 1042)
-            {
-                return StatusCode(503, new { message = "Соединение с базой данных отсутствует." }); 
-            }
-            
-        }
-
-        [HttpGet("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromQuery] string email)
-        {
-            try
-            {
-                var result = await _authorizationService.ResetPasswordAsync(email);
-                if (result.Contains("Ошибка"))
-                {
-                    return BadRequest(new { message = result }); 
-                }
-                return Ok(new { message = result }); 
-            }
-            catch (MySqlException ex) when (ex.Number == 1042)
-            {
-                return StatusCode(503, new { message = "Соединение с базой данных отсутствует." }); 
-            }
-            
-        }
-
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel login)
-        {
-            try
-            {
-                var (userId, message) = await _authorizationService.LoginAsync(login);
-
-                if (userId == null)
-                {
-                    return Unauthorized(new { message }); 
-                }
-
-                return Ok(new { message, userId }); 
-            }
-            catch (MySqlException ex) when (ex.Number == 1042)
-            {
-                return StatusCode(503, new { message = "Соединение с базой данных отсутствует." });
-            }
-        }
-
-
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterModel register)
-        {
-            try
-            {
-                await _authorizationService.RegisterAsync(register);
-                return Ok(new { message = "Пользователь успешно зарегистрирован." }); 
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { message = ex.Message }); 
-            }
-            catch (MySqlException ex) when (ex.Number == 1042)
-            {
-                return StatusCode(503, new { message = "Соединение с базой данных отсутствует." }); 
-            }
-            
-        }
-
         [HttpGet("check-email")]
-        public async Task<IActionResult> CheckEmail([FromQuery] string email)
+        public async Task<ActionResult> CheckEmail([FromQuery] EmailModel email)
         {
             try
             {
                 var result = await _authorizationService.CheckEmailAsync(email);
-
-                if (!string.IsNullOrEmpty(result))
-                {
-                    return BadRequest(new { message = result }); 
-                }
-
-                return Ok(new { message = "Почта свободна." }); 
+                return Ok(new { message = result });
             }
-            catch (MySqlException ex) when (ex.Number == 1042)
+            catch (MySqlException ex)
             {
-                return StatusCode(503, new { message = "Соединение с базой данных отсутствует." }); 
+                return StatusCode(500, new { message = "Не удалось установить связь с базой данных." });
             }
-            
+        }
+
+        [HttpGet("generate-code")]
+        public async Task<ActionResult> GenerateCode([FromQuery] EmailModel email)
+        {
+            try
+            {
+                var code = await _authorizationService.GenerateCodeAsync(email);
+                return Ok(new { code }); 
+            }
+            catch (MySqlException ex)
+            {
+                return StatusCode(500, new { message = "Не удалось установить связь с базой данных." });
+            }
+        }
+
+        [HttpGet("reset-password")]
+        public async Task<ActionResult> ResetPassword([FromQuery] EmailModel email)
+        {
+            try
+            {
+                var result = await _authorizationService.ResetPasswordAsync(email);
+                return Ok(new { message = result }); 
+            }
+            catch (MySqlException ex)
+            {
+                return StatusCode(500, new { message = "Не удалось установить связь с базой данных." });
+            }
+        }
+
+        [HttpPost("register")]
+        public async Task<ActionResult> Register([FromBody] RegisterModel register)
+        {
+            try
+            {
+                var result = await _authorizationService.RegisterAsync(register);
+                return Ok(new { message = result });
+            }
+            catch (MySqlException ex)
+            {
+                return StatusCode(500, new { message = "Не удалось установить связь с базой данных." });
+            }
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult> Login([FromBody] LoginModel login)
+        {
+            try
+            {
+                var result = await _authorizationService.LoginAsync(login);
+                return Ok(new { message = result });
+            }
+            catch (MySqlException ex)
+            {
+                return StatusCode(500, new { message = "Не удалось установить связь с базой данных." });
+            }
         }
     }
 }
