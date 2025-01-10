@@ -32,10 +32,7 @@ namespace AccountsService.Controllers
             {
                 return StatusCode(503, new { message = "Соединение с базой данных отсутствует." }); 
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Произошла ошибка на сервере.", details = ex.Message }); 
-            }
+            
         }
 
         [HttpGet("reset-password")]
@@ -54,10 +51,7 @@ namespace AccountsService.Controllers
             {
                 return StatusCode(503, new { message = "Соединение с базой данных отсутствует." }); 
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Произошла ошибка на сервере.", details = ex.Message }); 
-            }
+            
         }
 
         [HttpPost("login")]
@@ -77,10 +71,7 @@ namespace AccountsService.Controllers
             {
                 return StatusCode(503, new { message = "Соединение с базой данных отсутствует." }); 
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Произошла ошибка на сервере.", details = ex.Message }); 
-            }
+            
         }
 
         [HttpPost("register")]
@@ -99,10 +90,7 @@ namespace AccountsService.Controllers
             {
                 return StatusCode(503, new { message = "Соединение с базой данных отсутствует." }); 
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Произошла ошибка на сервере.", details = ex.Message }); 
-            }
+            
         }
 
         [HttpGet("check-email")]
@@ -123,10 +111,7 @@ namespace AccountsService.Controllers
             {
                 return StatusCode(503, new { message = "Соединение с базой данных отсутствует." }); 
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Произошла ошибка на сервере.", details = ex.Message }); 
-            }
+            
         }
     }
 }
