@@ -5,6 +5,7 @@ using System.Net;
 using MySql.Data.MySqlClient;
 using System.Security.Cryptography;
 using System.Text;
+using AccountsService.Validators.Authorization;
 
 namespace AccountsService.Services
 {
@@ -115,42 +116,17 @@ namespace AccountsService.Services
 
         public async Task<string> RegisterAsync(RegisterModel register)
         {
+            var validator = new RegisterModelValidator(_connectionString);
+            var validationResult = await validator.ValidateAsync(register);
+
+            if (!validationResult.IsValid)
+            {
+                return string.Join(Environment.NewLine, validationResult.Errors.Select(e => e.ErrorMessage));
+            }
+
             using (var connection = new MySqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-
-                using (var checkIdCommand = new MySqlCommand(_requests["CheckAccountId"], connection))
-                {
-                    checkIdCommand.Parameters.AddWithValue("@AccountId", register.AccountId);
-                    var idExists = Convert.ToInt32(await checkIdCommand.ExecuteScalarAsync()) > 0;
-
-                    if (idExists)
-                    {
-                        return "AccountId is already taken.";
-                    }
-                }
-
-                using (var checkEmailCommand = new MySqlCommand(_requests["CheckEmail"], connection))
-                {
-                    checkEmailCommand.Parameters.AddWithValue("@Email", register.Email);
-                    var emailExists = Convert.ToInt32(await checkEmailCommand.ExecuteScalarAsync()) > 0;
-
-                    if (emailExists)
-                    {
-                        return "Email is already taken.";
-                    }
-                }
-
-                using (var checkNameCommand = new MySqlCommand(_requests["CheckAccountName"], connection))
-                {
-                    checkNameCommand.Parameters.AddWithValue("@AccountName", register.AccountName);
-                    var nameExists = Convert.ToInt32(await checkNameCommand.ExecuteScalarAsync()) > 0;
-
-                    if (nameExists)
-                    {
-                        return "AccountName is already taken.";
-                    }
-                }
 
                 using (var command = new MySqlCommand(_requests["AddNewUser"], connection))
                 {
@@ -166,22 +142,20 @@ namespace AccountsService.Services
             return "Account successfully added";
         }
 
+
         public async Task<string> ResetPasswordAsync(string email)
         {
+            var validator = new EmailModelValidator(_connectionString);
+            var validationResult = await validator.ValidateAsync(email);
+
+            if (!validationResult.IsValid)
+            {
+                return string.Join(Environment.NewLine, validationResult.Errors.Select(e => e.ErrorMessage));
+            }
+
             using (var connection = new MySqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
-
-                using (var checkEmailCommand = new MySqlCommand(_requests["CheckEmail"], connection))
-                {
-                    checkEmailCommand.Parameters.AddWithValue("@Email", email);
-                    var emailExists = Convert.ToInt32(await checkEmailCommand.ExecuteScalarAsync()) > 0;
-
-                    if (!emailExists)
-                    {
-                        return "Email does not exist in the database.";
-                    }
-                }
 
                 const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
                 string newPassword = new string(Enumerable.Repeat(chars, 8)
@@ -201,5 +175,6 @@ namespace AccountsService.Services
                 return $"{newPassword}";
             }
         }
+
     }
 }
