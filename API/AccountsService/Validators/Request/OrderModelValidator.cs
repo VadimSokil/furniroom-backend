@@ -73,7 +73,10 @@ namespace AccountsService.Validators.Request
 
                 foreach (var property in actualProperties)
                 {
-                    if (!expectedProperties.Contains(property))
+                    if (!expectedProperties.Contains(property) &&
+                        property != nameof(model.City) &&
+                        property != nameof(model.Village) &&
+                        property != nameof(model.ApartmentNumber))
                     {
                         context.AddFailure($"Лишнее поле: {property}");
                     }
