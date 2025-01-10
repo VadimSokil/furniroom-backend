@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AccountsService.Interfaces;
-using AccountsService.Models.Authorization;
 using MySql.Data.MySqlClient;
+using AccountsService.Validators.Authorization;
+using AccountsService.Models.Authorization; 
 
 namespace AccountsService.Controllers
 {
@@ -10,18 +11,26 @@ namespace AccountsService.Controllers
     public class AuthorizationController : ControllerBase
     {
         private readonly IAuthorizationService _authorizationService;
+        private readonly EmailModelValidator _emailValidator; 
 
         public AuthorizationController(IAuthorizationService authorizationService)
         {
             _authorizationService = authorizationService;
+            _emailValidator = new EmailModelValidator(); 
         }
 
         [HttpGet("check-email")]
-        public async Task<ActionResult> CheckEmail([FromQuery] EmailModel email)
+        public async Task<ActionResult> CheckEmail([FromQuery] string email)
         {
+            var validationResult = _emailValidator.Validate(email);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(new { errors = validationResult.Errors });
+            }
+
             try
             {
-                var result = await _authorizationService.CheckEmailAsync(email);
+                var result = await _authorizationService.CheckEmailAsync(email); 
                 return Ok(new { message = result });
             }
             catch (MySqlException ex)
@@ -31,12 +40,18 @@ namespace AccountsService.Controllers
         }
 
         [HttpGet("generate-code")]
-        public async Task<ActionResult> GenerateCode([FromQuery] EmailModel email)
+        public async Task<ActionResult> GenerateCode([FromQuery] string email)
         {
+            var validationResult = _emailValidator.Validate(email);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(new { errors = validationResult.Errors });
+            }
+
             try
             {
-                var code = await _authorizationService.GenerateCodeAsync(email);
-                return Ok(new { code }); 
+                var code = await _authorizationService.GenerateCodeAsync(email); 
+                return Ok(new { code });
             }
             catch (MySqlException ex)
             {
@@ -45,12 +60,18 @@ namespace AccountsService.Controllers
         }
 
         [HttpGet("reset-password")]
-        public async Task<ActionResult> ResetPassword([FromQuery] EmailModel email)
+        public async Task<ActionResult> ResetPassword([FromQuery] string email)
         {
+            var validationResult = _emailValidator.Validate(email);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(new { errors = validationResult.Errors });
+            }
+
             try
             {
-                var result = await _authorizationService.ResetPasswordAsync(email);
-                return Ok(new { message = result }); 
+                var result = await _authorizationService.ResetPasswordAsync(email); 
+                return Ok(new { message = result });
             }
             catch (MySqlException ex)
             {
@@ -77,8 +98,8 @@ namespace AccountsService.Controllers
         {
             try
             {
-                var result = await _authorizationService.LoginAsync(login);
-                return Ok(new { message = result });
+                var accountId = await _authorizationService.LoginAsync(login);
+                return Ok(new { message = accountId });
             }
             catch (MySqlException ex)
             {

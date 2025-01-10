@@ -63,17 +63,15 @@ namespace AccountsService.Services
             }
         }
 
-        public async Task<string> CheckEmailAsync(EmailModel email)
+        public async Task<string> CheckEmailAsync(string email)
         {
-            var emailAddress = email.EmailAddress;
-
             using (var connection = new MySqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
                 using (var command = new MySqlCommand(_requests["EmailCheck"], connection))
                 {
-                    command.Parameters.AddWithValue("@Email", emailAddress);
+                    command.Parameters.AddWithValue("@Email", email);
                     var result = Convert.ToInt32(await command.ExecuteScalarAsync());
                     if (result > 0)
                     {
@@ -85,15 +83,13 @@ namespace AccountsService.Services
         }
 
 
-        public async Task<string> GenerateCodeAsync(EmailModel email)
+        public async Task<string> GenerateCodeAsync(string email)
         {
-            var emailAddress = email.EmailAddress;
-
             int verificationCode = Random.Shared.Next(1000, 9999);
 
             string messageBody = $"Hi, your verification code: {verificationCode}";
-            await SendEmailAsync(emailAddress, messageBody, "Verification code");
-            return $"Код отправлен на {emailAddress}. Ваш код: {verificationCode}";
+            await SendEmailAsync(email, messageBody, "Verification code");
+            return $"Код отправлен на {email}. Ваш код: {verificationCode}";
         }
 
         public async Task<int> LoginAsync(LoginModel login)
@@ -141,10 +137,8 @@ namespace AccountsService.Services
         }
 
 
-        public async Task<string> ResetPasswordAsync(EmailModel email)
+        public async Task<string> ResetPasswordAsync(string email)
         {
-            var emailAddress = email.EmailAddress;
-
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             string newPassword = new string(Enumerable.Repeat(chars, 8)
                 .Select(s => s[Random.Shared.Next(s.Length)]).ToArray());
@@ -157,7 +151,7 @@ namespace AccountsService.Services
 
                 using (var updateCommand = new MySqlCommand(_requests["ResetPassword"], connection))
                 {
-                    updateCommand.Parameters.AddWithValue("@Email", emailAddress);
+                    updateCommand.Parameters.AddWithValue("@Email", email);
                     updateCommand.Parameters.AddWithValue("@PasswordHash", hashedPassword);
 
                     int rowsAffected = await updateCommand.ExecuteNonQueryAsync();
@@ -167,8 +161,8 @@ namespace AccountsService.Services
                     }
                 }
 
-                await SendEmailAsync(emailAddress, $"Hi, your new password: {newPassword}", "Reset Password");
-                return $"Пароль отправлен на {emailAddress}. Ваш новый пароль: {newPassword}";
+                await SendEmailAsync(email, $"Hi, your new password: {newPassword}", "Reset Password");
+                return $"Пароль отправлен на {email}. Ваш новый пароль: {newPassword}";
             }
         }
     }
