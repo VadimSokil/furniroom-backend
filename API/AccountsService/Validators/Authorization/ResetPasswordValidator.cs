@@ -18,6 +18,12 @@ namespace AccountsService.Validators.Authorization
             var errors = new List<string>();
             var emailValidator = new EmailValidator();
 
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                errors.Add("Поле Email обязательно для заполнения."); 
+                return errors; 
+            }
+
             var emailErrors = emailValidator.Validate(email);
             errors.AddRange(emailErrors);
 

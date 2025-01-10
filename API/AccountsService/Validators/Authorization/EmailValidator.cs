@@ -10,11 +10,11 @@ namespace AccountsService.Validators.Authorization
 
             if (string.IsNullOrWhiteSpace(email))
             {
-                errors.Add("Поле Email обязательно для заполнения.");
+                errors.Add("Поле Email обязательно для заполнения."); 
             }
             else if (!IsValidEmail(email))
             {
-                errors.Add("Поле Email должно содержать корректный адрес электронной почты.");
+                errors.Add("Поле Email должно содержать корректный адрес электронной почты."); 
             }
 
             return errors;
