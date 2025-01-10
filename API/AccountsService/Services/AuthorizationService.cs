@@ -65,7 +65,7 @@ namespace AccountsService.Services
 
         public async Task<string> CheckEmailAsync(EmailModel email)
         {
-            var emailAddress = email.Email;
+            var emailAddress = email.EmailAddress;
 
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -87,7 +87,7 @@ namespace AccountsService.Services
 
         public async Task<string> GenerateCodeAsync(EmailModel email)
         {
-            var emailAddress = email.Email;
+            var emailAddress = email.EmailAddress;
 
             int verificationCode = Random.Shared.Next(1000, 9999);
 
@@ -143,7 +143,7 @@ namespace AccountsService.Services
 
         public async Task<string> ResetPasswordAsync(EmailModel email)
         {
-            var emailAddress = email.Email;
+            var emailAddress = email.EmailAddress;
 
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             string newPassword = new string(Enumerable.Repeat(chars, 8)

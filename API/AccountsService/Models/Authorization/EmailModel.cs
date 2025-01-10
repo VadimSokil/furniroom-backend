@@ -2,6 +2,6 @@
 {
     public class EmailModel
     {
-        public string Email { get; set; }
+        public string EmailAddress { get; set; }
     }
 }
