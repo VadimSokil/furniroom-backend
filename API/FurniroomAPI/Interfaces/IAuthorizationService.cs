@@ -1,13 +1,13 @@
-﻿using FurniroomAPI.Models;
+﻿using FurniroomAPI.Models.Authorization;
 
 namespace FurniroomAPI.Interfaces
 {
     public interface IAuthorizationService
     {
-        public Task CheckEmailExists(string email);
-        public Task GenerateVerificationCode(string email);
-        public Task AddNewUser(RegisterModel register);
-        public Task Login(LoginModel login);
-        public Task ResetPassword(string email);
+        public Task<string> CheckEmailAsync(string email);
+        public Task<string> GenerateCodeAsync(string email);
+        public Task<string> ResetPasswordAsync(string email);
+        public Task<string> RegisterAsync(RegisterModel register);
+        public Task<int> LoginAsync(LoginModel login);
     }
 }

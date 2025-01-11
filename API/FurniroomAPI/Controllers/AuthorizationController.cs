@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using FurniroomAPI.Models;
-using FurniroomAPI.Interfaces;
+﻿using FurniroomAPI.Interfaces;
+using FurniroomAPI.Models.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FurniroomAPI.Controllers
 {
@@ -9,44 +9,45 @@ namespace FurniroomAPI.Controllers
     public class AuthorizationController : ControllerBase
     {
         private readonly IAuthorizationService _authorizationService;
+
         public AuthorizationController(IAuthorizationService authorizationService)
         {
             _authorizationService = authorizationService;
         }
 
-        [HttpPost("add-user")]
-        public async Task<IActionResult> AddNewUser([FromBody] RegisterModel register)
-        {
-            await _authorizationService.AddNewUser(register);
-            return Ok();
-        }
-
         [HttpPost("check-email")]
-        public async Task<IActionResult> CheckEmail([FromBody] string email)
+        public async Task<ActionResult<string>> CheckEmail([FromBody] string email)
         {
-            await _authorizationService.CheckEmailExists(email);
-            return Ok();
+            var result = await _authorizationService.CheckEmailAsync(email);
+            return Ok(result);
         }
 
         [HttpPost("generate-code")]
-        public async Task<IActionResult> GenerateCode([FromBody] string email)
+        public async Task<ActionResult<string>> GenerateCode([FromBody] string email)
         {
-            await _authorizationService.GenerateVerificationCode(email);
-            return Ok();
-        }
-
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel login)
-        {
-            await _authorizationService.Login(login);
-            return Ok();
+            var result = await _authorizationService.GenerateCodeAsync(email);
+            return Ok(result);
         }
 
         [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] string email)
+        public async Task<ActionResult<string>> ResetPassword([FromBody] string email)
         {
-            await _authorizationService.ResetPassword(email);
-            return Ok();
+            var result = await _authorizationService.ResetPasswordAsync(email);
+            return Ok(result);
+        }
+
+        [HttpPost("register")]
+        public async Task<ActionResult<string>> Register([FromBody] RegisterModel register)
+        {
+            var result = await _authorizationService.RegisterAsync(register);
+            return Ok(result);
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<int>> Login([FromBody] LoginModel login)
+        {
+            var result = await _authorizationService.LoginAsync(login);
+            return Ok(result);
         }
     }
 }

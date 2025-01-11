@@ -1,7 +1,7 @@
 ﻿using FurniroomAPI.Interfaces;
-using FurniroomAPI.Models;
-using Newtonsoft.Json;
+using FurniroomAPI.Models.Authorization;
 using System.Text;
+using System.Text.Json;
 
 namespace FurniroomAPI.Services
 {
@@ -16,49 +16,51 @@ namespace FurniroomAPI.Services
             _endpointURL = endpointURL;
         }
 
-        public async Task AddNewUser(RegisterModel register)
+        public async Task<string> CheckEmailAsync(string email)
         {
-            var addUserEndpoint = _endpointURL["AddUser"];
-            var jsonContent = JsonConvert.SerializeObject(register);
+            var endpoint = _endpointURL["CheckEmail"];
+            var jsonContent = JsonSerializer.Serialize(email);
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(addUserEndpoint, content);
-            response.EnsureSuccessStatusCode();
+            var response = await _httpClient.PostAsync(endpoint, content);
+            return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task CheckEmailExists(string email)
+        public async Task<string> GenerateCodeAsync(string email)
         {
-            var checkEmailEndpoint = _endpointURL["checkEmail"];
-            var jsonContent = JsonConvert.SerializeObject(email);
+            var endpoint = _endpointURL["GenerateCode"];
+            var jsonContent = JsonSerializer.Serialize(email);
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(checkEmailEndpoint, content);
-            response.EnsureSuccessStatusCode();
+            var response = await _httpClient.PostAsync(endpoint, content);
+            return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task GenerateVerificationCode(string email)
+        public async Task<int> LoginAsync(LoginModel login)
         {
-            var generateCodeEndpoint = _endpointURL["generateCode"];
-            var jsonContent = JsonConvert.SerializeObject(email);
-            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(generateCodeEndpoint, content);
-            response.EnsureSuccessStatusCode();
+            var endpoint = _endpointURL["Login"]; 
+            var jsonContent = JsonSerializer.Serialize(login); 
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json"); 
+
+            var response = await _httpClient.PostAsync(endpoint, content); 
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return int.Parse(responseBody);
         }
 
-        public async Task Login(LoginModel login)
+        public async Task<string> RegisterAsync(RegisterModel register)
         {
-            var loginEndpoint = _endpointURL["Login"];
-            var jsonContent = JsonConvert.SerializeObject(login);
+            var endpoint = _endpointURL["Register"];
+            var jsonContent = JsonSerializer.Serialize(register);
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(loginEndpoint, content);
-            response.EnsureSuccessStatusCode();
+            var response = await _httpClient.PostAsync(endpoint, content);
+            return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task ResetPassword(string email)
+        public async Task<string> ResetPasswordAsync(string email)
         {
-            var resetPasswordEndpoint = _endpointURL["resetPassword"];
-            var jsonContent = JsonConvert.SerializeObject(email);
+            var endpoint = _endpointURL["ResetPassword"];
+            var jsonContent = JsonSerializer.Serialize(email);
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(resetPasswordEndpoint, content);
-            response.EnsureSuccessStatusCode();
+            var response = await _httpClient.PostAsync(endpoint, content);
+            return await response.Content.ReadAsStringAsync();
         }
     }
 }

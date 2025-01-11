@@ -7,63 +7,46 @@ namespace FurniroomAPI.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly ICategoryService _categoryService;
-        private readonly ISubcategoryService _subcategoryService;
-        private readonly IProductService _productService;
-        private readonly IProductSubcategoryService _productSubcategoryService;
-        private readonly IProductGalleryService _productGalleryService;
-        private readonly IProductDrawingsService _productDrawingsService;
+        private readonly IProductsService _productsService;
 
-        public ProductsController(ICategoryService categoryService, ISubcategoryService subcategoryService, IProductService productService, IProductSubcategoryService productSubcategoryService, IProductGalleryService productGalleryService, IProductDrawingsService productDrawingsService)
+        public ProductsController(IProductsService productsService)
         {
-            _categoryService = categoryService;
-            _subcategoryService = subcategoryService;
-            _productService = productService;
-            _productSubcategoryService = productSubcategoryService;
-            _productGalleryService = productGalleryService;
-            _productDrawingsService = productDrawingsService;
+            _productsService = productsService;
         }
 
-        [HttpGet("categories")]
-        public async Task<IActionResult> GetCategories()
+        [HttpGet("categories-list")]
+        public async Task<ActionResult<string>> GetCategories()
         {
-            var categories = await _categoryService.GetAllCategories();
-            return Ok(categories);
+            var result = await _productsService.GetAllCategoriesAsync();
+            return Ok(result);
         }
 
-        [HttpGet("subcategories")]
-        public async Task<IActionResult> GetSubcategories()
+        [HttpGet("subcategories-list")]
+        public async Task<ActionResult<string>> GetSubcategories()
         {
-            var subcategories = await _subcategoryService.GetAllSubcategories();
-            return Ok(subcategories);
+            var result = await _productsService.GetAllSubcategoriesAsync();
+            return Ok(result);
         }
 
-        [HttpGet("products")]
-        public async Task<IActionResult> GetAllProducts()
+        [HttpGet("products-list")]
+        public async Task<ActionResult<string>> GetProducts()
         {
-            var products = await _productService.GetAllProducts();
-            return Ok(products);
+            var result = await _productsService.GetAllProductsAsync();
+            return Ok(result);
         }
 
-        [HttpGet("product-subcategories")]
-        public async Task<IActionResult> GetAllProductSubcategory()
+        [HttpGet("images-list")]
+        public async Task<ActionResult<string>> GetImages()
         {
-            var productsubcategories = await _productSubcategoryService.GetAllProductSubcategory();
-            return Ok(productsubcategories);
+            var result = await _productsService.GetAllImagesAsync();
+            return Ok(result);
         }
 
-        [HttpGet("product-gallery")]
-        public async Task<IActionResult> GetAllProductGallery()
+        [HttpGet("drawings-list")]
+        public async Task<ActionResult<string>> GetDrawingss()
         {
-            var gallery = await _productGalleryService.GetAllProductGallery();
-            return Ok(gallery);
-        }
-
-        [HttpGet("product-drawings")]
-        public async Task<IActionResult> GetAllProductDrawings()
-        {
-            var drawings = await _productDrawingsService.GetAllProductDrawings();
-            return Ok(drawings);
+            var result = await _productsService.GetAllDrawingsAsync();
+            return Ok(result);
         }
     }
 }

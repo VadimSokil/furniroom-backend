@@ -15,22 +15,22 @@ namespace AccountsService.Controllers
             _authorizationService = authorizationService;
         }
 
-        [HttpGet("check-email")]
-        public async Task<ActionResult> CheckEmail([FromQuery] string email)
+        [HttpPost("check-email")]
+        public async Task<ActionResult> CheckEmail([FromBody] string email)
         {
             var result = await _authorizationService.CheckEmailAsync(email);
             return Ok(new { message = result });
         }
 
-        [HttpGet("generate-code")]
-        public async Task<ActionResult> GenerateCode([FromQuery] string email)
+        [HttpPost("generate-code")]
+        public async Task<ActionResult> GenerateCode([FromBody] string email)
         {
             var code = await _authorizationService.GenerateCodeAsync(email);
             return Ok(new { code });
         }
 
         [HttpPost("reset-password")]
-        public async Task<ActionResult> ResetPassword([FromQuery] string email)
+        public async Task<ActionResult> ResetPassword([FromBody] string email)
         {
             var resultMessage = await _authorizationService.ResetPasswordAsync(email);
             return Ok(new { message = resultMessage });
