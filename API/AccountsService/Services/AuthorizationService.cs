@@ -134,15 +134,6 @@ namespace AccountsService.Services
                     Message = $"Database error: {ex.Message}"
                 };
             }
-            catch (Exception ex) 
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = $"Unexpected error: {ex.Message}"
-                };
-            }
         }
 
 
