@@ -16,6 +16,8 @@ namespace AccountsService.Services
         private readonly string _servicePassword;
         private readonly Dictionary<string, string> _requests;
 
+        public string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
+
         public AuthorizationService(string connectionString, string serviceEmail, string servicePassword, Dictionary<string, string> requests)
         {
             _connectionString = connectionString;
@@ -83,8 +85,6 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> CheckEmailAsync(string? email)
         {
-            string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
-
             if (string.IsNullOrWhiteSpace(email))
             {
                 return new ResponseModel
@@ -156,13 +156,141 @@ namespace AccountsService.Services
         }
 
 
-        public async Task<string> GenerateCodeAsync(string email)
+        public async Task<ResponseModel> GenerateCodeAsync(string email)
         {
-            int verificationCode = Random.Shared.Next(1000, 9999);
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Email address cannot be empty"
+                };
+            }
 
-            string messageBody = $"Hi, your verification code: {verificationCode}";
-            await SendEmailAsync(email, messageBody, "Verification code");
-            return $"{verificationCode}";
+            if (!IsValidEmail(email))
+            {
+                return new ResponseModel
+                {
+                    Date = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + " UTC",
+                    RequestExecution = false,
+                    Message = "Invalid email address format"
+                };
+            }
+
+            try
+            {
+                int verificationCode = Random.Shared.Next(1000, 9999);
+
+                string messageBody = $"Hi, your verification code: {verificationCode}";
+                await SendEmailAsync(email, messageBody, "Verification code");
+
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = true,
+                    Message = $"{verificationCode}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Unexpected error: {ex.Message}"
+                };
+            }
+
+        }
+
+        public async Task<ResponseModel> ResetPasswordAsync(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Email address cannot be empty"
+                };
+            }
+
+            if (!IsValidEmail(email))
+            {
+                return new ResponseModel
+                {
+                    Date = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + " UTC",
+                    RequestExecution = false,
+                    Message = "Invalid email address format"
+                };
+            }
+
+            try
+            {
+                using (var connection = new MySqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    using (var checkEmailCommand = new MySqlCommand(_requests["CheckEmail"], connection))
+                    {
+                        checkEmailCommand.Parameters.AddWithValue("@Email", email);
+                        var emailExists = Convert.ToInt32(await checkEmailCommand.ExecuteScalarAsync()) > 0;
+
+                        if (!emailExists)
+                        {
+                            return new ResponseModel
+                            {
+                                Date = currentDateTime,
+                                RequestExecution = false,
+                                Message = "Email does not exist in the database"
+                            };
+                        }
+                    }
+
+                    const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                    string newPassword = new string(Enumerable.Repeat(chars, 8)
+                        .Select(s => s[Random.Shared.Next(s.Length)]).ToArray());
+
+                    string hashedPassword = HashPasswordWithMD5(newPassword);
+
+                    using (var updateCommand = new MySqlCommand(_requests["ResetPassword"], connection))
+                    {
+                        updateCommand.Parameters.AddWithValue("@Email", email);
+                        updateCommand.Parameters.AddWithValue("@PasswordHash", hashedPassword);
+
+                        await updateCommand.ExecuteNonQueryAsync();
+                    }
+
+                    await SendEmailAsync(email, $"Hi, your new password: {newPassword}", "Reset Password");
+
+                    return new ResponseModel
+                    {
+                        Date = currentDateTime,
+                        RequestExecution = true,
+                        Message = $"{newPassword}"
+                    };
+                }
+
+            }
+            catch (MySqlException ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Database error: {ex.Message}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Unexpected error: {ex.Message}"
+                };
+            }
         }
 
         public async Task<int> LoginAsync(LoginModel login)
@@ -239,42 +367,6 @@ namespace AccountsService.Services
             }
 
             return "Account successfully added";
-        }
-
-        public async Task<string> ResetPasswordAsync(string email)
-        {
-            using (var connection = new MySqlConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-
-                using (var checkEmailCommand = new MySqlCommand(_requests["CheckEmail"], connection))
-                {
-                    checkEmailCommand.Parameters.AddWithValue("@Email", email);
-                    var emailExists = Convert.ToInt32(await checkEmailCommand.ExecuteScalarAsync()) > 0;
-
-                    if (!emailExists)
-                    {
-                        return "Email does not exist in the database.";
-                    }
-                }
-
-                const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-                string newPassword = new string(Enumerable.Repeat(chars, 8)
-                    .Select(s => s[Random.Shared.Next(s.Length)]).ToArray());
-
-                string hashedPassword = HashPasswordWithMD5(newPassword);
-
-                using (var updateCommand = new MySqlCommand(_requests["ResetPassword"], connection))
-                {
-                    updateCommand.Parameters.AddWithValue("@Email", email);
-                    updateCommand.Parameters.AddWithValue("@PasswordHash", hashedPassword);
-
-                    await updateCommand.ExecuteNonQueryAsync();
-                }
-
-                await SendEmailAsync(email, $"Hi, your new password: {newPassword}", "Reset Password");
-                return $"{newPassword}";
-            }
         }
     }
 }

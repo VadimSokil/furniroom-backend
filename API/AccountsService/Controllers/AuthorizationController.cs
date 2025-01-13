@@ -22,18 +22,18 @@ namespace AccountsService.Controllers
             return Ok(result);
         }
 
-        [HttpPost("generate-code")]
-        public async Task<ActionResult> GenerateCode([FromBody] string email)
+        [HttpGet("generate-code")]
+        public async Task<ActionResult> GenerateCode([FromQuery] string? email)
         {
-            var code = await _authorizationService.GenerateCodeAsync(email);
-            return Ok(new { code });
+            var result = await _authorizationService.GenerateCodeAsync(email);
+            return Ok(result);
         }
 
-        [HttpPost("reset-password")]
-        public async Task<ActionResult> ResetPassword([FromBody] string email)
+        [HttpGet("reset-password")]
+        public async Task<ActionResult> ResetPassword([FromQuery] string? email)
         {
-            var resultMessage = await _authorizationService.ResetPasswordAsync(email);
-            return Ok(new { message = resultMessage });
+            var result = await _authorizationService.ResetPasswordAsync(email);
+            return Ok(result);
         }
 
         [HttpPost("register")]
