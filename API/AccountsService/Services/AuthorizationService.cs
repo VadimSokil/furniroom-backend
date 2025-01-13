@@ -64,8 +64,45 @@ namespace AccountsService.Services
             }
         }
 
+        private bool IsValidEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
         public async Task<ResponseModel> CheckEmailAsync(string email)
         {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return new ResponseModel
+                {
+                    Date = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + " UTC",
+                    RequestExecution = false,
+                    Message = "Email address cannot be empty"
+                };
+            }
+
+            if (!IsValidEmail(email))
+            {
+                return new ResponseModel
+                {
+                    Date = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + " UTC",
+                    RequestExecution = false,
+                    Message = "Invalid email address format"
+                };
+            }
+
             using (var connection = new MySqlConnection(_connectionString))
             {
                 await connection.OpenAsync();
@@ -78,7 +115,7 @@ namespace AccountsService.Services
                     {
                         return new ResponseModel
                         {
-                            Date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
+                            Date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + " UTC",
                             RequestExecution = true,
                             Message = "Email is already taken"
                         };
@@ -88,7 +125,7 @@ namespace AccountsService.Services
 
             return new ResponseModel
             {
-                Date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
+                Date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + " UTC",
                 RequestExecution = true,
                 Message = "Email is available"
             };
