@@ -81,55 +81,70 @@ namespace AccountsService.Services
         }
 
 
-        public async Task<ResponseModel> CheckEmailAsync(string email)
+        public async Task<ResponseModel> CheckEmailAsync(string? email)
         {
+            string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
+
             if (string.IsNullOrWhiteSpace(email))
             {
                 return new ResponseModel
                 {
-                    Date = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + " UTC",
+                    Date = currentDateTime,
                     RequestExecution = false,
                     Message = "Email address cannot be empty"
                 };
             }
 
-            if (!IsValidEmail(email))
+            try
+            {
+                using (var connection = new MySqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    using (var command = new MySqlCommand(_requests["CheckEmail"], connection))
+                    {
+                        command.Parameters.AddWithValue("@Email", email);
+                        var result = Convert.ToInt32(await command.ExecuteScalarAsync());
+
+                        if (result > 0)
+                        {
+                            return new ResponseModel
+                            {
+                                Date = currentDateTime,
+                                RequestExecution = true,
+                                Message = "Email is already taken"
+                            };
+                        }
+                    }
+                }
+
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = true,
+                    Message = "Email is available"
+                };
+            }
+            catch (MySqlException ex) 
             {
                 return new ResponseModel
                 {
-                    Date = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + " UTC",
+                    Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Invalid email address format"
+                    Message = $"Database error: {ex.Message}"
                 };
             }
-
-            using (var connection = new MySqlConnection(_connectionString))
+            catch (Exception ex) 
             {
-                await connection.OpenAsync();
-
-                using (var command = new MySqlCommand(_requests["CheckEmail"], connection))
+                return new ResponseModel
                 {
-                    command.Parameters.AddWithValue("@Email", email);
-                    var result = Convert.ToInt32(await command.ExecuteScalarAsync());
-                    if (result > 0)
-                    {
-                        return new ResponseModel
-                        {
-                            Date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + " UTC",
-                            RequestExecution = true,
-                            Message = "Email is already taken"
-                        };
-                    }
-                }
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Unexpected error: {ex.Message}"
+                };
             }
-
-            return new ResponseModel
-            {
-                Date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + " UTC",
-                RequestExecution = true,
-                Message = "Email is available"
-            };
         }
+
 
         public async Task<string> GenerateCodeAsync(string email)
         {
