@@ -16,10 +16,10 @@ namespace AccountsService.Controllers
         }
 
         [HttpGet("check-email")]
-        public async Task<ActionResult> CheckEmail([FromQuery] string email)
+        public async Task<ActionResult> CheckEmail([FromQuery] string? email)
         {
             var result = await _authorizationService.CheckEmailAsync(email);
-            return Ok(new { message = result });
+            return Ok(result);
         }
 
         [HttpPost("generate-code")]
