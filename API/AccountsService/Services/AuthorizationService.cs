@@ -95,6 +95,16 @@ namespace AccountsService.Services
                 };
             }
 
+            if (!IsValidEmail(email))
+            {
+                return new ResponseModel
+                {
+                    Date = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + " UTC",
+                    RequestExecution = false,
+                    Message = "Invalid email address format"
+                };
+            }
+
             try
             {
                 using (var connection = new MySqlConnection(_connectionString))
@@ -132,6 +142,15 @@ namespace AccountsService.Services
                     Date = currentDateTime,
                     RequestExecution = false,
                     Message = $"Database error: {ex.Message}"
+                };
+            }
+            catch (Exception ex) 
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Unexpected error: {ex.Message}"
                 };
             }
         }
