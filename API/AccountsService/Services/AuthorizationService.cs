@@ -5,6 +5,7 @@ using System.Net;
 using MySql.Data.MySqlClient;
 using System.Security.Cryptography;
 using System.Text;
+using AccountsService.Models;
 
 namespace AccountsService.Services
 {
@@ -63,7 +64,7 @@ namespace AccountsService.Services
             }
         }
 
-        public async Task<string> CheckEmailAsync(string email)
+        public async Task<ResponseModel> CheckEmailAsync(string email)
         {
             using (var connection = new MySqlConnection(_connectionString))
             {
@@ -75,11 +76,22 @@ namespace AccountsService.Services
                     var result = Convert.ToInt32(await command.ExecuteScalarAsync());
                     if (result > 0)
                     {
-                        return "Email is already taken";
+                        return new ResponseModel
+                        {
+                            Date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
+                            RequestExecution = true,
+                            Message = "Email is already taken"
+                        };
                     }
                 }
             }
-            return "Email is available";
+
+            return new ResponseModel
+            {
+                Date = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"),
+                RequestExecution = true,
+                Message = "Email is available"
+            };
         }
 
         public async Task<string> GenerateCodeAsync(string email)

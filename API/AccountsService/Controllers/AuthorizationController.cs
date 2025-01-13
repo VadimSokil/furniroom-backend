@@ -15,8 +15,8 @@ namespace AccountsService.Controllers
             _authorizationService = authorizationService;
         }
 
-        [HttpPost("check-email")]
-        public async Task<ActionResult> CheckEmail([FromBody] string email)
+        [HttpGet("check-email")]
+        public async Task<ActionResult> CheckEmail([FromQuery] string email)
         {
             var result = await _authorizationService.CheckEmailAsync(email);
             return Ok(new { message = result });
