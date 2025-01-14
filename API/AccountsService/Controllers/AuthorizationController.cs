@@ -29,8 +29,8 @@ namespace AccountsService.Controllers
             return Ok(result);
         }
 
-        [HttpGet("reset-password")]
-        public async Task<ActionResult> ResetPassword([FromQuery] string? email)
+        [HttpPost("reset-password")]
+        public async Task<ActionResult> ResetPassword([FromBody] string? email)
         {
             var result = await _authorizationService.ResetPasswordAsync(email);
             return Ok(result);
@@ -39,15 +39,15 @@ namespace AccountsService.Controllers
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] RegisterModel register)
         {
-            var resultMessage = await _authorizationService.RegisterAsync(register);
-            return Ok(new { message = resultMessage });
+            var result = await _authorizationService.RegisterAsync(register);
+            return Ok(result);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login([FromQuery] LoginModel login)
+        public async Task<ActionResult> Login([FromBody] LoginModel login)
         {
-            var accountId = await _authorizationService.LoginAsync(login);
-            return Ok(new { message = accountId });
+            var result = await _authorizationService.LoginAsync(login);
+            return Ok(result);
         }
     }
 }

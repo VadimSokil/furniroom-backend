@@ -73,7 +73,7 @@ namespace AccountsService.Services
 
             try
             {
-                var addr = new System.Net.Mail.MailAddress(email);
+                var addr = new MailAddress(email);
                 return addr.Address == email;
             }
             catch
@@ -99,7 +99,7 @@ namespace AccountsService.Services
             {
                 return new ResponseModel
                 {
-                    Date = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + " UTC",
+                    Date = currentDateTime,
                     RequestExecution = false,
                     Message = "Invalid email address format"
                 };
@@ -172,7 +172,7 @@ namespace AccountsService.Services
             {
                 return new ResponseModel
                 {
-                    Date = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + " UTC",
+                    Date = currentDateTime,
                     RequestExecution = false,
                     Message = "Invalid email address format"
                 };
@@ -220,7 +220,7 @@ namespace AccountsService.Services
             {
                 return new ResponseModel
                 {
-                    Date = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + " UTC",
+                    Date = currentDateTime,
                     RequestExecution = false,
                     Message = "Invalid email address format"
                 };
@@ -309,7 +309,7 @@ namespace AccountsService.Services
             {
                 return new ResponseModel
                 {
-                    Date = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + " UTC",
+                    Date = currentDateTime,
                     RequestExecution = false,
                     Message = "Invalid email address format"
                 };
@@ -342,7 +342,7 @@ namespace AccountsService.Services
                             return new ResponseModel
                             {
                                 Date = currentDateTime,
-                                RequestExecution = false,
+                                RequestExecution = true,
                                 Message = $"Invalid login or password"
                             };
                         }
@@ -376,58 +376,159 @@ namespace AccountsService.Services
             }
         }
 
-        public async Task<string> RegisterAsync(RegisterModel register)
+        public async Task<ResponseModel> RegisterAsync(RegisterModel register)
         {
-
-            using (var connection = new MySqlConnection(_connectionString))
+            if (!register.AccountId.HasValue)
             {
-                await connection.OpenAsync();
-
-                using (var checkIdCommand = new MySqlCommand(_requests["CheckAccountId"], connection))
+                return new ResponseModel
                 {
-                    checkIdCommand.Parameters.AddWithValue("@AccountId", register.AccountId);
-                    var idExists = Convert.ToInt32(await checkIdCommand.ExecuteScalarAsync()) > 0;
-
-                    if (idExists)
-                    {
-                        return "AccountId is already taken.";
-                    }
-                }
-
-                using (var checkEmailCommand = new MySqlCommand(_requests["CheckEmail"], connection))
-                {
-                    checkEmailCommand.Parameters.AddWithValue("@Email", register.Email);
-                    var emailExists = Convert.ToInt32(await checkEmailCommand.ExecuteScalarAsync()) > 0;
-
-                    if (emailExists)
-                    {
-                        return "Email is already taken.";
-                    }
-                }
-
-                using (var checkNameCommand = new MySqlCommand(_requests["CheckAccountName"], connection))
-                {
-                    checkNameCommand.Parameters.AddWithValue("@AccountName", register.AccountName);
-                    var nameExists = Convert.ToInt32(await checkNameCommand.ExecuteScalarAsync()) > 0;
-
-                    if (nameExists)
-                    {
-                        return "AccountName is already taken.";
-                    }
-                }
-
-                using (var command = new MySqlCommand(_requests["AddNewUser"], connection))
-                {
-                    command.Parameters.AddWithValue("@AccountId", register.AccountId);
-                    command.Parameters.AddWithValue("@AccountName", register.AccountName);
-                    command.Parameters.AddWithValue("@Email", register.Email);
-                    command.Parameters.AddWithValue("@PasswordHash", register.PasswordHash);
-
-                    await command.ExecuteNonQueryAsync();
-                }
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "AccountId cannot be empty"
+                };
             }
 
-            return "Account successfully added";
+            if (register.AccountId == default || register.AccountId <= 0)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "AccountId must be a positive number"
+                };
+            }
+
+            if (string.IsNullOrWhiteSpace(register.AccountName))
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "AccountName cannot be empty"
+                };
+            }
+
+            if (string.IsNullOrWhiteSpace(register.Email))
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Email address cannot be empty"
+                };
+            }
+
+            if (!IsValidEmail(register.Email))
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Invalid email address format"
+                };
+            }
+
+            if (string.IsNullOrWhiteSpace(register.PasswordHash))
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "PasswordHash cannot be empty"
+                };
+            }
+
+            try
+            {
+                using (var connection = new MySqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    using (var checkIdCommand = new MySqlCommand(_requests["CheckAccountId"], connection))
+                    {
+                        checkIdCommand.Parameters.AddWithValue("@AccountId", register.AccountId);
+                        var idExists = Convert.ToInt32(await checkIdCommand.ExecuteScalarAsync()) > 0;
+
+                        if (idExists)
+                        {
+                            return new ResponseModel
+                            {
+                                Date = currentDateTime,
+                                RequestExecution = false,
+                                Message = "AccountId is already taken"
+                            };
+                        }
+                    }
+
+                    using (var checkEmailCommand = new MySqlCommand(_requests["CheckEmail"], connection))
+                    {
+                        checkEmailCommand.Parameters.AddWithValue("@Email", register.Email);
+                        var emailExists = Convert.ToInt32(await checkEmailCommand.ExecuteScalarAsync()) > 0;
+
+                        if (emailExists)
+                        {
+                            return new ResponseModel
+                            {
+                                Date = currentDateTime,
+                                RequestExecution = false,
+                                Message = "Email is already taken"
+                            };
+                        }
+                    }
+
+                    using (var checkNameCommand = new MySqlCommand(_requests["CheckAccountName"], connection))
+                    {
+                        checkNameCommand.Parameters.AddWithValue("@AccountName", register.AccountName);
+                        var nameExists = Convert.ToInt32(await checkNameCommand.ExecuteScalarAsync()) > 0;
+
+                        if (nameExists)
+                        {
+                            return new ResponseModel
+                            {
+                                Date = currentDateTime,
+                                RequestExecution = false,
+                                Message = "AccountName is already taken"
+                            };
+                        }
+                    }
+
+                    using (var command = new MySqlCommand(_requests["AddNewUser"], connection))
+                    {
+                        command.Parameters.AddWithValue("@AccountId", register.AccountId);
+                        command.Parameters.AddWithValue("@AccountName", register.AccountName);
+                        command.Parameters.AddWithValue("@Email", register.Email);
+                        command.Parameters.AddWithValue("@PasswordHash", register.PasswordHash);
+
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = true,
+                    Message = "Account successfully created"
+                };
+            }
+            catch (MySqlException ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Database error: {ex.Message}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Unexpected error: {ex.Message}"
+                };
+            }
+
         }
     }
 }
