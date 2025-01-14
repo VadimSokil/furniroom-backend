@@ -44,7 +44,7 @@ namespace AccountsService.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login([FromBody] LoginModel login)
+        public async Task<ActionResult> Login([FromQuery] LoginModel login)
         {
             var accountId = await _authorizationService.LoginAsync(login);
             return Ok(new { message = accountId });

@@ -9,6 +9,6 @@ namespace AccountsService.Interfaces
         public Task<ResponseModel> GenerateCodeAsync(string email);
         public Task<ResponseModel> ResetPasswordAsync(string email);
         public Task<string> RegisterAsync(RegisterModel register);
-        public Task<int> LoginAsync(LoginModel login);
+        public Task<ResponseModel> LoginAsync(LoginModel login);
     }
 }

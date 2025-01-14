@@ -293,25 +293,86 @@ namespace AccountsService.Services
             }
         }
 
-        public async Task<int> LoginAsync(LoginModel login)
+        public async Task<ResponseModel> LoginAsync(LoginModel login)
         {
-            using (var connection = new MySqlConnection(_connectionString))
+            if (string.IsNullOrWhiteSpace(login.Email))
             {
-                await connection.OpenAsync();
-
-                using (var command = new MySqlCommand(_requests["Login"], connection))
+                return new ResponseModel
                 {
-                    command.Parameters.AddWithValue("@Email", login.Email);
-                    command.Parameters.AddWithValue("@PasswordHash", login.PasswordHash);
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Email address cannot be empty"
+                };
+            }
 
-                    var result = await command.ExecuteScalarAsync();
-                    if (result == null)
+            if (!IsValidEmail(login.Email))
+            {
+                return new ResponseModel
+                {
+                    Date = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + " UTC",
+                    RequestExecution = false,
+                    Message = "Invalid email address format"
+                };
+            }
+
+            if (string.IsNullOrWhiteSpace(login.PasswordHash))
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "PasswordHash cannot be empty"
+                };
+            }
+
+            try
+            {
+                using (var connection = new MySqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    using (var command = new MySqlCommand(_requests["Login"], connection))
                     {
-                        return 0;
-                    }
+                        command.Parameters.AddWithValue("@Email", login.Email);
+                        command.Parameters.AddWithValue("@PasswordHash", login.PasswordHash);
 
-                    return Convert.ToInt32(result);
+                        var result = await command.ExecuteScalarAsync();
+                        if (result == null)
+                        {
+                            return new ResponseModel
+                            {
+                                Date = currentDateTime,
+                                RequestExecution = false,
+                                Message = $"Invalid login or password"
+                            };
+                        }
+
+                        return new ResponseModel
+                        {
+                            Date = currentDateTime,
+                            RequestExecution = true,
+                            Message = $"{result}"
+                        };
+                    }
                 }
+            }
+            catch (MySqlException ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Database error: {ex.Message}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Unexpected error: {ex.Message}"
+                };
             }
         }
 
