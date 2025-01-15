@@ -94,7 +94,7 @@ namespace AccountsService.Services
 
             var dataProperties = data.GetType().GetProperties().Select(p => p.Name).ToHashSet();
 
-            return modelProperties.SetEquals(dataProperties);
+            return dataProperties.IsSubsetOf(modelProperties) && modelProperties.IsSubsetOf(dataProperties);
         }
 
 
