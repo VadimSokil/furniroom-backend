@@ -6,6 +6,7 @@ using MySql.Data.MySqlClient;
 using System.Security.Cryptography;
 using System.Text;
 using AccountsService.Models;
+using Microsoft.Win32;
 
 namespace AccountsService.Services
 {
@@ -82,6 +83,20 @@ namespace AccountsService.Services
             }
         }
 
+        private bool ValidateModel<TModel>(TModel model, object data)
+        {
+            if (data == null)
+            {
+                return false;
+            }
+
+            var modelProperties = typeof(TModel).GetProperties().Select(p => p.Name).ToHashSet();
+
+            var dataProperties = data.GetType().GetProperties().Select(p => p.Name).ToHashSet();
+
+            return modelProperties.SetEquals(dataProperties);
+        }
+
 
         public async Task<ResponseModel> CheckEmailAsync(string? email)
         {
@@ -102,6 +117,16 @@ namespace AccountsService.Services
                     Date = currentDateTime,
                     RequestExecution = false,
                     Message = "Invalid email address format"
+                };
+            }
+
+            if (email.Length > 100)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Maximum number of characters exceeded for email"
                 };
             }
 
@@ -178,6 +203,16 @@ namespace AccountsService.Services
                 };
             }
 
+            if (email.Length > 100)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Maximum number of characters exceeded for email"
+                };
+            }
+
             try
             {
                 int verificationCode = Random.Shared.Next(1000, 9999);
@@ -223,6 +258,16 @@ namespace AccountsService.Services
                     Date = currentDateTime,
                     RequestExecution = false,
                     Message = "Invalid email address format"
+                };
+            }
+
+            if (email.Length > 100)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Maximum number of characters exceeded for email"
                 };
             }
 
@@ -295,6 +340,16 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> LoginAsync(LoginModel login)
         {
+            if (!ValidateModel(new LoginModel(), login))
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Invalid data structure"
+                };
+            }
+
             if (string.IsNullOrWhiteSpace(login.Email))
             {
                 return new ResponseModel
@@ -315,6 +370,16 @@ namespace AccountsService.Services
                 };
             }
 
+            if (login.Email.Length > 100)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Maximum number of characters exceeded for email"
+                };
+            }
+
             if (string.IsNullOrWhiteSpace(login.PasswordHash))
             {
                 return new ResponseModel
@@ -322,6 +387,16 @@ namespace AccountsService.Services
                     Date = currentDateTime,
                     RequestExecution = false,
                     Message = "PasswordHash cannot be empty"
+                };
+            }
+
+            if (login.PasswordHash.Length > 500)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Maximum number of characters exceeded for passwordHash"
                 };
             }
 
@@ -378,6 +453,16 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> RegisterAsync(RegisterModel register)
         {
+            if (!ValidateModel(new RegisterModel(), register))
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Invalid data structure"
+                };
+            }
+
             if (!register.AccountId.HasValue)
             {
                 return new ResponseModel
@@ -408,6 +493,16 @@ namespace AccountsService.Services
                 };
             }
 
+            if (register.AccountName.Length > 50)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Maximum number of characters exceeded for accountName"
+                };
+            }
+
             if (string.IsNullOrWhiteSpace(register.Email))
             {
                 return new ResponseModel
@@ -428,6 +523,16 @@ namespace AccountsService.Services
                 };
             }
 
+            if (register.Email.Length > 100)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Maximum number of characters exceeded for email"
+                };
+            }
+
             if (string.IsNullOrWhiteSpace(register.PasswordHash))
             {
                 return new ResponseModel
@@ -435,6 +540,16 @@ namespace AccountsService.Services
                     Date = currentDateTime,
                     RequestExecution = false,
                     Message = "PasswordHash cannot be empty"
+                };
+            }
+
+            if (register.PasswordHash.Length > 500)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Maximum number of characters exceeded for passwordHash"
                 };
             }
 
