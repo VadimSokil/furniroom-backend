@@ -1,5 +1,6 @@
 ﻿using InformationService.Interfaces;
 using InformationService.Models.Products;
+using InformationService.Models.Response;
 using MySql.Data.MySqlClient;
 using System.Data;
 
@@ -9,6 +10,7 @@ namespace InformationService.Services
     {
         private readonly string _connectionString;
         private readonly Dictionary<string, string> _requests;
+        public string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
 
         public ProductsService(string connectionString, Dictionary<string, string> requests)
         {
@@ -16,146 +18,281 @@ namespace InformationService.Services
             _requests = requests;
         }
 
-        public async Task<List<CategoryModel>> GetAllCategoriesAsync()
+        public async Task<ResponseModel> GetAllCategoriesAsync()
         {
-            var categories = new List<CategoryModel>();
-
-            using (var connection = new MySqlConnection(_connectionString))
+            try
             {
-                await connection.OpenAsync();
+                var categories = new List<CategoryModel>();
 
-                using (var command = new MySqlCommand(_requests["GetAllCategories"], connection))
+                using (var connection = new MySqlConnection(_connectionString))
                 {
-                    using (var reader = await command.ExecuteReaderAsync())
+                    await connection.OpenAsync();
+
+                    using (var command = new MySqlCommand(_requests["GetAllCategories"], connection))
                     {
-                        while (await reader.ReadAsync())
+                        using (var reader = await command.ExecuteReaderAsync())
                         {
-                            categories.Add(new CategoryModel
+                            while (await reader.ReadAsync())
                             {
-                                CategoryId = reader.GetInt32("CategoryId"),
-                                CategoryName = reader.GetString("CategoryName")
-                            });
+                                categories.Add(new CategoryModel
+                                {
+                                    CategoryId = reader.GetInt32("CategoryId"),
+                                    CategoryName = reader.GetString("CategoryName")
+                                });
+                            }
                         }
                     }
                 }
-            }
 
-            return categories;
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = true,
+                    Message = "Data retrieved successfully",
+                    Data = categories
+                };
+            }
+            catch (MySqlException ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Database error: {ex.Message}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Unexpected error: {ex.Message}"
+                };
+            }
         }
 
-        public async Task<List<SubcategoryModel>> GetAllSubcategoriesAsync()
+        public async Task<ResponseModel> GetAllSubcategoriesAsync()
         {
-            var subcategories = new List<SubcategoryModel>();
-
-            using (var connection = new MySqlConnection(_connectionString))
+            try
             {
-                await connection.OpenAsync();
+                var subcategories = new List<SubcategoryModel>();
 
-                using (var command = new MySqlCommand(_requests["GetAllSubcategories"], connection))
+                using (var connection = new MySqlConnection(_connectionString))
                 {
-                    using (var reader = await command.ExecuteReaderAsync())
+                    await connection.OpenAsync();
+
+                    using (var command = new MySqlCommand(_requests["GetAllSubcategories"], connection))
                     {
-                        while (await reader.ReadAsync())
+                        using (var reader = await command.ExecuteReaderAsync())
                         {
-                            subcategories.Add(new SubcategoryModel
+                            while (await reader.ReadAsync())
                             {
-                                SubcategoryId = reader.GetInt32("SubcategoryId"),
-                                CategoryId = reader.GetInt32("CategoryId"),
-                                SubcategoryName = reader.GetString("SubcategoryName")
-                            });
+                                subcategories.Add(new SubcategoryModel
+                                {
+                                    SubcategoryId = reader.GetInt32("SubcategoryId"),
+                                    CategoryId = reader.GetInt32("CategoryId"),
+                                    SubcategoryName = reader.GetString("SubcategoryName")
+                                });
+                            }
                         }
                     }
                 }
-            }
 
-            return subcategories;
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = true,
+                    Message = "Data retrieved successfully",
+                    Data = subcategories
+                };
+            }
+            catch (MySqlException ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Database error: {ex.Message}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Unexpected error: {ex.Message}"
+                };
+            }
         }
 
-        public async Task<List<ProductModel>> GetAllProductsAsync()
+        public async Task<ResponseModel> GetAllProductsAsync()
         {
-            var products = new List<ProductModel>();
-
-            using (var connection = new MySqlConnection(_connectionString))
+            try
             {
-                await connection.OpenAsync();
+                var products = new List<ProductModel>();
 
-                using (var command = new MySqlCommand(_requests["GetAllProducts"], connection))
+                using (var connection = new MySqlConnection(_connectionString))
                 {
-                    using (var reader = await command.ExecuteReaderAsync())
+                    await connection.OpenAsync();
+
+                    using (var command = new MySqlCommand(_requests["GetAllProducts"], connection))
                     {
-                        while (await reader.ReadAsync())
+                        using (var reader = await command.ExecuteReaderAsync())
                         {
-                            products.Add(new ProductModel
+                            while (await reader.ReadAsync())
                             {
-                                ProductId = reader.GetInt32("ProductId"),
-                                SubcategoryId = reader.GetInt32("SubcategoryId"),
-                                ProductName = reader.GetString("ProductName"),
-                                ProductDescription = reader.GetString("ProductDescription"),
-                                ProductImageUrl = reader.GetString("ProductImageUrl")
-                            });
+                                products.Add(new ProductModel
+                                {
+                                    ProductId = reader.GetInt32("ProductId"),
+                                    SubcategoryId = reader.GetInt32("SubcategoryId"),
+                                    ProductName = reader.GetString("ProductName"),
+                                    ProductDescription = reader.GetString("ProductDescription"),
+                                    ProductImageUrl = reader.GetString("ProductImageUrl")
+                                });
+                            }
                         }
                     }
                 }
-            }
 
-            return products;
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = true,
+                    Message = "Data retrieved successfully",
+                    Data = products
+                };
+            }
+            catch (MySqlException ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Database error: {ex.Message}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Unexpected error: {ex.Message}"
+                };
+            }
         }
-        public async Task<List<ImageModel>> GetAllImagesAsync()
+        public async Task<ResponseModel> GetAllImagesAsync()
         {
-            var images = new List<ImageModel>();
-
-            using (var connection = new MySqlConnection(_connectionString))
+            try
             {
-                await connection.OpenAsync();
+                var images = new List<ImageModel>();
 
-                using (var command = new MySqlCommand(_requests["GetAllImages"], connection))
+                using (var connection = new MySqlConnection(_connectionString))
                 {
-                    using (var reader = await command.ExecuteReaderAsync())
+                    await connection.OpenAsync();
+
+                    using (var command = new MySqlCommand(_requests["GetAllImages"], connection))
                     {
-                        while (await reader.ReadAsync())
+                        using (var reader = await command.ExecuteReaderAsync())
                         {
-                            images.Add(new ImageModel
+                            while (await reader.ReadAsync())
                             {
-                                ImageId = reader.GetInt32("ImageId"),
-                                ProductId = reader.GetInt32("ProductId"),
-                                ImageUrl = reader.GetString("ImageUrl")
-                            });
+                                images.Add(new ImageModel
+                                {
+                                    ImageId = reader.GetInt32("ImageId"),
+                                    ProductId = reader.GetInt32("ProductId"),
+                                    ImageUrl = reader.GetString("ImageUrl")
+                                });
+                            }
                         }
                     }
                 }
-            }
 
-            return images;
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = true,
+                    Message = "Data retrieved successfully",
+                    Data = images
+                };
+            }
+            catch (MySqlException ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Database error: {ex.Message}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Unexpected error: {ex.Message}"
+                };
+            }
         }
 
-        public async Task<List<DrawingModel>> GetAllDrawingsAsync()
+        public async Task<ResponseModel> GetAllDrawingsAsync()
         {
-            var drawingss = new List<DrawingModel>();
-
-            using (var connection = new MySqlConnection(_connectionString))
+            try
             {
-                await connection.OpenAsync();
+                var drawings = new List<DrawingModel>();
 
-                using (var command = new MySqlCommand(_requests["GetAllDrawings"], connection))
+                using (var connection = new MySqlConnection(_connectionString))
                 {
-                    using (var reader = await command.ExecuteReaderAsync())
+                    await connection.OpenAsync();
+
+                    using (var command = new MySqlCommand(_requests["GetAllDrawings"], connection))
                     {
-                        while (await reader.ReadAsync())
+                        using (var reader = await command.ExecuteReaderAsync())
                         {
-                            drawingss.Add(new DrawingModel
+                            while (await reader.ReadAsync())
                             {
-                                DrawingId = reader.GetInt32("DrawingId"),
-                                ProductId = reader.GetInt32("ProductId"),
-                                DrawingName = reader.GetString("DrawingName"),
-                                DrawingDescription = reader.GetString("DrawingDescription"),
-                                DrawingImageUrl = reader.GetString("DrawingImageUrl")
-                            });
+                                drawings.Add(new DrawingModel
+                                {
+                                    DrawingId = reader.GetInt32("DrawingId"),
+                                    ProductId = reader.GetInt32("ProductId"),
+                                    DrawingName = reader.GetString("DrawingName"),
+                                    DrawingDescription = reader.GetString("DrawingDescription"),
+                                    DrawingImageUrl = reader.GetString("DrawingImageUrl")
+                                });
+                            }
                         }
                     }
                 }
-            }
 
-            return drawingss;
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = true,
+                    Message = "Data retrieved successfully",
+                    Data = drawings
+                };
+            }
+            catch (MySqlException ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Database error: {ex.Message}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Unexpected error: {ex.Message}"
+                };
+            }
         }
     }
 }

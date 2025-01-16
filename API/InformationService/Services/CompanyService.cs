@@ -1,7 +1,6 @@
 ﻿using InformationService.Interfaces;
 using InformationService.Models.Company;
 using InformationService.Models.Response;
-using InformationService.Validation;
 using MySql.Data.MySqlClient;
 using System.Data;
 
@@ -12,7 +11,6 @@ namespace InformationService.Services
         private readonly string _connectionString;
         private readonly Dictionary<string, string> _requests;
         public string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
-        public ValidationMethods validationMethods = new ValidationMethods();
 
         public CompanyService(string connectionString, Dictionary<string, string> requests)
         {
