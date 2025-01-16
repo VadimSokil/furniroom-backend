@@ -1,4 +1,4 @@
-﻿namespace AccountsService.Validation
+﻿namespace InformationService.Validation
 {
     public class ValidationMethods
     {

@@ -18,22 +18,22 @@ namespace InformationService.Controllers
         [HttpGet("company-information")]
         public async Task<ActionResult<List<CompanyModel>>> GetCompanyInformation()
         {
-            var note = await _companyService.GetCompanyInformationAsync();
-            return Ok(note);
+            var result = await _companyService.GetCompanyInformationAsync();
+            return Ok(result);
         }
 
         [HttpGet("delivery-information")]
         public async Task<ActionResult<List<CompanyModel>>> GetDeliveryInformation()
         {
-            var note = await _companyService.GetDeliveryInformationAsync();
-            return Ok(note);
+            var result = await _companyService.GetDeliveryInformationAsync();
+            return Ok(result);
         }
 
         [HttpGet("payment-information")]
         public async Task<ActionResult<List<CompanyModel>>> GetPaymentInformation()
         {
-            var note = await _companyService.GetPaymentInformationAsync();
-            return Ok(note);
+            var result = await _companyService.GetPaymentInformationAsync();
+            return Ok(result);
         }
 
     }

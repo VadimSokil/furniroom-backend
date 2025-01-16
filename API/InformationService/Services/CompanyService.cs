@@ -1,5 +1,7 @@
 ﻿using InformationService.Interfaces;
 using InformationService.Models.Company;
+using InformationService.Models.Response;
+using InformationService.Validation;
 using MySql.Data.MySqlClient;
 using System.Data;
 
@@ -9,6 +11,8 @@ namespace InformationService.Services
     {
         private readonly string _connectionString;
         private readonly Dictionary<string, string> _requests;
+        public string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
+        public ValidationMethods validationMethods = new ValidationMethods();
 
         public CompanyService(string connectionString, Dictionary<string, string> requests)
         {
@@ -16,86 +20,167 @@ namespace InformationService.Services
             _requests = requests;
         }
 
-        public async Task<List<CompanyModel>> GetCompanyInformationAsync()
+        public async Task<ResponseModel> GetCompanyInformationAsync()
         {
-            var notes = new List<CompanyModel>();
-
-            using (var connection = new MySqlConnection(_connectionString))
+            try
             {
-                await connection.OpenAsync();
+                var notes = new List<CompanyModel>();
 
-                using (var command = new MySqlCommand(_requests["GetCompanyInformation"], connection))
+                using (var connection = new MySqlConnection(_connectionString))
                 {
-                    using (var reader = await command.ExecuteReaderAsync())
+                    await connection.OpenAsync();
+
+                    using (var command = new MySqlCommand(_requests["GetCompanyInformation"], connection))
                     {
-                        while (await reader.ReadAsync())
+                        using (var reader = await command.ExecuteReaderAsync())
                         {
-                            notes.Add(new CompanyModel
+                            while (await reader.ReadAsync())
                             {
-                                NoteId = reader.GetInt32("NoteId"),
-                                Note = reader.GetString("Note")
-                            });
+                                notes.Add(new CompanyModel
+                                {
+                                    NoteId = reader.GetInt32("NoteId"),
+                                    Note = reader.GetString("Note")
+                                });
+                            }
                         }
                     }
                 }
-            }
 
-            return notes;
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = true,
+                    Message = "Data retrieved successfully",
+                    Data = notes
+                };
+            }
+            catch (MySqlException ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Database error: {ex.Message}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Unexpected error: {ex.Message}"
+                };
+            }
 
         }
 
-        public async Task<List<CompanyModel>> GetDeliveryInformationAsync()
+        public async Task<ResponseModel> GetDeliveryInformationAsync()
         {
-            var notes = new List<CompanyModel>();
-
-            using (var connection = new MySqlConnection(_connectionString))
+            try
             {
-                await connection.OpenAsync();
+                var notes = new List<CompanyModel>();
 
-                using (var command = new MySqlCommand(_requests["GetDeliveryInformation"], connection))
+                using (var connection = new MySqlConnection(_connectionString))
                 {
-                    using (var reader = await command.ExecuteReaderAsync())
+                    await connection.OpenAsync();
+
+                    using (var command = new MySqlCommand(_requests["GetDeliveryInformation"], connection))
                     {
-                        while (await reader.ReadAsync())
+                        using (var reader = await command.ExecuteReaderAsync())
                         {
-                            notes.Add(new CompanyModel
+                            while (await reader.ReadAsync())
                             {
-                                NoteId = reader.GetInt32("NoteId"),
-                                Note = reader.GetString("Note")
-                            });
+                                notes.Add(new CompanyModel
+                                {
+                                    NoteId = reader.GetInt32("NoteId"),
+                                    Note = reader.GetString("Note")
+                                });
+                            }
                         }
                     }
                 }
-            }
 
-            return notes;
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = true,
+                    Message = "Data retrieved successfully",
+                    Data = notes
+                };
+            }
+            catch (MySqlException ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Database error: {ex.Message}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Unexpected error: {ex.Message}"
+                };
+            }
         }
 
-        public async Task<List<CompanyModel>> GetPaymentInformationAsync()
+        public async Task<ResponseModel> GetPaymentInformationAsync()
         {
-            var notes = new List<CompanyModel>();
-
-            using (var connection = new MySqlConnection(_connectionString))
+            try
             {
-                await connection.OpenAsync();
+                var notes = new List<CompanyModel>();
 
-                using (var command = new MySqlCommand(_requests["GetPaymentInformation"], connection))
+                using (var connection = new MySqlConnection(_connectionString))
                 {
-                    using (var reader = await command.ExecuteReaderAsync())
+                    await connection.OpenAsync();
+
+                    using (var command = new MySqlCommand(_requests["GetPaymentInformation"], connection))
                     {
-                        while (await reader.ReadAsync())
+                        using (var reader = await command.ExecuteReaderAsync())
                         {
-                            notes.Add(new CompanyModel
+                            while (await reader.ReadAsync())
                             {
-                                NoteId = reader.GetInt32("NoteId"),
-                                Note = reader.GetString("Note")
-                            });
+                                notes.Add(new CompanyModel
+                                {
+                                    NoteId = reader.GetInt32("NoteId"),
+                                    Note = reader.GetString("Note")
+                                });
+                            }
                         }
                     }
                 }
-            }
 
-            return notes;
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = true,
+                    Message = "Data retrieved successfully",
+                    Data = notes
+                };
+            }
+            catch (MySqlException ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Database error: {ex.Message}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"Unexpected error: {ex.Message}"
+                };
+            }
         }
     }
 }

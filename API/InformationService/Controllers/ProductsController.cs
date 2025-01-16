@@ -18,36 +18,36 @@ namespace InformationService.Controllers
         [HttpGet("categories-list")]
         public async Task<ActionResult<List<CategoryModel>>> GetAllCategories()
         {
-            var note = await _productsService.GetAllCategoriesAsync();
-            return Ok(note);
+            var result = await _productsService.GetAllCategoriesAsync();
+            return Ok(result);
         }
 
         [HttpGet("subcategories-list")]
         public async Task<ActionResult<List<SubcategoryModel>>> GetAllSubcategories()
         {
-            var note = await _productsService.GetAllSubcategoriesAsync();
-            return Ok(note);
+            var result = await _productsService.GetAllSubcategoriesAsync();
+            return Ok(result);
         }
 
         [HttpGet("products-list")]
         public async Task<ActionResult<List<ProductModel>>> GetAllProducts()
         {
-            var note = await _productsService.GetAllProductsAsync();
-            return Ok(note);
+            var result = await _productsService.GetAllProductsAsync();
+            return Ok(result);
         }
 
         [HttpGet("images-list")]
         public async Task<ActionResult<List<ImageModel>>> GetAllImages()
         {
-            var note = await _productsService.GetAllImagesAsync();
-            return Ok(note);
+            var result = await _productsService.GetAllImagesAsync();
+            return Ok(result);
         }
 
         [HttpGet("drawings-list")]
         public async Task<ActionResult<List<DrawingModel>>> GetAllDrawings()
         {
-            var note = await _productsService.GetAllDrawingsAsync();
-            return Ok(note);
+            var result = await _productsService.GetAllDrawingsAsync();
+            return Ok(result);
         }
     }
 }

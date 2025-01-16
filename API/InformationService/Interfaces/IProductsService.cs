@@ -1,13 +1,13 @@
-﻿using InformationService.Models.Products;
+﻿using InformationService.Models.Response;
 
 namespace InformationService.Interfaces
 {
     public interface IProductsService
     {
-        public Task<List<CategoryModel>> GetAllCategoriesAsync();
-        public Task<List<SubcategoryModel>> GetAllSubcategoriesAsync();
-        public Task<List<ProductModel>> GetAllProductsAsync();
-        public Task<List<ImageModel>> GetAllImagesAsync();
-        public Task<List<DrawingModel>> GetAllDrawingsAsync();
+        public Task<ResponseModel> GetAllCategoriesAsync();
+        public Task<ResponseModel> GetAllSubcategoriesAsync();
+        public Task<ResponseModel> GetAllProductsAsync();
+        public Task<ResponseModel> GetAllImagesAsync();
+        public Task<ResponseModel> GetAllDrawingsAsync();
     }
 }

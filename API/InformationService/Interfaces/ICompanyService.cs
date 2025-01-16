@@ -1,11 +1,11 @@
-﻿using InformationService.Models.Company;
+﻿using InformationService.Models.Response;
 
 namespace InformationService.Interfaces
 {
     public interface ICompanyService
     {
-        public Task<List<CompanyModel>> GetCompanyInformationAsync();
-        public Task<List<CompanyModel>> GetDeliveryInformationAsync();
-        public Task<List<CompanyModel>> GetPaymentInformationAsync();
+        public Task<ResponseModel> GetCompanyInformationAsync();
+        public Task<ResponseModel> GetDeliveryInformationAsync();
+        public Task<ResponseModel> GetPaymentInformationAsync();
     }
 }
