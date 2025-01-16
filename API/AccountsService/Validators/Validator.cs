@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Net.Mail;
+using System.Text.RegularExpressions;
 
 namespace AccountsService.Validators
 {
@@ -20,13 +21,15 @@ namespace AccountsService.Validators
 
         public bool IsValidEmail(string email)
         {
-            if (string.IsNullOrWhiteSpace(email))
+            try
+            {
+                var addr = new MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
             {
                 return false;
             }
-
-            string emailRegex = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
-            return Regex.IsMatch(email, emailRegex, RegexOptions.IgnoreCase);
         }
 
         public bool IsWithinMaxLength(string value, int maxLength)
