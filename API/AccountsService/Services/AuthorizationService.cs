@@ -6,7 +6,7 @@ using MySql.Data.MySqlClient;
 using System.Security.Cryptography;
 using System.Text;
 using AccountsService.Models;
-using Microsoft.Win32;
+using AccountsService.Validators;
 
 namespace AccountsService.Services
 {
@@ -16,6 +16,9 @@ namespace AccountsService.Services
         private readonly string _serviceEmail;
         private readonly string _servicePassword;
         private readonly Dictionary<string, string> _requests;
+        private const string SmtpHost = "smtp.gmail.com";
+        private const int SmtpPort = 587;
+        private readonly Validator _validator;
 
         public string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
 
@@ -26,9 +29,6 @@ namespace AccountsService.Services
             _servicePassword = servicePassword;
             _requests = requests;
         }
-
-        private const string SmtpHost = "smtp.gmail.com";
-        private const int SmtpPort = 587;
 
         private async Task SendEmailAsync(string recipientEmail, string messageBody, string subject)
         {
@@ -66,41 +66,9 @@ namespace AccountsService.Services
                 return sb.ToString();
             }
         }
-
-        private bool IsValidEmail(string email)
-        {
-            if (string.IsNullOrWhiteSpace(email))
-                return false;
-
-            try
-            {
-                var addr = new MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        private bool ValidateModel<TModel>(TModel model, object data)
-        {
-            if (data == null)
-            {
-                return false;
-            }
-
-            var modelProperties = typeof(TModel).GetProperties().Select(p => p.Name).ToHashSet();
-
-            var dataProperties = data.GetType().GetProperties().Select(p => p.Name).ToHashSet();
-
-            return dataProperties.IsSubsetOf(modelProperties) && modelProperties.IsSubsetOf(dataProperties);
-        }
-
-
         public async Task<ResponseModel> CheckEmailAsync(string? email)
         {
-            if (string.IsNullOrWhiteSpace(email))
+            if (!_validator.IsNotEmpty(email))
             {
                 return new ResponseModel
                 {
@@ -110,7 +78,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!IsValidEmail(email))
+            if (!_validator.IsValidEmail(email))
             {
                 return new ResponseModel
                 {
@@ -120,7 +88,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (email.Length > 100)
+            if (!_validator.IsWithinMaxLength(email, 100))
             {
                 return new ResponseModel
                 {
@@ -181,9 +149,9 @@ namespace AccountsService.Services
         }
 
 
-        public async Task<ResponseModel> GenerateCodeAsync(string email)
+        public async Task<ResponseModel> GenerateCodeAsync(string? email)
         {
-            if (string.IsNullOrWhiteSpace(email))
+            if (!_validator.IsNotEmpty(email))
             {
                 return new ResponseModel
                 {
@@ -193,7 +161,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!IsValidEmail(email))
+            if (!_validator.IsValidEmail(email))
             {
                 return new ResponseModel
                 {
@@ -203,7 +171,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (email.Length > 100)
+            if (!_validator.IsWithinMaxLength(email, 100))
             {
                 return new ResponseModel
                 {
@@ -224,7 +192,8 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = true,
-                    Message = $"{verificationCode}"
+                    Message = "Vertification code generated",
+                    Data = verificationCode
                 };
             }
             catch (Exception ex)
@@ -239,9 +208,9 @@ namespace AccountsService.Services
 
         }
 
-        public async Task<ResponseModel> ResetPasswordAsync(string email)
+        public async Task<ResponseModel> ResetPasswordAsync(string? email)
         {
-            if (string.IsNullOrWhiteSpace(email))
+            if (!_validator.IsNotEmpty(email))
             {
                 return new ResponseModel
                 {
@@ -251,7 +220,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!IsValidEmail(email))
+            if (!_validator.IsValidEmail(email))
             {
                 return new ResponseModel
                 {
@@ -261,7 +230,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (email.Length > 100)
+            if (!_validator.IsWithinMaxLength(email, 100))
             {
                 return new ResponseModel
                 {
@@ -313,7 +282,8 @@ namespace AccountsService.Services
                     {
                         Date = currentDateTime,
                         RequestExecution = true,
-                        Message = $"{newPassword}"
+                        Message = "Password reseted",
+                        Data = newPassword
                     };
                 }
 
@@ -340,17 +310,7 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> LoginAsync(LoginModel login)
         {
-            if (!ValidateModel(new LoginModel(), login))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Invalid data structure"
-                };
-            }
-
-            if (string.IsNullOrWhiteSpace(login.Email))
+            if (!_validator.IsNotEmpty(login.Email))
             {
                 return new ResponseModel
                 {
@@ -360,7 +320,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!IsValidEmail(login.Email))
+            if (!_validator.IsValidEmail(login.Email))
             {
                 return new ResponseModel
                 {
@@ -370,7 +330,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (login.Email.Length > 100)
+            if (!_validator.IsWithinMaxLength(login.Email, 100))
             {
                 return new ResponseModel
                 {
@@ -380,7 +340,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (string.IsNullOrWhiteSpace(login.PasswordHash))
+            if (!_validator.IsNotEmpty(login.PasswordHash))
             {
                 return new ResponseModel
                 {
@@ -390,7 +350,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (login.PasswordHash.Length > 500)
+            if (!_validator.IsWithinMaxLength(login.PasswordHash, 500))
             {
                 return new ResponseModel
                 {
@@ -426,7 +386,8 @@ namespace AccountsService.Services
                         {
                             Date = currentDateTime,
                             RequestExecution = true,
-                            Message = $"{result}"
+                            Message = "Login and password is correct",
+                            Data = result
                         };
                     }
                 }
@@ -453,17 +414,8 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> RegisterAsync(RegisterModel register)
         {
-            if (!ValidateModel(new RegisterModel(), register))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Invalid data structure"
-                };
-            }
 
-            if (!register.AccountId.HasValue)
+            if (!_validator.IsNotEmpty(register.AccountId?.ToString()))
             {
                 return new ResponseModel
                 {
@@ -473,7 +425,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (register.AccountId == default || register.AccountId <= 0)
+            if (!_validator.IsPositiveNumber(register.AccountId?.ToString()))
             {
                 return new ResponseModel
                 {
@@ -483,7 +435,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (string.IsNullOrWhiteSpace(register.AccountName))
+            if (!_validator.IsNotEmpty(register.AccountName))
             {
                 return new ResponseModel
                 {
@@ -493,7 +445,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (register.AccountName.Length > 50)
+            if (!_validator.IsWithinMaxLength(register.AccountName, 50))
             {
                 return new ResponseModel
                 {
@@ -503,7 +455,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (string.IsNullOrWhiteSpace(register.Email))
+            if (!_validator.IsNotEmpty(register.Email))
             {
                 return new ResponseModel
                 {
@@ -513,7 +465,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!IsValidEmail(register.Email))
+            if (!_validator.IsValidEmail(register.Email))
             {
                 return new ResponseModel
                 {
@@ -523,7 +475,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (register.Email.Length > 100)
+            if (!_validator.IsWithinMaxLength(register.Email, 100))
             {
                 return new ResponseModel
                 {
@@ -533,7 +485,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (string.IsNullOrWhiteSpace(register.PasswordHash))
+            if (!_validator.IsNotEmpty(register.PasswordHash))
             {
                 return new ResponseModel
                 {
@@ -543,7 +495,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (register.PasswordHash.Length > 500)
+            if (!_validator.IsWithinMaxLength(register.PasswordHash, 500))
             {
                 return new ResponseModel
                 {

@@ -15,45 +15,45 @@ namespace AccountsService.Controllers
         }
 
         [HttpGet("get-account-info")]
-        public async Task<IActionResult> GetAccountInfo([FromQuery] int accountId)
+        public async Task<IActionResult> GetAccountInfo([FromQuery] int? accountId)
         {
-            var accountInfo = await _accountService.GetAccountInformationAsync(accountId);
-            return Ok(accountInfo);
+            var result = await _accountService.GetAccountInformationAsync(accountId);
+            return Ok(result);
         }
 
         [HttpGet("get-orders")]
-        public async Task<IActionResult> GetOrders([FromQuery] int accountId)
+        public async Task<IActionResult> GetOrders([FromQuery] int? accountId)
         {
-            var orders = await _accountService.GetAccountOrdersAsync(accountId);
-            return Ok(orders);
+            var result = await _accountService.GetAccountOrdersAsync(accountId);
+            return Ok(result);
         }
 
         [HttpPut("change-name")]
-        public async Task<IActionResult> ChangeName([FromQuery] string oldName, [FromQuery] string newName)
+        public async Task<IActionResult> ChangeName([FromQuery] string? oldName, [FromQuery] string? newName)
         {
             var result = await _accountService.ChangeNameAsync(oldName, newName);
-            return Ok(new { message = result });
+            return Ok(result);
         }
 
         [HttpPut("change-email")]
-        public async Task<IActionResult> ChangeEmail([FromQuery] string oldEmail, [FromQuery] string newEmail)
+        public async Task<IActionResult> ChangeEmail([FromQuery] string? oldEmail, [FromQuery] string? newEmail)
         {
             var result = await _accountService.ChangeEmailAsync(oldEmail, newEmail);
-            return Ok(new { message = result });
+            return Ok(result);
         }
 
         [HttpPut("change-password")]
-        public async Task<IActionResult> ChangePassword([FromQuery] string oldPasswordHash, [FromQuery] string newPasswordHash)
+        public async Task<IActionResult> ChangePassword([FromQuery] string? oldPasswordHash, [FromQuery] string? newPasswordHash)
         {
             var result = await _accountService.ChangePasswordAsync(oldPasswordHash, newPasswordHash);
-            return Ok(new { message = result });
+            return Ok(result);
         }
 
         [HttpDelete("delete-account")]
-        public async Task<IActionResult> DeleteAccount([FromQuery] int accountId)
+        public async Task<IActionResult> DeleteAccount([FromQuery] int? accountId)
         {
             var result = await _accountService.DeleteAccountAsync(accountId);
-            return Ok(new { message = result });
+            return Ok(result);
         }
     }
 }

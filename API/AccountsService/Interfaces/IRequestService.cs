@@ -1,10 +1,11 @@
-﻿using AccountsService.Models.Request;
+﻿using AccountsService.Models;
+using AccountsService.Models.Request;
 
 namespace AccountsService.Interfaces
 {
     public interface IRequestService
     {
-        public Task<string> AddOrderAsync(OrderModel order);
-        public Task<string> AddQuestionAsync(QuestionModel question);
+        public Task<ResponseModel> AddOrderAsync(OrderModel order);
+        public Task<ResponseModel> AddQuestionAsync(QuestionModel question);
     }
 }

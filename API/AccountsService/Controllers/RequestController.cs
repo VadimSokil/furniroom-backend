@@ -18,15 +18,15 @@ namespace AccountsService.Controllers
         [HttpPost("add-order")]
         public async Task<ActionResult> AddOrder([FromBody] OrderModel order)
         {
-            var resultMessage = await _requestsService.AddOrderAsync(order);
-            return Ok(new { message = "Order successfully added" });
+            var result = await _requestsService.AddOrderAsync(order);
+            return Ok(result);
         }
 
         [HttpPost("add-question")]
         public async Task<ActionResult> AddQuestion([FromBody] QuestionModel question)
         {
-            var resultMessage = await _requestsService.AddQuestionAsync(question);
-            return Ok(new { message = "Question successfully added" });
+            var result = await _requestsService.AddQuestionAsync(question);
+            return Ok(result);
         }
     }
 }
