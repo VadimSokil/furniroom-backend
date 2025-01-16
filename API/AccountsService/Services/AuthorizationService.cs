@@ -149,7 +149,7 @@ namespace AccountsService.Services
         }
 
 
-        public async Task<ResponseModel> GenerateCodeAsync(string? email)
+        public async Task<ResponseModel> GenerateCodeAsync(string email)
         {
             if (!_validator.IsNotEmpty(email))
             {
@@ -208,7 +208,7 @@ namespace AccountsService.Services
 
         }
 
-        public async Task<ResponseModel> ResetPasswordAsync(string? email)
+        public async Task<ResponseModel> ResetPasswordAsync(string email)
         {
             if (!_validator.IsNotEmpty(email))
             {

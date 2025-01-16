@@ -16,25 +16,26 @@ namespace AccountsService.Controllers
         }
 
         [HttpGet("check-email")]
-        public async Task<ActionResult> CheckEmail([FromQuery] string? email)
+        public async Task<ActionResult> CheckEmail([FromQuery] string email)
         {
             var result = await _authorizationService.CheckEmailAsync(email);
             return Ok(result);
         }
 
         [HttpGet("generate-code")]
-        public async Task<ActionResult> GenerateCode([FromQuery] string? email)
+        public async Task<ActionResult> GenerateCode([FromQuery] string email)
         {
             var result = await _authorizationService.GenerateCodeAsync(email);
             return Ok(result);
         }
 
         [HttpPost("reset-password")]
-        public async Task<ActionResult> ResetPassword([FromBody] string? email)
+        public async Task<ActionResult> ResetPassword([FromBody] string email)
         {
             var result = await _authorizationService.ResetPasswordAsync(email);
             return Ok(result);
         }
+
 
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] RegisterModel register)
