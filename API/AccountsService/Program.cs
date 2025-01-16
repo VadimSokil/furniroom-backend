@@ -1,5 +1,6 @@
 using AccountsService.Interfaces;
 using AccountsService.Services;
+using AccountsService.Validators;
 
 namespace AccountsService
 {
@@ -23,6 +24,7 @@ namespace AccountsService
             builder.Services.AddScoped<IAuthorizationService, AuthorizationService>(provider => new AuthorizationService(connectionString, serviceEmail, servicePassword, requests));
             builder.Services.AddScoped<IAccountService, AccountService>(provider => new AccountService(connectionString, requests));
             builder.Services.AddScoped<IRequestService, RequestService>(provider => new RequestService(connectionString, requests));
+            builder.Services.AddScoped<Validator>();
 
             builder.Services.AddCors(options =>
             {
