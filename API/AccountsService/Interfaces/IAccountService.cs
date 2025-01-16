@@ -1,5 +1,4 @@
 ﻿using AccountsService.Models;
-using AccountsService.Models.Account;
 
 namespace AccountsService.Interfaces
 {

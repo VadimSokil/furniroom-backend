@@ -20,7 +20,7 @@ namespace AccountsService.Services
             _requests = requests;
         }
 
-        public async Task<ResponseModel> GetAccountInformationAsync(int? accountId)
+        public async Task<ResponseModel> GetAccountInformationAsync(int accountId)
         {
             if (!_validator.IsNotEmpty(accountId.ToString()))
             {
