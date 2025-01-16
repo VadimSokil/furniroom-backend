@@ -1,5 +1,6 @@
 using InformationService.Services;
 using InformationService.Interfaces;
+using InformationService.Validation;
 
 namespace InformationService
 {
@@ -22,7 +23,8 @@ namespace InformationService
 
             builder.Services.AddScoped<ICompanyService, CompanyService>(provider => new CompanyService(connectionString, requests));
             builder.Services.AddScoped<IProductsService, ProductsService>(provider => new ProductsService(connectionString, requests));
-            
+            builder.Services.AddScoped<ValidationMethods>();
+
 
             builder.Services.AddCors(options =>
             {
