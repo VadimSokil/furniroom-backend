@@ -3,7 +3,7 @@ using AccountsService.Models;
 using AccountsService.Models.Account;
 using MySql.Data.MySqlClient;
 using System.Data;
-using AccountsService.Validators;
+using AccountsService.Validation;
 
 namespace AccountsService.Services
 {
@@ -12,7 +12,7 @@ namespace AccountsService.Services
         private readonly string _connectionString;
         private readonly Dictionary<string, string> _requests;
         public string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
-        private readonly Validator _validator;
+        public ValidationMethods validationMethods = new ValidationMethods();
 
         public AccountService(string connectionString, Dictionary<string, string> requests)
         {
@@ -22,7 +22,7 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> GetAccountInformationAsync(int? accountId)
         {
-            if (!_validator.IsNotEmpty(accountId.ToString()))
+            if (!validationMethods.IsNotEmptyValue(accountId))
             {
                 return new ResponseModel
                 {
@@ -32,7 +32,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsPositiveNumber(accountId.ToString()))
+            if (!validationMethods.IsValidDigit(accountId))
             {
                 return new ResponseModel
                 {
@@ -105,7 +105,7 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> GetAccountOrdersAsync(int? accountId)
         {
-            if (!_validator.IsNotEmpty(accountId?.ToString()))
+            if (!validationMethods.IsNotEmptyValue(accountId))
             {
                 return new ResponseModel
                 {
@@ -115,7 +115,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsPositiveNumber(accountId?.ToString()))
+            if (!validationMethods.IsValidDigit(accountId))
             {
                 return new ResponseModel
                 {
@@ -204,7 +204,7 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> ChangeNameAsync(string oldName, string newName)
         {
-            if (!_validator.IsNotEmpty(oldName))
+            if (!validationMethods.IsNotEmptyValue(oldName))
             {
                 return new ResponseModel
                 {
@@ -214,7 +214,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsNotEmpty(newName))
+            if (!validationMethods.IsNotEmptyValue(newName))
             {
                 return new ResponseModel
                 {
@@ -224,7 +224,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsWithinMaxLength(oldName, 50))
+            if (!validationMethods.IsValidLength(oldName, 50))
             {
                 return new ResponseModel
                 {
@@ -234,7 +234,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsWithinMaxLength(newName, 50))
+            if (!validationMethods.IsValidLength(newName, 50))
             {
                 return new ResponseModel
                 {
@@ -326,7 +326,7 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> ChangeEmailAsync(string oldEmail, string newEmail)
         {
-            if (!_validator.IsNotEmpty(oldEmail))
+            if (!validationMethods.IsNotEmptyValue(oldEmail))
             {
                 return new ResponseModel
                 {
@@ -336,7 +336,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsNotEmpty(newEmail))
+            if (!validationMethods.IsNotEmptyValue(newEmail))
             {
                 return new ResponseModel
                 {
@@ -346,7 +346,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsValidEmail(oldEmail))
+            if (!validationMethods.IsValidEmail(oldEmail))
             {
                 return new ResponseModel
                 {
@@ -356,7 +356,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsValidEmail(newEmail))
+            if (!validationMethods.IsValidEmail(newEmail))
             {
                 return new ResponseModel
                 {
@@ -366,7 +366,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsWithinMaxLength(oldEmail, 50))
+            if (!validationMethods.IsValidLength(oldEmail, 50))
             {
                 return new ResponseModel
                 {
@@ -376,7 +376,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsWithinMaxLength(newEmail, 50))
+            if (!validationMethods.IsValidLength(newEmail, 50))
             {
                 return new ResponseModel
                 {
@@ -472,7 +472,7 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> ChangePasswordAsync(string oldPasswordHash, string newPasswordHash)
         {
-            if (!_validator.IsNotEmpty(newPasswordHash))
+            if (!validationMethods.IsNotEmptyValue(newPasswordHash))
             {
                 return new ResponseModel
                 {
@@ -482,7 +482,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsNotEmpty(oldPasswordHash))
+            if (!validationMethods.IsNotEmptyValue(oldPasswordHash))
             {
                 return new ResponseModel
                 {
@@ -492,7 +492,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsWithinMaxLength(oldPasswordHash, 50))
+            if (!validationMethods.IsValidLength(oldPasswordHash, 50))
             {
                 return new ResponseModel
                 {
@@ -502,7 +502,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsWithinMaxLength(newPasswordHash, 50))
+            if (!validationMethods.IsValidLength(newPasswordHash, 50))
             {
                 return new ResponseModel
                 {
@@ -562,7 +562,7 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> DeleteAccountAsync(int? accountId)
         {
-            if (!_validator.IsNotEmpty(accountId?.ToString()))
+            if (!validationMethods.IsNotEmptyValue(accountId))
             {
                 return new ResponseModel
                 {
@@ -572,7 +572,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsPositiveNumber(accountId?.ToString()))
+            if (!validationMethods.IsValidDigit(accountId))
             {
                 return new ResponseModel
                 {

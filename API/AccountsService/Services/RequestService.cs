@@ -2,7 +2,7 @@
 using AccountsService.Interfaces;
 using AccountsService.Models.Request;
 using AccountsService.Models;
-using AccountsService.Validators;
+using AccountsService.Validation;
 
 namespace AccountsService.Services
 {
@@ -10,8 +10,8 @@ namespace AccountsService.Services
     {
         private readonly string _connectionString;
         private readonly Dictionary<string, string> _requests;
-        private readonly Validator _validator;
         public string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
+        ValidationMethods validationMethods = new ValidationMethods();
 
         public RequestService(string connectionString, Dictionary<string, string> requests)
         {
@@ -21,7 +21,7 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> AddOrderAsync(OrderModel order)
         {
-            if (!_validator.IsNotEmpty(order.OrderId?.ToString()))
+            if (!validationMethods.IsNotEmptyValue(order.OrderId))
             {
                 return new ResponseModel
                 {
@@ -31,7 +31,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsPositiveNumber(order.OrderId?.ToString()))
+            if (!validationMethods.IsValidDigit(order.OrderId))
             {
                 return new ResponseModel
                 {
@@ -41,7 +41,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsNotEmpty(order.OrderDate))
+            if (!validationMethods.IsNotEmptyValue(order.OrderDate))
             {
                 return new ResponseModel
                 {
@@ -51,7 +51,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsNotEmpty(order.AccountId?.ToString()))
+            if (!validationMethods.IsNotEmptyValue(order.AccountId))
             {
                 return new ResponseModel
                 {
@@ -61,7 +61,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsPositiveNumber(order.AccountId?.ToString()))
+            if (!validationMethods.IsValidDigit(order.AccountId))
             {
                 return new ResponseModel
                 {
@@ -71,7 +71,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsNotEmpty(order.PhoneNumber))
+            if (!validationMethods.IsNotEmptyValue(order.PhoneNumber))
             {
                 return new ResponseModel
                 {
@@ -81,7 +81,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsWithinMaxLength(order.PhoneNumber, 15))
+            if (!validationMethods.IsValidLength(order.PhoneNumber, 15))
             {
                 return new ResponseModel
                 {
@@ -91,7 +91,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsNotEmpty(order.Country))
+            if (!validationMethods.IsNotEmptyValue(order.Country))
             {
                 return new ResponseModel
                 {
@@ -101,7 +101,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsWithinMaxLength(order.Country, 100))
+            if (!validationMethods.IsValidLength(order.Country, 100))
             {
                 return new ResponseModel
                 {
@@ -111,7 +111,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsNotEmpty(order.Region))
+            if (!validationMethods.IsNotEmptyValue(order.Region))
             {
                 return new ResponseModel
                 {
@@ -121,7 +121,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsWithinMaxLength(order.Region, 100))
+            if (!validationMethods.IsValidLength(order.Region, 100))
             {
                 return new ResponseModel
                 {
@@ -131,7 +131,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsNotEmpty(order.District))
+            if (!validationMethods.IsNotEmptyValue(order.District))
             {
                 return new ResponseModel
                 {
@@ -141,7 +141,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsWithinMaxLength(order.District, 100))
+            if (!validationMethods.IsValidLength(order.District, 100))
             {
                 return new ResponseModel
                 {
@@ -151,7 +151,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsWithinMaxLength(order.City, 100))
+            if (!validationMethods.IsValidLength(order.City, 100))
             {
                 return new ResponseModel
                 {
@@ -161,7 +161,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsWithinMaxLength(order.Village, 100))
+            if (!validationMethods.IsValidLength(order.Village, 100))
             {
                 return new ResponseModel
                 {
@@ -171,7 +171,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsNotEmpty(order.Street))
+            if (!validationMethods.IsNotEmptyValue(order.Street))
             {
                 return new ResponseModel
                 {
@@ -181,7 +181,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsWithinMaxLength(order.Street, 100))
+            if (!validationMethods.IsValidLength(order.Street, 100))
             {
                 return new ResponseModel
                 {
@@ -191,7 +191,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsNotEmpty(order.HouseNumber))
+            if (!validationMethods.IsNotEmptyValue(order.HouseNumber))
             {
                 return new ResponseModel
                 {
@@ -201,7 +201,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsWithinMaxLength(order.HouseNumber, 50))
+            if (!validationMethods.IsValidLength(order.HouseNumber, 50))
             {
                 return new ResponseModel
                 {
@@ -211,7 +211,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsWithinMaxLength(order.ApartmentNumber, 50))
+            if (!validationMethods.IsValidLength(order.ApartmentNumber, 50))
             {
                 return new ResponseModel
                 {
@@ -221,7 +221,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsNotEmpty(order.OrderText))
+            if (!validationMethods.IsNotEmptyValue(order.OrderText))
             {
                 return new ResponseModel
                 {
@@ -231,7 +231,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsWithinMaxLength(order.OrderText, 500))
+            if (!validationMethods.IsValidLength(order.OrderText, 500))
             {
                 return new ResponseModel
                 {
@@ -241,7 +241,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsNotEmpty(order.DeliveryType))
+            if (!validationMethods.IsNotEmptyValue(order.DeliveryType))
             {
                 return new ResponseModel
                 {
@@ -251,7 +251,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsWithinMaxLength(order.DeliveryType, 100))
+            if (!validationMethods.IsValidLength(order.DeliveryType, 100))
             {
                 return new ResponseModel
                 {
@@ -333,7 +333,7 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> AddQuestionAsync(QuestionModel question)
         {
-            if (!_validator.IsNotEmpty(question.QuestionId?.ToString()))
+            if (!validationMethods.IsNotEmptyValue(question.QuestionId?.ToString()))
             {
                 return new ResponseModel
                 {
@@ -343,7 +343,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsPositiveNumber(question.QuestionId?.ToString()))
+            if (!validationMethods.IsValidDigit(question.QuestionId))
             {
                 return new ResponseModel
                 {
@@ -353,7 +353,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsNotEmpty(question.QuestionDate))
+            if (!validationMethods.IsNotEmptyValue(question.QuestionDate))
             {
                 return new ResponseModel
                 {
@@ -363,7 +363,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsNotEmpty(question.UserName))
+            if (!validationMethods.IsNotEmptyValue(question.UserName))
             {
                 return new ResponseModel
                 {
@@ -373,7 +373,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsWithinMaxLength(question.UserName, 100))
+            if (!validationMethods.IsValidLength(question.UserName, 100))
             {
                 return new ResponseModel
                 {
@@ -383,7 +383,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsNotEmpty(question.PhoneNumber))
+            if (!validationMethods.IsNotEmptyValue(question.PhoneNumber))
             {
                 return new ResponseModel
                 {
@@ -393,7 +393,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsWithinMaxLength(question.PhoneNumber, 15))
+            if (!validationMethods.IsValidLength(question.PhoneNumber, 15))
             {
                 return new ResponseModel
                 {
@@ -403,7 +403,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsNotEmpty(question.QuestionText))
+            if (!validationMethods.IsNotEmptyValue(question.QuestionText))
             {
                 return new ResponseModel
                 {
@@ -413,7 +413,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsWithinMaxLength(question.QuestionText, 500))
+            if (!validationMethods.IsValidLength(question.QuestionText, 500))
             {
                 return new ResponseModel
                 {
