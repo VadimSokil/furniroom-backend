@@ -10,6 +10,7 @@ namespace AccountsService.Validators
             return !string.IsNullOrWhiteSpace(value);
         }
 
+
         public bool IsPositiveNumber(string value)
         {
             if (decimal.TryParse(value, out decimal number))
@@ -21,20 +22,23 @@ namespace AccountsService.Validators
 
         public bool IsValidEmail(string email)
         {
-            try
-            {
-                var addr = new MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
+            if (string.IsNullOrWhiteSpace(email))
             {
                 return false;
             }
+
+            string emailRegex = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+            return Regex.IsMatch(email, emailRegex, RegexOptions.IgnoreCase);
         }
+
 
         public bool IsWithinMaxLength(string value, int maxLength)
         {
-            return value != null && value.Length <= maxLength;
+            if (value.Length > maxLength)
+            {
+                return false;
+            }
+            else return true;
         }
     }
 }

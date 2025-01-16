@@ -68,35 +68,35 @@ namespace AccountsService.Services
         }
         public async Task<ResponseModel> CheckEmailAsync(string email)
         {
-            if (string.IsNullOrWhiteSpace(email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email address cannot be empty"
-                };
-            }
+            //if (string.IsNullOrWhiteSpace(email))
+            //{
+            //    return new ResponseModel
+            //    {
+            //        Date = currentDateTime,
+            //        RequestExecution = false,
+            //        Message = "Email address cannot be empty"
+            //    };
+            //}
 
-            if (!_validator.IsValidEmail(email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Invalid email address format"
-                };
-            }
+            //if (!_validator.IsValidEmail(email))
+            //{
+            //    return new ResponseModel
+            //    {
+            //        Date = currentDateTime,
+            //        RequestExecution = false,
+            //        Message = "Invalid email address format"
+            //    };
+            //}
 
-            if (!_validator.IsWithinMaxLength(email, 100))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Maximum number of characters exceeded for email"
-                };
-            }
+            //if (!_validator.IsWithinMaxLength(email, 100))
+            //{
+            //    return new ResponseModel
+            //    {
+            //        Date = currentDateTime,
+            //        RequestExecution = false,
+            //        Message = "Maximum number of characters exceeded for email"
+            //    };
+            //}
 
             try
             {
