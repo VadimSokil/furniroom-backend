@@ -66,7 +66,7 @@ namespace AccountsService.Services
                 return sb.ToString();
             }
         }
-        public async Task<ResponseModel> CheckEmailAsync(string? email)
+        public async Task<ResponseModel> CheckEmailAsync(string email)
         {
             if (!_validator.IsNotEmpty(email))
             {
