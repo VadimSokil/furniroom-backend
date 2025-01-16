@@ -20,7 +20,7 @@ namespace AccountsService.Services
             _requests = requests;
         }
 
-        public async Task<ResponseModel> GetAccountInformationAsync(int accountId)
+        public async Task<ResponseModel> GetAccountInformationAsync(int? accountId)
         {
             if (!_validator.IsNotEmpty(accountId.ToString()))
             {
@@ -32,7 +32,7 @@ namespace AccountsService.Services
                 };
             }
 
-            if (!_validator.IsPositiveNumber(accountId?.ToString()))
+            if (!_validator.IsPositiveNumber(accountId.ToString()))
             {
                 return new ResponseModel
                 {
