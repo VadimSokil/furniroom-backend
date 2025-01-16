@@ -68,7 +68,7 @@ namespace AccountsService.Services
         }
         public async Task<ResponseModel> CheckEmailAsync(string email)
         {
-            if (!_validator.IsNotEmpty(email))
+            if (string.IsNullOrWhiteSpace(email))
             {
                 return new ResponseModel
                 {
