@@ -22,7 +22,7 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> GetAccountInformationAsync(int? accountId)
         {
-            if (!_validator.IsNotEmpty(accountId?.ToString()))
+            if (!_validator.IsNotEmpty(accountId.ToString()))
             {
                 return new ResponseModel
                 {
