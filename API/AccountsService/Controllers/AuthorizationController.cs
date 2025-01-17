@@ -3,7 +3,6 @@ using AccountsService.Interfaces;
 using AccountsService.Models.Authorization;
 using AccountsService.Models.Response;
 using AccountsService.Validation;
-using System.Text.Json;
 
 namespace AccountsService.Controllers
 {
@@ -288,20 +287,9 @@ namespace AccountsService.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<ResponseModel>> Login([FromBody] JsonElement loginJson)
+        public async Task<ActionResult<ResponseModel>> Login([FromBody] LoginModel login)
         {
-            var login = loginJson.Deserialize<LoginModel>();
-
-            if (login == null)
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Invalid data structure. Please check your input."
-                };
-            }
-            else if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return new ResponseModel
                 {
@@ -310,22 +298,6 @@ namespace AccountsService.Controllers
                     Message = "The structure of the data is incorrect"
                 };
             }
-            var jsonKeys = loginJson.EnumerateObject().Select(kv => kv.Name).ToHashSet();
-            var modelProperties = typeof(LoginModel).GetProperties().Select(p => p.Name).ToHashSet();
-
-            foreach (var key in jsonKeys)
-            {
-                if (!modelProperties.Contains(key))
-                {
-                    return new ResponseModel
-                    {
-                        Date = currentDateTime,
-                        RequestExecution = false,
-                        Message = "Invalid data structure. Extra field detected: " + key
-                    };
-                }
-            }
-
             if (!validationMethods.IsString(login.Email))
             {
                 return new ResponseModel
