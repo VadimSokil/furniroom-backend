@@ -289,6 +289,15 @@ namespace AccountsService.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<ResponseModel>> Login([FromBody] LoginModel login)
         {
+            if (!ModelState.IsValid)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "The structure of the data is incorrect"
+                };
+            }
             if (login == null)
             {
                 return new ResponseModel
