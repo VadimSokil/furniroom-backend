@@ -3,7 +3,6 @@ using AccountsService.Models.Response;
 using AccountsService.Models.Account;
 using MySql.Data.MySqlClient;
 using System.Data;
-using AccountsService.Validation;
 
 namespace AccountsService.Services
 {
@@ -12,7 +11,6 @@ namespace AccountsService.Services
         private readonly string _connectionString;
         private readonly Dictionary<string, string> _requests;
         public string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
-        public ValidationMethods validationMethods = new ValidationMethods();
 
         public AccountService(string connectionString, Dictionary<string, string> requests)
         {
@@ -22,26 +20,6 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> GetAccountInformationAsync(int? accountId)
         {
-            if (!validationMethods.IsNotEmptyValue(accountId))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Account ID cannot be empty"
-                };
-            }
-
-            if (!validationMethods.IsValidDigit(accountId))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Account ID must be a positive number"
-                };
-            }
-
             try
             {
                 using (var connection = new MySqlConnection(_connectionString))
@@ -105,26 +83,6 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> GetAccountOrdersAsync(int? accountId)
         {
-            if (!validationMethods.IsNotEmptyValue(accountId))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Account ID cannot be empty"
-                };
-            }
-
-            if (!validationMethods.IsValidDigit(accountId))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Account ID must be a positive number"
-                };
-            }
-
             try
             {
                 var orders = new List<AccountOrdersModel>();
@@ -204,46 +162,6 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> ChangeNameAsync(string oldName, string newName)
         {
-            if (!validationMethods.IsNotEmptyValue(oldName))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Old name cannot be empty"
-                };
-            }
-
-            if (!validationMethods.IsNotEmptyValue(newName))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "New name cannot be empty"
-                };
-            }
-
-            if (!validationMethods.IsValidLength(oldName, 50))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Old name exceeds the maximum allowed length of 50 characters"
-                };
-            }
-
-            if (!validationMethods.IsValidLength(newName, 50))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "New name exceeds the maximum allowed length of 50 characters"
-                };
-            }
-
             try
             {
                 using (var connection = new MySqlConnection(_connectionString))
@@ -320,66 +238,6 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> ChangeEmailAsync(string oldEmail, string newEmail)
         {
-            if (!validationMethods.IsNotEmptyValue(oldEmail))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Old email cannot be empty"
-                };
-            }
-
-            if (!validationMethods.IsNotEmptyValue(newEmail))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "New email cannot be empty"
-                };
-            }
-
-            if (!validationMethods.IsValidEmail(oldEmail))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Old email address format is invalid"
-                };
-            }
-
-            if (!validationMethods.IsValidEmail(newEmail))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "New email address format is invalid"
-                };
-            }
-
-            if (!validationMethods.IsValidLength(oldEmail, 254))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Old email exceeds the maximum allowed length of 254 characters"
-                };
-            }
-
-            if (!validationMethods.IsValidLength(newEmail, 254))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "New email exceeds the maximum allowed length of 254 characters"
-                };
-            }
-
             try
             {
                 using (var connection = new MySqlConnection(_connectionString))
@@ -454,46 +312,6 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> ChangePasswordAsync(string oldPasswordHash, string newPasswordHash)
         {
-            if (!validationMethods.IsNotEmptyValue(newPasswordHash))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "New password cannot be empty"
-                };
-            }
-
-            if (!validationMethods.IsNotEmptyValue(oldPasswordHash))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Old password cannot be empty"
-                };
-            }
-
-            if (!validationMethods.IsValidLength(oldPasswordHash, 128))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Old email exceeds the maximum allowed length of 128 characters"
-                };
-            }
-
-            if (!validationMethods.IsValidLength(newPasswordHash, 128))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "New email exceeds the maximum allowed length of 128 characters"
-                };
-            }
-
             try
             {
                 using (var connection = new MySqlConnection(_connectionString))
@@ -544,26 +362,6 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> DeleteAccountAsync(int? accountId)
         {
-            if (!validationMethods.IsNotEmptyValue(accountId))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Account ID cannot be empty"
-                };
-            }
-
-            if (!validationMethods.IsValidDigit(accountId))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Account ID must be a positive number"
-                };
-            }
-
             try
             {
                 using (var connection = new MySqlConnection(_connectionString))
