@@ -21,7 +21,7 @@ namespace AccountsService.Controllers
         }
 
         [HttpGet("check-email")]
-        public async Task<ActionResult<ResponseModel>> CheckEmail([FromQuery] string? email)
+        public async Task<ActionResult<ResponseModel>> CheckEmail([FromQuery][Required]string? email)
         {
             if (!ModelState.IsValid)
             {
@@ -67,7 +67,7 @@ namespace AccountsService.Controllers
         }
 
         [HttpGet("generate-code")]
-        public async Task<ActionResult<ResponseModel>> GenerateCode([FromQuery] string? email)
+        public async Task<ActionResult<ResponseModel>> GenerateCode([FromQuery][Required]string? email)
         {
             if (!ModelState.IsValid)
             {
@@ -113,7 +113,7 @@ namespace AccountsService.Controllers
         }
 
         [HttpPost("reset-password")]
-        public async Task<ActionResult<ResponseModel>> ResetPassword([FromBody] string? email)
+        public async Task<ActionResult<ResponseModel>> ResetPassword([FromQuery][Required] string? email)
         {
             if (!ModelState.IsValid)
             {
@@ -189,15 +189,6 @@ namespace AccountsService.Controllers
                     Message = "Account ID must be a positive number"
                 };
             }
-            else if (!validationMethods.IsString(register.AccountName))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Account name must be a string"
-                };
-            }
             else if (!validationMethods.IsNotEmptyValue(register.AccountName))
             {
                 return new ResponseModel
@@ -214,15 +205,6 @@ namespace AccountsService.Controllers
                     Date = currentDateTime,
                     RequestExecution = false,
                     Message = "Account name exceeds the maximum allowed length of 50 characters"
-                };
-            }
-            else if (!validationMethods.IsString(register.Email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email address must be a string"
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(register.Email))
@@ -250,15 +232,6 @@ namespace AccountsService.Controllers
                     Date = currentDateTime,
                     RequestExecution = false,
                     Message = "Email exceeds the maximum allowed length of 254 characters"
-                };
-            }
-            else if (!validationMethods.IsString(register.PasswordHash))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Password must be a string"
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(register.PasswordHash))
@@ -324,15 +297,6 @@ namespace AccountsService.Controllers
                     Date = currentDateTime,
                     RequestExecution = false,
                     Message = "Email exceeds the maximum allowed length of 254 characters"
-                };
-            }
-            else if (!validationMethods.IsString(login.PasswordHash))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Password must be a string"
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(login.PasswordHash))

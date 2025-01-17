@@ -48,29 +48,5 @@
 
             return value.Length <= lengthLimit;
         }
-
-        public bool IsString(object value)
-        {
-            if (value is string)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public bool IsDigit(object value)
-        {
-            if (value is int)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
     }
 }
