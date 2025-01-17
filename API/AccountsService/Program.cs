@@ -1,6 +1,7 @@
 using AccountsService.Interfaces;
 using AccountsService.Services;
 using AccountsService.Validation;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AccountsService
 {
@@ -35,6 +36,12 @@ namespace AccountsService
                           .AllowAnyHeader();
                 });
             });
+
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();

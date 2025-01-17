@@ -1,4 +1,5 @@
-﻿using AccountsService.Models.Response;
+﻿using AccountsService.Models.Account;
+using AccountsService.Models.Response;
 
 namespace AccountsService.Interfaces
 {
@@ -6,9 +7,9 @@ namespace AccountsService.Interfaces
     {
         public Task<ResponseModel> GetAccountInformationAsync(int? accountId);
         public Task<ResponseModel> GetAccountOrdersAsync(int? accountId);
-        public Task<ResponseModel> ChangeNameAsync(string? oldName, string? newName);
-        public Task<ResponseModel> ChangeEmailAsync(string? oldEmail, string? newEmail);
-        public Task<ResponseModel> ChangePasswordAsync(string? oldPasswordHash, string? newPasswordHash);
+        public Task<ResponseModel> ChangeNameAsync(ChangeNameModel changeName);
+        public Task<ResponseModel> ChangeEmailAsync(ChangeEmailModel changeEmail);
+        public Task<ResponseModel> ChangePasswordAsync(ChangePasswordModel changePassword);
         public Task<ResponseModel> DeleteAccountAsync(int? accountId);
     }
 }

@@ -160,7 +160,7 @@ namespace AccountsService.Services
             }
         }
 
-        public async Task<ResponseModel> ChangeNameAsync(string oldName, string newName)
+        public async Task<ResponseModel> ChangeNameAsync(ChangeNameModel changeName)
         {
             try
             {
@@ -170,8 +170,8 @@ namespace AccountsService.Services
 
                     using (var commandCheck = new MySqlCommand(_requests["CheckAccountNames"], connection))
                     {
-                        commandCheck.Parameters.AddWithValue("@OldName", oldName);
-                        commandCheck.Parameters.AddWithValue("@NewName", newName);
+                        commandCheck.Parameters.AddWithValue("@OldName", changeName.OldName);
+                        commandCheck.Parameters.AddWithValue("@NewName", changeName.NewName);
 
                         using (var reader = await commandCheck.ExecuteReaderAsync())
                         {
@@ -200,8 +200,8 @@ namespace AccountsService.Services
 
                     using (var commandUpdate = new MySqlCommand(_requests["ChangeAccountName"], connection))
                     {
-                        commandUpdate.Parameters.AddWithValue("@OldName", oldName);
-                        commandUpdate.Parameters.AddWithValue("@NewName", newName);
+                        commandUpdate.Parameters.AddWithValue("@OldName", changeName.OldName);
+                        commandUpdate.Parameters.AddWithValue("@NewName", changeName.NewName);
 
                         int affectedRows = await commandUpdate.ExecuteNonQueryAsync();
 
@@ -236,7 +236,7 @@ namespace AccountsService.Services
         }
 
 
-        public async Task<ResponseModel> ChangeEmailAsync(string oldEmail, string newEmail)
+        public async Task<ResponseModel> ChangeEmailAsync(ChangeEmailModel changeEmail)
         {
             try
             {
@@ -246,7 +246,7 @@ namespace AccountsService.Services
 
                     using (var checkOldEmailCommand = new MySqlCommand(_requests["CheckOldEmail"], connection))
                     {
-                        checkOldEmailCommand.Parameters.AddWithValue("@OldEmail", oldEmail);
+                        checkOldEmailCommand.Parameters.AddWithValue("@OldEmail", changeEmail.OldEmail);
                         object oldEmailResult = await checkOldEmailCommand.ExecuteScalarAsync();
                         if (oldEmailResult == null || Convert.ToInt32(oldEmailResult) == 0)
                         {
@@ -261,7 +261,7 @@ namespace AccountsService.Services
 
                     using (var checkNewEmailCommand = new MySqlCommand(_requests["CheckNewEmail"], connection))
                     {
-                        checkNewEmailCommand.Parameters.AddWithValue("@NewEmail", newEmail);
+                        checkNewEmailCommand.Parameters.AddWithValue("@NewEmail", changeEmail.NewEmail);
                         object newEmailResult = await checkNewEmailCommand.ExecuteScalarAsync();
                         if (newEmailResult != null && Convert.ToInt32(newEmailResult) > 0)
                         {
@@ -276,8 +276,8 @@ namespace AccountsService.Services
 
                     using (var changeEmailCommand = new MySqlCommand(_requests["ChangeEmail"], connection))
                     {
-                        changeEmailCommand.Parameters.AddWithValue("@OldEmail", oldEmail);
-                        changeEmailCommand.Parameters.AddWithValue("@NewEmail", newEmail);
+                        changeEmailCommand.Parameters.AddWithValue("@OldEmail", changeEmail.OldEmail);
+                        changeEmailCommand.Parameters.AddWithValue("@NewEmail", changeEmail.NewEmail);
                         int affectedRows = await changeEmailCommand.ExecuteNonQueryAsync();
 
                         return new ResponseModel
@@ -310,7 +310,7 @@ namespace AccountsService.Services
         }
 
 
-        public async Task<ResponseModel> ChangePasswordAsync(string oldPasswordHash, string newPasswordHash)
+        public async Task<ResponseModel> ChangePasswordAsync(ChangePasswordModel changePassword)
         {
             try
             {
@@ -319,8 +319,8 @@ namespace AccountsService.Services
                     await connection.OpenAsync();
                     using (var command = new MySqlCommand(_requests["ChangePassword"], connection))
                     {
-                        command.Parameters.AddWithValue("@OldPasswordHash", oldPasswordHash);
-                        command.Parameters.AddWithValue("@NewPasswordHash", newPasswordHash);
+                        command.Parameters.AddWithValue("@OldPasswordHash", changePassword.OldPasswordHash);
+                        command.Parameters.AddWithValue("@NewPasswordHash", changePassword.NewPasswordHash);
 
                         int affectedRows = await command.ExecuteNonQueryAsync();
                         if (affectedRows > 0)

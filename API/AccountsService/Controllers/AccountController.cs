@@ -1,4 +1,5 @@
 ﻿using AccountsService.Interfaces;
+using AccountsService.Models.Account;
 using AccountsService.Models.Response;
 using AccountsService.Validation;
 using Microsoft.AspNetCore.Mvc;
@@ -75,9 +76,9 @@ namespace AccountsService.Controllers
         }
 
         [HttpPut("change-name")]
-        public async Task<ActionResult<ResponseModel>> ChangeName([FromQuery] string? oldName, [FromQuery] string? newName)
+        public async Task<ActionResult<ResponseModel>> ChangeName([FromQuery] ChangeNameModel changeName)
         {
-            if (!validationMethods.IsNotEmptyValue(oldName))
+            if (!validationMethods.IsNotEmptyValue(changeName.OldName))
             {
                 return new ResponseModel
                 {
@@ -86,7 +87,7 @@ namespace AccountsService.Controllers
                     Message = "Old name cannot be empty"
                 };
             }
-            else if (!validationMethods.IsNotEmptyValue(newName))
+            else if (!validationMethods.IsNotEmptyValue(changeName.NewName))
             {
                 return new ResponseModel
                 {
@@ -95,7 +96,7 @@ namespace AccountsService.Controllers
                     Message = "New name cannot be empty"
                 };
             }
-            else if (!validationMethods.IsValidLength(oldName, 50))
+            else if (!validationMethods.IsValidLength(changeName.OldName, 50))
             {
                 return new ResponseModel
                 {
@@ -104,7 +105,7 @@ namespace AccountsService.Controllers
                     Message = "Old name exceeds the maximum allowed length of 50 characters"
                 };
             }
-            else if (!validationMethods.IsValidLength(newName, 50))
+            else if (!validationMethods.IsValidLength(changeName.NewName, 50))
             {
                 return new ResponseModel
                 {
@@ -115,15 +116,15 @@ namespace AccountsService.Controllers
             }
             else
             {
-                var result = await _accountService.ChangeNameAsync(oldName, newName);
+                var result = await _accountService.ChangeNameAsync(changeName);
                 return Ok(result);
             }
         }
 
         [HttpPut("change-email")]
-        public async Task<ActionResult<ResponseModel>> ChangeEmail([FromQuery] string? oldEmail, [FromQuery] string? newEmail)
+        public async Task<ActionResult<ResponseModel>> ChangeEmail([FromQuery] ChangeEmailModel changeEmail)
         {
-            if (!validationMethods.IsNotEmptyValue(oldEmail))
+            if (!validationMethods.IsNotEmptyValue(changeEmail.OldEmail))
             {
                 return new ResponseModel
                 {
@@ -132,7 +133,7 @@ namespace AccountsService.Controllers
                     Message = "Old email cannot be empty"
                 };
             }
-            else if (!validationMethods.IsNotEmptyValue(newEmail))
+            else if (!validationMethods.IsNotEmptyValue(changeEmail.NewEmail))
             {
                 return new ResponseModel
                 {
@@ -141,7 +142,7 @@ namespace AccountsService.Controllers
                     Message = "New email cannot be empty"
                 };
             }
-            else if (!validationMethods.IsValidEmail(oldEmail))
+            else if (!validationMethods.IsValidEmail(changeEmail.OldEmail))
             {
                 return new ResponseModel
                 {
@@ -150,7 +151,7 @@ namespace AccountsService.Controllers
                     Message = "Old email address format is invalid"
                 };
             }
-            else if (!validationMethods.IsValidEmail(newEmail))
+            else if (!validationMethods.IsValidEmail(changeEmail.NewEmail))
             {
                 return new ResponseModel
                 {
@@ -159,7 +160,7 @@ namespace AccountsService.Controllers
                     Message = "New email address format is invalid"
                 };
             }
-            else if (!validationMethods.IsValidLength(oldEmail, 254))
+            else if (!validationMethods.IsValidLength(changeEmail.OldEmail, 254))
             {
                 return new ResponseModel
                 {
@@ -168,7 +169,7 @@ namespace AccountsService.Controllers
                     Message = "Old email exceeds the maximum allowed length of 254 characters"
                 };
             }
-            else if (!validationMethods.IsValidLength(newEmail, 254))
+            else if (!validationMethods.IsValidLength(changeEmail.NewEmail, 254))
             {
                 return new ResponseModel
                 {
@@ -179,15 +180,15 @@ namespace AccountsService.Controllers
             }
             else
             {
-                var result = await _accountService.ChangeEmailAsync(oldEmail, newEmail);
+                var result = await _accountService.ChangeEmailAsync(changeEmail);
                 return Ok(result);
             }
         }
 
         [HttpPut("change-password")]
-        public async Task<ActionResult<ResponseModel>> ChangePassword([FromQuery] string? oldPasswordHash, [FromQuery] string? newPasswordHash)
+        public async Task<ActionResult<ResponseModel>> ChangePassword([FromQuery] ChangePasswordModel changePassword)
         {
-            if (!validationMethods.IsNotEmptyValue(newPasswordHash))
+            if (!validationMethods.IsNotEmptyValue(changePassword.NewPasswordHash))
             {
                 return new ResponseModel
                 {
@@ -196,7 +197,7 @@ namespace AccountsService.Controllers
                     Message = "New password cannot be empty"
                 };
             }
-            else if (!validationMethods.IsNotEmptyValue(oldPasswordHash))
+            else if (!validationMethods.IsNotEmptyValue(changePassword.OldPasswordHash))
             {
                 return new ResponseModel
                 {
@@ -205,27 +206,27 @@ namespace AccountsService.Controllers
                     Message = "Old password cannot be empty"
                 };
             }
-            else if (!validationMethods.IsValidLength(oldPasswordHash, 128))
+            else if (!validationMethods.IsValidLength(changePassword.OldPasswordHash, 128))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Old email exceeds the maximum allowed length of 128 characters"
+                    Message = "Old password exceeds the maximum allowed length of 128 characters"
                 };
             }
-            else if (!validationMethods.IsValidLength(newPasswordHash, 128))
+            else if (!validationMethods.IsValidLength(changePassword.NewPasswordHash, 128))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "New email exceeds the maximum allowed length of 128 characters"
+                    Message = "New password exceeds the maximum allowed length of 128 characters"
                 };
             }
             else
             {
-                var result = await _accountService.ChangePasswordAsync(oldPasswordHash, newPasswordHash);
+                var result = await _accountService.ChangePasswordAsync(changePassword);
                 return Ok(result);
             }
         }
