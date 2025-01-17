@@ -6,7 +6,6 @@ using MySql.Data.MySqlClient;
 using System.Security.Cryptography;
 using System.Text;
 using AccountsService.Models.Response;
-using AccountsService.Validation;
 
 namespace AccountsService.Services
 {
@@ -18,8 +17,6 @@ namespace AccountsService.Services
         private readonly Dictionary<string, string> _requests;
         private const string SmtpHost = "smtp.gmail.com";
         private const int SmtpPort = 587;
-        public ValidationMethods validationMethods = new ValidationMethods();
-
         public string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
 
         public AuthorizationService(string connectionString, string serviceEmail, string servicePassword, Dictionary<string, string> requests)
@@ -69,36 +66,6 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> CheckEmailAsync(string email)
         {
-            if (!validationMethods.IsNotEmptyValue(email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email address cannot be empty"
-                };
-            }
-
-            if (!validationMethods.IsValidEmail(email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "The email address format is invalid"
-                };
-            }
-
-            if (!validationMethods.IsValidLength(email, 254))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email exceeds the maximum allowed length of 254 characters"
-                };
-            }
-
             try
             {
                 using (var connection = new MySqlConnection(_connectionString))
@@ -152,36 +119,6 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> GenerateCodeAsync(string email)
         {
-            if (!validationMethods.IsNotEmptyValue(email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email address cannot be empty"
-                };
-            }
-
-            if (!validationMethods.IsValidEmail(email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "The email address format is invalid"
-                };
-            }
-
-            if (!validationMethods.IsValidLength(email, 254))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email exceeds the maximum allowed length of 254 characters"
-                };
-            }
-
             try
             {
                 int verificationCode = Random.Shared.Next(1000, 9999);
@@ -220,36 +157,6 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> ResetPasswordAsync(string email)
         {
-            if (!validationMethods.IsNotEmptyValue(email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email address cannot be empty"
-                };
-            }
-
-            if (!validationMethods.IsValidEmail(email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "The email address format is invalid"
-                };
-            }
-
-            if (!validationMethods.IsValidLength(email, 254))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email exceeds the maximum allowed length of 254 characters"
-                };
-            }
-
             try
             {
                 using (var connection = new MySqlConnection(_connectionString))
@@ -320,56 +227,6 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> LoginAsync(LoginModel login)
         {
-            if (!validationMethods.IsNotEmptyValue(login.Email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email address cannot be empty"
-                };
-            }
-
-            if (!validationMethods.IsValidEmail(login.Email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "The email address format is invalid"
-                };
-            }
-
-            if (!validationMethods.IsValidLength(login.Email, 254))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email exceeds the maximum allowed length of 254 characters"
-                };
-            }
-
-            if (!validationMethods.IsNotEmptyValue(login.PasswordHash))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Password cannot be empty"
-                };
-            }
-
-            if (!validationMethods.IsValidLength(login.PasswordHash, 128))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Password exceeds the maximum allowed length of 128 characters"
-                };
-            }
-
             try
             {
                 using (var connection = new MySqlConnection(_connectionString))
@@ -424,97 +281,6 @@ namespace AccountsService.Services
 
         public async Task<ResponseModel> RegisterAsync(RegisterModel register)
         {
-
-            if (!validationMethods.IsNotEmptyValue(register.AccountId))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Account ID cannot be empty"
-                };
-            }
-
-            if (!validationMethods.IsValidDigit(register.AccountId))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Account ID must be a positive number"
-                };
-            }
-
-            if (!validationMethods.IsNotEmptyValue(register.AccountName))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Account name cannot be empty"
-                };
-            }
-
-            if (!validationMethods.IsValidLength(register.AccountName, 50))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Account name exceeds the maximum allowed length of 50 characters"
-                };
-            }
-
-            if (!validationMethods.IsNotEmptyValue(register.Email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email address cannot be empty"
-                };
-            }
-
-            if (!validationMethods.IsValidEmail(register.Email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "The email address format is invalid"
-                };
-            }
-
-            if (!validationMethods.IsValidLength(register.Email, 254))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email exceeds the maximum allowed length of 254 characters"
-                };
-            }
-
-            if (!validationMethods.IsNotEmptyValue(register.PasswordHash))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Password cannot be empty"
-                };
-            }
-
-            if (!validationMethods.IsValidLength(register.PasswordHash, 128))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Password exceeds the maximum allowed length of 128 characters"
-                };
-            }
-
             try
             {
                 using (var connection = new MySqlConnection(_connectionString))
