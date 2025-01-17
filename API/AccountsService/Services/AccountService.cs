@@ -28,7 +28,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "AccountId cannot be empty"
+                    Message = "Account ID cannot be empty"
                 };
             }
 
@@ -38,7 +38,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "AccountId must be a positive number"
+                    Message = "Account ID must be a positive number"
                 };
             }
 
@@ -89,7 +89,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Database error: {ex.Message}"
+                    Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
@@ -98,7 +98,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Unexpected error: {ex.Message}"
+                    Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }
@@ -111,7 +111,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "AccountId cannot be empty"
+                    Message = "Account ID cannot be empty"
                 };
             }
 
@@ -121,7 +121,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "AccountId must be a positive number"
+                    Message = "Account ID must be a positive number"
                 };
             }
 
@@ -145,7 +145,7 @@ namespace AccountsService.Services
                                 {
                                     OrderId = reader.GetInt32("OrderId"),
                                     OrderDate = reader.GetString("OrderDate"),
-                                    CustomerId = reader.GetInt32("CustomerId"),
+                                    AccountId = reader.GetInt32("AccountId"),
                                     PhoneNumber = reader.GetString("PhoneNumber"),
                                     Country = reader.GetString("Country"),
                                     Region = reader.GetString("Region"),
@@ -188,7 +188,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Database error: {ex.Message}"
+                    Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
@@ -197,7 +197,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Unexpected error: {ex.Message}"
+                    Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }
@@ -230,7 +230,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Old name length cannot exceed 50 characters"
+                    Message = "Old name exceeds the maximum allowed length of 50 characters"
                 };
             }
 
@@ -240,7 +240,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "New name length cannot exceed 50 characters"
+                    Message = "New name exceeds the maximum allowed length of 50 characters"
                 };
             }
 
@@ -267,7 +267,7 @@ namespace AccountsService.Services
                                 {
                                     Date = currentDateTime,
                                     RequestExecution = false,
-                                    Message = "Old username not found."
+                                    Message = "Old username not found"
                                 };
 
                             if (newNameExists > 0)
@@ -275,7 +275,7 @@ namespace AccountsService.Services
                                 {
                                     Date = currentDateTime,
                                     RequestExecution = false,
-                                    Message = "New username is already taken."
+                                    Message = "New username is already in use"
                                 };
                         }
                     }
@@ -286,20 +286,14 @@ namespace AccountsService.Services
                         commandUpdate.Parameters.AddWithValue("@NewName", newName);
 
                         int affectedRows = await commandUpdate.ExecuteNonQueryAsync();
-                        if (affectedRows > 0)
-                            return new ResponseModel
-                            {
-                                Date = currentDateTime,
-                                RequestExecution = true,
-                                Message = "Name successfully changed."
-                            };
-                        else
-                            return new ResponseModel
-                            {
-                                Date = currentDateTime,
-                                RequestExecution = false,
-                                Message = "Failed to change username."
-                            };
+
+                        return new ResponseModel
+                        {
+                            Date = currentDateTime,
+                            RequestExecution = true,
+                            Message = "Name successfully changed"
+                        };
+
                     }
                 }
             }
@@ -309,7 +303,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Database error: {ex.Message}"
+                    Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
@@ -318,7 +312,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Unexpected error: {ex.Message}"
+                    Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }
@@ -352,7 +346,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Invalid format for old email"
+                    Message = "Old email address format is invalid"
                 };
             }
 
@@ -362,27 +356,27 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Invalid format for new email"
+                    Message = "New email address format is invalid"
                 };
             }
 
-            if (!validationMethods.IsValidLength(oldEmail, 50))
+            if (!validationMethods.IsValidLength(oldEmail, 254))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Old email length cannot exceed 50 characters"
+                    Message = "Old email exceeds the maximum allowed length of 254 characters"
                 };
             }
 
-            if (!validationMethods.IsValidLength(newEmail, 50))
+            if (!validationMethods.IsValidLength(newEmail, 254))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "New email length cannot exceed 50 characters"
+                    Message = "New email exceeds the maximum allowed length of 254 characters"
                 };
             }
 
@@ -428,24 +422,12 @@ namespace AccountsService.Services
                         changeEmailCommand.Parameters.AddWithValue("@NewEmail", newEmail);
                         int affectedRows = await changeEmailCommand.ExecuteNonQueryAsync();
 
-                        if (affectedRows > 0)
+                        return new ResponseModel
                         {
-                            return new ResponseModel
-                            {
-                                Date = currentDateTime,
-                                RequestExecution = true,
-                                Message = "Email successfully changed."
-                            };
-                        }
-                        else
-                        {
-                            return new ResponseModel
-                            {
-                                Date = currentDateTime,
-                                RequestExecution = false,
-                                Message = "Failed to change email."
-                            };
-                        }
+                            Date = currentDateTime,
+                            RequestExecution = true,
+                            Message = "Email successfully changed."
+                        };
                     }
                 }
             }
@@ -455,7 +437,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Database error: {ex.Message}"
+                    Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
@@ -464,7 +446,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Unexpected error: {ex.Message}"
+                    Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }
@@ -478,7 +460,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "newPasswordHash cannot be empty"
+                    Message = "New password cannot be empty"
                 };
             }
 
@@ -488,27 +470,27 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "oldPasswordHash cannot be empty"
+                    Message = "Old password cannot be empty"
                 };
             }
 
-            if (!validationMethods.IsValidLength(oldPasswordHash, 50))
+            if (!validationMethods.IsValidLength(oldPasswordHash, 128))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "oldPasswordHash length cannot exceed 50 characters"
+                    Message = "Old email exceeds the maximum allowed length of 128 characters"
                 };
             }
 
-            if (!validationMethods.IsValidLength(newPasswordHash, 50))
+            if (!validationMethods.IsValidLength(newPasswordHash, 128))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "newPasswordHash length cannot exceed 50 characters"
+                    Message = "New email exceeds the maximum allowed length of 128 characters"
                 };
             }
 
@@ -546,7 +528,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Database error: {ex.Message}"
+                    Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
@@ -555,7 +537,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Unexpected error: {ex.Message}"
+                    Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }
@@ -568,7 +550,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "AccountId cannot be empty"
+                    Message = "Account ID cannot be empty"
                 };
             }
 
@@ -578,7 +560,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "AccountId must be a positive number"
+                    Message = "Account ID must be a positive number"
                 };
             }
 
@@ -597,7 +579,7 @@ namespace AccountsService.Services
                             {
                                 Date = currentDateTime,
                                 RequestExecution = true,
-                                Message = "Account and his orders deleted"
+                                Message = "Account and orders is deleted"
                             };
                         else
                             return new ResponseModel
@@ -615,7 +597,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Database error: {ex.Message}"
+                    Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
@@ -624,7 +606,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Unexpected error: {ex.Message}"
+                    Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }

@@ -58,7 +58,7 @@ namespace InformationService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Database error: {ex.Message}"
+                    Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
@@ -67,7 +67,7 @@ namespace InformationService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Unexpected error: {ex.Message}"
+                    Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }
@@ -113,7 +113,7 @@ namespace InformationService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Database error: {ex.Message}"
+                    Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
@@ -122,7 +122,7 @@ namespace InformationService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Unexpected error: {ex.Message}"
+                    Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }
@@ -170,7 +170,7 @@ namespace InformationService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Database error: {ex.Message}"
+                    Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
@@ -179,7 +179,7 @@ namespace InformationService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Unexpected error: {ex.Message}"
+                    Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }
@@ -224,7 +224,7 @@ namespace InformationService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Database error: {ex.Message}"
+                    Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
@@ -233,7 +233,7 @@ namespace InformationService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Unexpected error: {ex.Message}"
+                    Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }
@@ -281,7 +281,7 @@ namespace InformationService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Database error: {ex.Message}"
+                    Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
@@ -290,7 +290,7 @@ namespace InformationService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Unexpected error: {ex.Message}"
+                    Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }

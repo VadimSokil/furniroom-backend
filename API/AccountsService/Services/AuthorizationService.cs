@@ -67,21 +67,6 @@ namespace AccountsService.Services
             }
         }
 
-        private bool IsValidEmail(string email)
-        {
-            if (string.IsNullOrWhiteSpace(email))
-                return false;
-            try
-            {
-                var addr = new MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         public async Task<ResponseModel> CheckEmailAsync(string email)
         {
             if (!validationMethods.IsNotEmptyValue(email))
@@ -90,7 +75,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Email cannot be empty"
+                    Message = "Email address cannot be empty"
                 };
             }
 
@@ -100,17 +85,17 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Invalid email address format"
+                    Message = "The email address format is invalid"
                 };
             }
 
-            if (!validationMethods.IsValidLength(email, 100))
+            if (!validationMethods.IsValidLength(email, 254))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Email exceeds the maximum length of 100 characters"
+                    Message = "Email exceeds the maximum allowed length of 254 characters"
                 };
             }
 
@@ -131,7 +116,7 @@ namespace AccountsService.Services
                             {
                                 Date = currentDateTime,
                                 RequestExecution = true,
-                                Message = "Email is already taken"
+                                Message = "This email address is already in use"
                             };
                         }
                     }
@@ -141,7 +126,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = true,
-                    Message = "Email is available"
+                    Message = "This email address is available"
                 };
             }
             catch (MySqlException ex) 
@@ -150,7 +135,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Database error: {ex.Message}"
+                    Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex) 
@@ -159,7 +144,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Unexpected error: {ex.Message}"
+                    Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }
@@ -183,17 +168,17 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Invalid email address format"
+                    Message = "The email address format is invalid"
                 };
             }
 
-            if (!validationMethods.IsValidLength(email, 100))
+            if (!validationMethods.IsValidLength(email, 254))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Maximum number of characters exceeded for email"
+                    Message = "Email exceeds the maximum allowed length of 254 characters"
                 };
             }
 
@@ -208,8 +193,17 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = true,
-                    Message = "Vertification code generated",
+                    Message = "The verification code has been generated",
                     Data = verificationCode
+                };
+            }
+            catch (MySqlException ex)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
@@ -218,7 +212,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Unexpected error: {ex.Message}"
+                    Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
 
@@ -242,17 +236,17 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Invalid email address format"
+                    Message = "The email address format is invalid"
                 };
             }
 
-            if (!validationMethods.IsValidLength(email, 100))
+            if (!validationMethods.IsValidLength(email, 254))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Maximum number of characters exceeded for email"
+                    Message = "Email exceeds the maximum allowed length of 254 characters"
                 };
             }
 
@@ -273,7 +267,7 @@ namespace AccountsService.Services
                             {
                                 Date = currentDateTime,
                                 RequestExecution = false,
-                                Message = "Email does not exist in the database"
+                                Message = "The email address is not found in the database"
                             };
                         }
                     }
@@ -342,17 +336,17 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Invalid email address format"
+                    Message = "The email address format is invalid"
                 };
             }
 
-            if (!validationMethods.IsValidLength(login.Email, 100))
+            if (!validationMethods.IsValidLength(login.Email, 254))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Maximum number of characters exceeded for email"
+                    Message = "Email exceeds the maximum allowed length of 254 characters"
                 };
             }
 
@@ -362,17 +356,17 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "PasswordHash cannot be empty"
+                    Message = "Password cannot be empty"
                 };
             }
 
-            if (!validationMethods.IsValidLength(login.PasswordHash, 500))
+            if (!validationMethods.IsValidLength(login.PasswordHash, 128))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Maximum number of characters exceeded for passwordHash"
+                    Message = "Password exceeds the maximum allowed length of 128 characters"
                 };
             }
 
@@ -394,7 +388,7 @@ namespace AccountsService.Services
                             {
                                 Date = currentDateTime,
                                 RequestExecution = true,
-                                Message = $"Invalid login or password"
+                                Message = $"Incorrect email or password"
                             };
                         }
 
@@ -402,7 +396,7 @@ namespace AccountsService.Services
                         {
                             Date = currentDateTime,
                             RequestExecution = true,
-                            Message = "Login and password is correct",
+                            Message = "Login credentials are correct",
                             Data = result
                         };
                     }
@@ -414,7 +408,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Database error: {ex.Message}"
+                    Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
@@ -423,7 +417,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Unexpected error: {ex.Message}"
+                    Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }
@@ -437,7 +431,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "AccountId cannot be empty"
+                    Message = "Account ID cannot be empty"
                 };
             }
 
@@ -447,7 +441,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "AccountId must be a positive number"
+                    Message = "Account ID must be a positive number"
                 };
             }
 
@@ -457,7 +451,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "AccountName cannot be empty"
+                    Message = "Account name cannot be empty"
                 };
             }
 
@@ -467,7 +461,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Maximum number of characters exceeded for accountName"
+                    Message = "Account name exceeds the maximum allowed length of 50 characters"
                 };
             }
 
@@ -487,17 +481,17 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Invalid email address format"
+                    Message = "The email address format is invalid"
                 };
             }
 
-            if (!validationMethods.IsValidLength(register.Email, 100))
+            if (!validationMethods.IsValidLength(register.Email, 254))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Maximum number of characters exceeded for email"
+                    Message = "Email exceeds the maximum allowed length of 254 characters"
                 };
             }
 
@@ -507,17 +501,17 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "PasswordHash cannot be empty"
+                    Message = "Password cannot be empty"
                 };
             }
 
-            if (!validationMethods.IsValidLength(register.PasswordHash, 500))
+            if (!validationMethods.IsValidLength(register.PasswordHash, 128))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Maximum number of characters exceeded for passwordHash"
+                    Message = "Password exceeds the maximum allowed length of 128 characters"
                 };
             }
 
@@ -538,7 +532,7 @@ namespace AccountsService.Services
                             {
                                 Date = currentDateTime,
                                 RequestExecution = false,
-                                Message = "AccountId is already taken"
+                                Message = "This Account ID is already in use"
                             };
                         }
                     }
@@ -554,7 +548,7 @@ namespace AccountsService.Services
                             {
                                 Date = currentDateTime,
                                 RequestExecution = false,
-                                Message = "Email is already taken"
+                                Message = "This Email is already in use"
                             };
                         }
                     }
@@ -570,7 +564,7 @@ namespace AccountsService.Services
                             {
                                 Date = currentDateTime,
                                 RequestExecution = false,
-                                Message = "AccountName is already taken"
+                                Message = "This Account name is already in use"
                             };
                         }
                     }
@@ -599,7 +593,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Database error: {ex.Message}"
+                    Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
@@ -608,7 +602,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Unexpected error: {ex.Message}"
+                    Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
 

@@ -27,7 +27,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "OrderId cannot be empty"
+                    Message = "Order ID cannot be empty"
                 };
             }
 
@@ -37,7 +37,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "OrderId must be a positive number"
+                    Message = "Order ID must be a positive number"
                 };
             }
 
@@ -47,7 +47,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "OrderDate cannot be empty"
+                    Message = "Order date cannot be empty"
                 };
             }
 
@@ -57,7 +57,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "AccountId cannot be empty"
+                    Message = "AccountID  cannot be empty"
                 };
             }
 
@@ -67,7 +67,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "AccountId must be a positive number"
+                    Message = "Account ID must be a positive number"
                 };
             }
 
@@ -77,17 +77,17 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "PhoneNumber cannot be empty"
+                    Message = "Phone number cannot be empty"
                 };
             }
 
-            if (!validationMethods.IsValidLength(order.PhoneNumber, 15))
+            if (!validationMethods.IsValidLength(order.PhoneNumber, 20))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "PhoneNumber exceeds maximum length (15 characters)"
+                    Message = "Phone number exceeds the maximum allowed length of 20 characters"
                 };
             }
 
@@ -107,7 +107,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Country exceeds maximum length (100 characters)"
+                    Message = "Country exceeds the maximum allowed length of 100 characters"
                 };
             }
 
@@ -127,7 +127,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Region exceeds maximum length (100 characters)"
+                    Message = "Region exceeds the maximum allowed length of 100 characters"
                 };
             }
 
@@ -147,7 +147,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "District exceeds maximum length (100 characters)"
+                    Message = "District exceeds the maximum allowed length of 100 characters"
                 };
             }
 
@@ -157,7 +157,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "City exceeds maximum length (100 characters)"
+                    Message = "City exceeds the maximum allowed length of 100 characters"
                 };
             }
 
@@ -167,7 +167,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Village exceeds maximum length (100 characters)"
+                    Message = "Village exceeds the maximum allowed length of 100 characters"
                 };
             }
 
@@ -187,7 +187,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Street exceeds maximum length (100 characters)"
+                    Message = "Street exceeds the maximum allowed length of 100 characters"
                 };
             }
 
@@ -197,27 +197,27 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "HouseNumber cannot be empty"
+                    Message = "House number cannot be empty"
                 };
             }
 
-            if (!validationMethods.IsValidLength(order.HouseNumber, 50))
+            if (!validationMethods.IsValidLength(order.HouseNumber, 20))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "HouseNumber exceeds maximum length (50 characters)"
+                    Message = "House number exceeds the maximum allowed length of 20 characters"
                 };
             }
 
-            if (!validationMethods.IsValidLength(order.ApartmentNumber, 50))
+            if (!validationMethods.IsValidLength(order.ApartmentNumber, 20))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "ApartmentNumber exceeds maximum length (50 characters)"
+                    Message = "Apartment number exceeds the maximum allowed length of 20 characters"
                 };
             }
 
@@ -227,17 +227,17 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "OrderText cannot be empty"
+                    Message = "Order text cannot be empty"
                 };
             }
 
-            if (!validationMethods.IsValidLength(order.OrderText, 500))
+            if (!validationMethods.IsValidLength(order.OrderText, 5000))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "OrderText exceeds maximum length (500 characters)"
+                    Message = "Order text exceeds the maximum allowed length of 5000 characters"
                 };
             }
 
@@ -247,17 +247,17 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "DeliveryType cannot be empty"
+                    Message = "Delivery type cannot be empty"
                 };
             }
 
-            if (!validationMethods.IsValidLength(order.DeliveryType, 100))
+            if (!validationMethods.IsValidLength(order.DeliveryType, 20))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "DeliveryType exceeds maximum length (100 characters)"
+                    Message = "Delivery type exceeds the maximum allowed length of 20 characters"
                 };
             }
 
@@ -278,7 +278,7 @@ namespace AccountsService.Services
                             {
                                 Date = currentDateTime,
                                 RequestExecution = false,
-                                Message = "OrderId is already taken"
+                                Message = "This Order ID is already in use"
                             };
                         }
                     }
@@ -317,7 +317,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Database error: {ex.Message}"
+                    Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
@@ -326,7 +326,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Unexpected error: {ex.Message}"
+                    Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }
@@ -339,7 +339,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "QuestionId cannot be empty"
+                    Message = "Question ID cannot be empty"
                 };
             }
 
@@ -349,7 +349,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "QuestionId must be a positive number"
+                    Message = "Question ID must be a positive number"
                 };
             }
 
@@ -359,7 +359,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "QuestionDate cannot be empty"
+                    Message = "Question date cannot be empty"
                 };
             }
 
@@ -369,17 +369,17 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "UserName cannot be empty"
+                    Message = "User name cannot be empty"
                 };
             }
 
-            if (!validationMethods.IsValidLength(question.UserName, 100))
+            if (!validationMethods.IsValidLength(question.UserName, 50))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "UserName exceeds maximum length (100 characters)"
+                    Message = "User name exceeds the maximum allowed length of 50 characters"
                 };
             }
 
@@ -389,17 +389,17 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "PhoneNumber cannot be empty"
+                    Message = "Phone number cannot be empty"
                 };
             }
 
-            if (!validationMethods.IsValidLength(question.PhoneNumber, 15))
+            if (!validationMethods.IsValidLength(question.PhoneNumber, 20))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "PhoneNumber exceeds maximum length (15 characters)"
+                    Message = "Phone number exceeds the maximum allowed length of 20 characters"
                 };
             }
 
@@ -409,17 +409,17 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "QuestionText cannot be empty"
+                    Message = "Question text cannot be empty"
                 };
             }
 
-            if (!validationMethods.IsValidLength(question.QuestionText, 500))
+            if (!validationMethods.IsValidLength(question.QuestionText, 5000))
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "QuestionText exceeds maximum length (500 characters)"
+                    Message = "Question text exceeds the maximum allowed length of 5000 characters"
                 };
             }
 
@@ -440,7 +440,7 @@ namespace AccountsService.Services
                             {
                                 Date = currentDateTime,
                                 RequestExecution = false,
-                                Message = "QuestionId is already taken"
+                                Message = "This Question ID is already in use"
                             };
                         }
                     }
@@ -470,7 +470,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Database error: {ex.Message}"
+                    Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
@@ -479,7 +479,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = $"Unexpected error: {ex.Message}"
+                    Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }

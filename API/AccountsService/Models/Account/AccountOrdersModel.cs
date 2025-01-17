@@ -4,7 +4,7 @@
     {
         public int OrderId { get; set; }
         public string OrderDate { get; set; }
-        public int CustomerId { get; set; }
+        public int AccountId { get; set; }
         public string PhoneNumber { get; set; }
         public string Country { get; set; }
         public string Region { get; set; }
