@@ -1,7 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using AccountsService.Interfaces;
 using AccountsService.Models.Request;
-using AccountsService.Models;
+using AccountsService.Models.Response;
 using AccountsService.Validation;
 
 namespace AccountsService.Services

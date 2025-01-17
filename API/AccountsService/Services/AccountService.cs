@@ -1,5 +1,5 @@
 ﻿using AccountsService.Interfaces;
-using AccountsService.Models;
+using AccountsService.Models.Response;
 using AccountsService.Models.Account;
 using MySql.Data.MySqlClient;
 using System.Data;

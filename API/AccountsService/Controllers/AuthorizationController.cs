@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AccountsService.Interfaces;
 using AccountsService.Models.Authorization;
+using AccountsService.Models.Response;
 
 namespace AccountsService.Controllers
 {
@@ -9,6 +10,7 @@ namespace AccountsService.Controllers
     public class AuthorizationController : ControllerBase
     {
         private readonly IAuthorizationService _authorizationService;
+        public string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
 
         public AuthorizationController(IAuthorizationService authorizationService)
         {
@@ -16,10 +18,22 @@ namespace AccountsService.Controllers
         }
 
         [HttpGet("check-email")]
-        public async Task<ActionResult> CheckEmail([FromQuery] string? email)
+        public async Task<ActionResult<ResponseModel>> CheckEmail([FromQuery] string? email)
         {
-            var result = await _authorizationService.CheckEmailAsync(email);
-            return Ok(result);
+            if(!(email is string))
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Email must be a valid string",
+                };
+            }
+            else
+            {
+                var result = await _authorizationService.CheckEmailAsync(email);
+                return Ok(result);
+            }
         }
 
         [HttpGet("generate-code")]

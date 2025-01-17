@@ -1,4 +1,4 @@
-﻿using AccountsService.Models;
+﻿using AccountsService.Models.Response;
 using AccountsService.Models.Authorization;
 
 namespace AccountsService.Interfaces
