@@ -289,6 +289,15 @@ namespace AccountsService.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<ResponseModel>> Login([FromBody] LoginModel login)
         {
+            if (login == null)
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Invalid data structure. Please check your input."
+                };
+            }
             if (!validationMethods.IsString(login.Email))
             {
                 return new ResponseModel
