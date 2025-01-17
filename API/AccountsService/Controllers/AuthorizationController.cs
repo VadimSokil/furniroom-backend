@@ -3,6 +3,7 @@ using AccountsService.Interfaces;
 using AccountsService.Models.Authorization;
 using AccountsService.Models.Response;
 using AccountsService.Validation;
+using System.ComponentModel.DataAnnotations;
 
 namespace AccountsService.Controllers
 {
@@ -22,13 +23,13 @@ namespace AccountsService.Controllers
         [HttpGet("check-email")]
         public async Task<ActionResult<ResponseModel>> CheckEmail([FromQuery] string? email)
         {
-            if(!validationMethods.IsString(email))
+            if (!ModelState.IsValid)
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Email address must be a string"
+                    Message = "The structure of the data is incorrect"
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(email))
@@ -68,13 +69,13 @@ namespace AccountsService.Controllers
         [HttpGet("generate-code")]
         public async Task<ActionResult<ResponseModel>> GenerateCode([FromQuery] string? email)
         {
-            if (!validationMethods.IsString(email))
+            if (!ModelState.IsValid)
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Email address must be a string"
+                    Message = "The structure of the data is incorrect"
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(email))
@@ -114,13 +115,13 @@ namespace AccountsService.Controllers
         [HttpPost("reset-password")]
         public async Task<ActionResult<ResponseModel>> ResetPassword([FromBody] string? email)
         {
-            if (!validationMethods.IsString(email))
+            if (!ModelState.IsValid)
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Email address must be a string"
+                    Message = "The structure of the data is incorrect"
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(email))
@@ -161,13 +162,13 @@ namespace AccountsService.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<ResponseModel>> Register([FromBody] RegisterModel register)
         {
-            if(!validationMethods.IsDigit(register.AccountId))
+            if (!ModelState.IsValid)
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Account ID must be a int"
+                    Message = "The structure of the data is incorrect"
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(register.AccountId))
@@ -296,15 +297,6 @@ namespace AccountsService.Controllers
                     Date = currentDateTime,
                     RequestExecution = false,
                     Message = "The structure of the data is incorrect"
-                };
-            }
-            if (!validationMethods.IsString(login.Email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email address must be a string"
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(login.Email))
