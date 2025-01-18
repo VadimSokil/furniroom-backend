@@ -95,7 +95,7 @@ namespace AccountsService.Controllers
         }
 
         [HttpPut("change-name")]
-        public async Task<ActionResult<ResponseModel>> ChangeName([FromQuery] ChangeNameModel changeName)
+        public async Task<ActionResult<ResponseModel>> ChangeName([FromBody] ChangeNameModel changeName)
         {
             if (!ModelState.IsValid)
             {
@@ -150,7 +150,7 @@ namespace AccountsService.Controllers
         }
 
         [HttpPut("change-email")]
-        public async Task<ActionResult<ResponseModel>> ChangeEmail([FromQuery] ChangeEmailModel changeEmail)
+        public async Task<ActionResult<ResponseModel>> ChangeEmail([FromBody] ChangeEmailModel changeEmail)
         {
             if (!ModelState.IsValid)
             {
@@ -223,7 +223,7 @@ namespace AccountsService.Controllers
         }
 
         [HttpPut("change-password")]
-        public async Task<ActionResult<ResponseModel>> ChangePassword([FromQuery] ChangePasswordModel changePassword)
+        public async Task<ActionResult<ResponseModel>> ChangePassword([FromBody] ChangePasswordModel changePassword)
         {
             if (!ModelState.IsValid)
             {
