@@ -83,7 +83,7 @@ namespace AccountsService.Services
                             {
                                 Date = currentDateTime,
                                 RequestExecution = true,
-                                Message = "This email address is already in use"
+                                Message = "This email address is already in use."
                             };
                         }
                     }
@@ -93,7 +93,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = true,
-                    Message = "This email address is available"
+                    Message = "This email address is available."
                 };
             }
             catch (MySqlException ex) 
@@ -130,7 +130,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = true,
-                    Message = "The verification code has been generated",
+                    Message = "Verification code has been generated.",
                     Data = verificationCode
                 };
             }
@@ -174,7 +174,7 @@ namespace AccountsService.Services
                             {
                                 Date = currentDateTime,
                                 RequestExecution = false,
-                                Message = "The email address is not found in the database"
+                                Message = "Email address is not found."
                             };
                         }
                     }
@@ -199,7 +199,7 @@ namespace AccountsService.Services
                     {
                         Date = currentDateTime,
                         RequestExecution = true,
-                        Message = "Password reseted",
+                        Message = "Password successfully reseted.",
                         Data = newPassword
                     };
                 }
@@ -245,7 +245,7 @@ namespace AccountsService.Services
                             {
                                 Date = currentDateTime,
                                 RequestExecution = true,
-                                Message = $"Incorrect email or password"
+                                Message = $"Incorrect email address or password."
                             };
                         }
 
@@ -253,7 +253,7 @@ namespace AccountsService.Services
                         {
                             Date = currentDateTime,
                             RequestExecution = true,
-                            Message = "Login credentials are correct",
+                            Message = "Data confirmed.",
                             Data = result
                         };
                     }
@@ -298,7 +298,7 @@ namespace AccountsService.Services
                             {
                                 Date = currentDateTime,
                                 RequestExecution = false,
-                                Message = "This Account ID is already in use"
+                                Message = "This Account ID is already in use."
                             };
                         }
                     }
@@ -314,7 +314,7 @@ namespace AccountsService.Services
                             {
                                 Date = currentDateTime,
                                 RequestExecution = false,
-                                Message = "This Email is already in use"
+                                Message = "This Email is already in use."
                             };
                         }
                     }
@@ -330,7 +330,7 @@ namespace AccountsService.Services
                             {
                                 Date = currentDateTime,
                                 RequestExecution = false,
-                                Message = "This Account name is already in use"
+                                Message = "This Account name is already in use."
                             };
                         }
                     }
@@ -350,7 +350,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = true,
-                    Message = "Account successfully created"
+                    Message = "Account successfully created."
                 };
             }
             catch (MySqlException ex)

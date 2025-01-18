@@ -44,7 +44,7 @@ namespace AccountsService.Services
                                 {
                                     Date = currentDateTime,
                                     RequestExecution = true,
-                                    Message = "Account information successfully retrieved",
+                                    Message = "Account information successfully retrieved.",
                                     Data = accountInformation
                                 };
                             }
@@ -54,7 +54,7 @@ namespace AccountsService.Services
                                 {
                                     Date = currentDateTime,
                                     RequestExecution = false,
-                                    Message = "Account not found"
+                                    Message = "Account not found."
                                 };
                             }
                         }
@@ -128,7 +128,7 @@ namespace AccountsService.Services
                     {
                         Date = currentDateTime,
                         RequestExecution = false,
-                        Message = "Orders not found"
+                        Message = "Orders not found."
                     };
                 }
 
@@ -136,7 +136,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = true,
-                    Message = "Orders successfully retrieved",
+                    Message = "Orders information successfully retrieved.",
                     Data = orders
                 };
             }
@@ -185,7 +185,7 @@ namespace AccountsService.Services
                                 {
                                     Date = currentDateTime,
                                     RequestExecution = false,
-                                    Message = "Old username not found"
+                                    Message = "Old name not found."
                                 };
 
                             if (newNameExists > 0)
@@ -193,7 +193,7 @@ namespace AccountsService.Services
                                 {
                                     Date = currentDateTime,
                                     RequestExecution = false,
-                                    Message = "New username is already in use"
+                                    Message = "New name is already in use."
                                 };
                         }
                     }
@@ -209,7 +209,7 @@ namespace AccountsService.Services
                         {
                             Date = currentDateTime,
                             RequestExecution = true,
-                            Message = "Name successfully changed"
+                            Message = "Name successfully changed."
                         };
 
                     }
@@ -254,7 +254,7 @@ namespace AccountsService.Services
                             {
                                 Date = currentDateTime,
                                 RequestExecution = false,
-                                Message = "The specified old email was not found."
+                                Message = "Old email not found."
                             };
                         }
                     }
@@ -328,14 +328,14 @@ namespace AccountsService.Services
                             {
                                 Date = currentDateTime,
                                 RequestExecution = true,
-                                Message = "Password changed"
+                                Message = "Password successfully changed."
                             };
                         else
                             return new ResponseModel
                             {
                                 Date = currentDateTime,
                                 RequestExecution = false,
-                                Message = "Old password not found"
+                                Message = "Old password not found."
                             };
                     }
                 }
@@ -377,14 +377,14 @@ namespace AccountsService.Services
                             {
                                 Date = currentDateTime,
                                 RequestExecution = true,
-                                Message = "Account and orders is deleted"
+                                Message = "Account and orders successfully deleted."
                             };
                         else
                             return new ResponseModel
                             {
                                 Date = currentDateTime,
                                 RequestExecution = false,
-                                Message = "Account not found"
+                                Message = "Account not found."
                             };
                     }
                 }

@@ -36,7 +36,7 @@ namespace AccountsService.Services
                             {
                                 Date = currentDateTime,
                                 RequestExecution = false,
-                                Message = "This Order ID is already in use"
+                                Message = "This Order ID is already in use."
                             };
                         }
                     }
@@ -66,7 +66,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = true,
-                    Message = "Order successfully added"
+                    Message = "Order successfully added."
                 };
             }
             catch (MySqlException ex)
@@ -108,7 +108,7 @@ namespace AccountsService.Services
                             {
                                 Date = currentDateTime,
                                 RequestExecution = false,
-                                Message = "This Question ID is already in use"
+                                Message = "This Question ID is already in use."
                             };
                         }
                     }
@@ -129,7 +129,7 @@ namespace AccountsService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = true,
-                    Message = "Question successfully added"
+                    Message = "Question successfully added."
                 };
             }
             catch (MySqlException ex)

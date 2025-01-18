@@ -22,13 +22,22 @@ namespace AccountsService.Controllers
         [HttpPost("add-order")]
         public async Task<ActionResult<ResponseModel>> AddOrder([FromBody] OrderModel order)
         {
-            if (!validationMethods.IsNotEmptyValue(order.OrderId))
+            if (!ModelState.IsValid)
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Order ID cannot be empty"
+                    Message = "Your query is missing some fields."
+                };
+            }
+            else if (!validationMethods.IsNotEmptyValue(order.OrderId))
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Order ID cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidDigit(order.OrderId))
@@ -37,7 +46,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Order ID must be a positive number"
+                    Message = "Order ID must be a positive number."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(order.OrderDate))
@@ -46,7 +55,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Order date cannot be empty"
+                    Message = "Order date cannot be empty."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(order.AccountId))
@@ -55,7 +64,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "AccountID  cannot be empty"
+                    Message = "Account ID cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidDigit(order.AccountId))
@@ -64,7 +73,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Account ID must be a positive number"
+                    Message = "Account ID must be a positive number."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(order.PhoneNumber))
@@ -73,7 +82,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Phone number cannot be empty"
+                    Message = "Phone number cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidLength(order.PhoneNumber, 20))
@@ -82,7 +91,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Phone number exceeds the maximum allowed length of 20 characters"
+                    Message = "Phone number cannot exceed 20 characters in length."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(order.Country))
@@ -91,7 +100,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Country cannot be empty"
+                    Message = "Country cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidLength(order.Country, 100))
@@ -100,7 +109,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Country exceeds the maximum allowed length of 100 characters"
+                    Message = "Country cannot exceed 100 characters in length."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(order.Region))
@@ -109,7 +118,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Region cannot be empty"
+                    Message = "Region cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidLength(order.Region, 100))
@@ -118,7 +127,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Region exceeds the maximum allowed length of 100 characters"
+                    Message = "Region cannot exceed 100 characters in length."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(order.District))
@@ -127,7 +136,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "District cannot be empty"
+                    Message = "District cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidLength(order.District, 100))
@@ -136,7 +145,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "District exceeds the maximum allowed length of 100 characters"
+                    Message = "District cannot exceed 100 characters in length."
                 };
             }
             else if (!validationMethods.IsValidLength(order.City, 100))
@@ -145,7 +154,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "City exceeds the maximum allowed length of 100 characters"
+                    Message = "City cannot exceed 100 characters in length."
                 };
             }
             else if (!validationMethods.IsValidLength(order.Village, 100))
@@ -154,7 +163,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Village exceeds the maximum allowed length of 100 characters"
+                    Message = "Village cannot exceed 100 characters in length."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(order.Street))
@@ -163,7 +172,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Street cannot be empty"
+                    Message = "Street cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidLength(order.Street, 100))
@@ -172,7 +181,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Street exceeds the maximum allowed length of 100 characters"
+                    Message = "Street cannot exceed 100 characters in length."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(order.HouseNumber))
@@ -181,7 +190,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "House number cannot be empty"
+                    Message = "House number cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidLength(order.HouseNumber, 20))
@@ -190,7 +199,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "House number exceeds the maximum allowed length of 20 characters"
+                    Message = "House number cannot exceed 20 characters in length."
                 };
             }
             else if (!validationMethods.IsValidLength(order.ApartmentNumber, 20))
@@ -199,7 +208,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Apartment number exceeds the maximum allowed length of 20 characters"
+                    Message = "Apartment number cannot exceed 20 characters in length."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(order.OrderText))
@@ -208,7 +217,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Order text cannot be empty"
+                    Message = "Order text cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidLength(order.OrderText, 5000))
@@ -217,7 +226,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Order text exceeds the maximum allowed length of 5000 characters"
+                    Message = "Order text cannot exceed 5000 characters in length."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(order.DeliveryType))
@@ -226,7 +235,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Delivery type cannot be empty"
+                    Message = "Delivery type cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidLength(order.DeliveryType, 20))
@@ -235,7 +244,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Delivery type exceeds the maximum allowed length of 20 characters"
+                    Message = "Delivery type cannot exceed 20 characters in length."
                 };
             }
             else
@@ -248,13 +257,22 @@ namespace AccountsService.Controllers
         [HttpPost("add-question")]
         public async Task<ActionResult<ResponseModel>> AddQuestion([FromBody] QuestionModel question)
         {
-            if (!validationMethods.IsNotEmptyValue(question.QuestionId))
+            if (!ModelState.IsValid)
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Question ID cannot be empty"
+                    Message = "Your query is missing some fields."
+                };
+            }
+            else if (!validationMethods.IsNotEmptyValue(question.QuestionId))
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Question ID cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidDigit(question.QuestionId))
@@ -263,7 +281,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Question ID must be a positive number"
+                    Message = "Question ID must be a positive number."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(question.QuestionDate))
@@ -272,7 +290,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Question date cannot be empty"
+                    Message = "Question date cannot be empty."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(question.UserName))
@@ -281,7 +299,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "User name cannot be empty"
+                    Message = "User name cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidLength(question.UserName, 50))
@@ -290,7 +308,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "User name exceeds the maximum allowed length of 50 characters"
+                    Message = "User name cannot exceed 50 characters in length."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(question.PhoneNumber))
@@ -299,7 +317,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Phone number cannot be empty"
+                    Message = "Phone number cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidLength(question.PhoneNumber, 20))
@@ -308,7 +326,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Phone number exceeds the maximum allowed length of 20 characters"
+                    Message = "Phone number cannot exceed 20 characters in length."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(question.QuestionText))
@@ -317,7 +335,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Question text cannot be empty"
+                    Message = "Question text cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidLength(question.QuestionText, 5000))
@@ -326,7 +344,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Question text exceeds the maximum allowed length of 5000 characters"
+                    Message = "Question text cannot exceed 5000 characters in length."
                 };
             }
             else

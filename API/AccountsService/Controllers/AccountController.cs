@@ -3,6 +3,7 @@ using AccountsService.Models.Account;
 using AccountsService.Models.Response;
 using AccountsService.Validation;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace AccountsService.Controllers
 {
@@ -20,15 +21,24 @@ namespace AccountsService.Controllers
         }
 
         [HttpGet("get-account-info")]
-        public async Task<ActionResult<ResponseModel>> GetAccountInfo([FromQuery] int? accountId)
+        public async Task<ActionResult<ResponseModel>> GetAccountInfo([FromQuery][Required] int? accountId)
         {
-            if (!validationMethods.IsNotEmptyValue(accountId))
+            if (!ModelState.IsValid)
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Account ID cannot be empty"
+                    Message = "Your query is missing some fields."
+                };
+            }
+            else if (!validationMethods.IsNotEmptyValue(accountId))
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Account ID cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidDigit(accountId))
@@ -37,7 +47,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Account ID must be a positive number"
+                    Message = "Account ID must be a positive number."
                 };
             }
             else
@@ -48,15 +58,24 @@ namespace AccountsService.Controllers
         }
 
         [HttpGet("get-orders")]
-        public async Task<ActionResult<ResponseModel>> GetOrders([FromQuery] int? accountId)
+        public async Task<ActionResult<ResponseModel>> GetOrders([FromQuery][Required] int? accountId)
         {
-            if (!validationMethods.IsNotEmptyValue(accountId))
+            if (!ModelState.IsValid)
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Account ID cannot be empty"
+                    Message = "Your query is missing some fields."
+                };
+            }
+            else if (!validationMethods.IsNotEmptyValue(accountId))
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Account ID cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidDigit(accountId))
@@ -65,7 +84,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Account ID must be a positive number"
+                    Message = "Account ID must be a positive number."
                 };
             }
             else
@@ -78,13 +97,22 @@ namespace AccountsService.Controllers
         [HttpPut("change-name")]
         public async Task<ActionResult<ResponseModel>> ChangeName([FromQuery] ChangeNameModel changeName)
         {
-            if (!validationMethods.IsNotEmptyValue(changeName.OldName))
+            if (!ModelState.IsValid)
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Old name cannot be empty"
+                    Message = "Your query is missing some fields."
+                };
+            }
+            else if (!validationMethods.IsNotEmptyValue(changeName.OldName))
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Old name cannot be empty."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(changeName.NewName))
@@ -93,7 +121,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "New name cannot be empty"
+                    Message = "New name cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidLength(changeName.OldName, 50))
@@ -102,7 +130,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Old name exceeds the maximum allowed length of 50 characters"
+                    Message = "Old name cannot exceed 50 characters in length."
                 };
             }
             else if (!validationMethods.IsValidLength(changeName.NewName, 50))
@@ -111,7 +139,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "New name exceeds the maximum allowed length of 50 characters"
+                    Message = "New name cannot exceed 50 characters in length."
                 };
             }
             else
@@ -124,13 +152,22 @@ namespace AccountsService.Controllers
         [HttpPut("change-email")]
         public async Task<ActionResult<ResponseModel>> ChangeEmail([FromQuery] ChangeEmailModel changeEmail)
         {
-            if (!validationMethods.IsNotEmptyValue(changeEmail.OldEmail))
+            if (!ModelState.IsValid)
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Old email cannot be empty"
+                    Message = "Your query is missing some fields."
+                };
+            }
+            else if (!validationMethods.IsNotEmptyValue(changeEmail.OldEmail))
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Old email address cannot be empty."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(changeEmail.NewEmail))
@@ -139,7 +176,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "New email cannot be empty"
+                    Message = "New email address cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidEmail(changeEmail.OldEmail))
@@ -148,7 +185,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Old email address format is invalid"
+                    Message = "Incorrect old email address format."
                 };
             }
             else if (!validationMethods.IsValidEmail(changeEmail.NewEmail))
@@ -157,7 +194,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "New email address format is invalid"
+                    Message = "Incorrect new email address format."
                 };
             }
             else if (!validationMethods.IsValidLength(changeEmail.OldEmail, 254))
@@ -166,7 +203,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Old email exceeds the maximum allowed length of 254 characters"
+                    Message = "Old email address cannot exceed 254 characters in length."
                 };
             }
             else if (!validationMethods.IsValidLength(changeEmail.NewEmail, 254))
@@ -175,7 +212,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "New email exceeds the maximum allowed length of 254 characters"
+                    Message = "New email address cannot exceed 254 characters in length."
                 };
             }
             else
@@ -188,13 +225,22 @@ namespace AccountsService.Controllers
         [HttpPut("change-password")]
         public async Task<ActionResult<ResponseModel>> ChangePassword([FromQuery] ChangePasswordModel changePassword)
         {
-            if (!validationMethods.IsNotEmptyValue(changePassword.NewPasswordHash))
+            if (!ModelState.IsValid)
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "New password cannot be empty"
+                    Message = "Your query is missing some fields."
+                };
+            }
+            else if (!validationMethods.IsNotEmptyValue(changePassword.NewPasswordHash))
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "New password hash cannot be empty."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(changePassword.OldPasswordHash))
@@ -203,7 +249,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Old password cannot be empty"
+                    Message = "Old password hash cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidLength(changePassword.OldPasswordHash, 128))
@@ -212,7 +258,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Old password exceeds the maximum allowed length of 128 characters"
+                    Message = "Old password hash cannot exceed 128 characters in length."
                 };
             }
             else if (!validationMethods.IsValidLength(changePassword.NewPasswordHash, 128))
@@ -221,7 +267,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "New password exceeds the maximum allowed length of 128 characters"
+                    Message = "New password hash cannot exceed 128 characters in length."
                 };
             }
             else
@@ -232,15 +278,24 @@ namespace AccountsService.Controllers
         }
 
         [HttpDelete("delete-account")]
-        public async Task<ActionResult<ResponseModel>> DeleteAccount([FromQuery] int? accountId)
+        public async Task<ActionResult<ResponseModel>> DeleteAccount([FromQuery][Required] int? accountId)
         {
-            if (!validationMethods.IsNotEmptyValue(accountId))
+            if (!ModelState.IsValid)
             {
                 return new ResponseModel
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Account ID cannot be empty"
+                    Message = "Your query is missing some fields."
+                };
+            }
+            else if (!validationMethods.IsNotEmptyValue(accountId))
+            {
+                return new ResponseModel
+                {
+                    Date = currentDateTime,
+                    RequestExecution = false,
+                    Message = "Account ID cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidDigit(accountId))
@@ -249,7 +304,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Account ID must be a positive number"
+                    Message = "Account ID must be a positive number."
                 };
             }
             else

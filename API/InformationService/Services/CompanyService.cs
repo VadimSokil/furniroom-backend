@@ -48,7 +48,7 @@ namespace InformationService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = true,
-                    Message = "Data retrieved successfully",
+                    Message = "Data retrieved successfully.",
                     Data = notes
                 };
             }
@@ -103,7 +103,7 @@ namespace InformationService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = true,
-                    Message = "Data retrieved successfully",
+                    Message = "Data retrieved successfully.",
                     Data = notes
                 };
             }
@@ -157,7 +157,7 @@ namespace InformationService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = true,
-                    Message = "Data retrieved successfully",
+                    Message = "Data retrieved successfully.",
                     Data = notes
                 };
             }

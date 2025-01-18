@@ -48,7 +48,7 @@ namespace InformationService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = true,
-                    Message = "Data retrieved successfully",
+                    Message = "Data retrieved successfully.",
                     Data = categories
                 };
             }
@@ -103,7 +103,7 @@ namespace InformationService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = true,
-                    Message = "Data retrieved successfully",
+                    Message = "Data retrieved successfully.",
                     Data = subcategories
                 };
             }
@@ -160,7 +160,7 @@ namespace InformationService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = true,
-                    Message = "Data retrieved successfully",
+                    Message = "Data retrieved successfully.",
                     Data = products
                 };
             }
@@ -214,7 +214,7 @@ namespace InformationService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = true,
-                    Message = "Data retrieved successfully",
+                    Message = "Data retrieved successfully.",
                     Data = images
                 };
             }
@@ -271,7 +271,7 @@ namespace InformationService.Services
                 {
                     Date = currentDateTime,
                     RequestExecution = true,
-                    Message = "Data retrieved successfully",
+                    Message = "Data retrieved successfully.",
                     Data = drawings
                 };
             }

@@ -29,7 +29,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "The structure of the data is incorrect"
+                    Message = "Your query is missing some fields."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(email))
@@ -38,7 +38,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Email address cannot be empty"
+                    Message = "Email address cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidEmail(email))
@@ -47,7 +47,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "The email address format is invalid"
+                    Message = "Incorrect email address format."
                 };
             }
             else if (!validationMethods.IsValidLength(email, 254))
@@ -56,7 +56,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Email exceeds the maximum allowed length of 254 characters"
+                    Message = "Email address cannot exceed 254 characters in length."
                 };
             }
             else
@@ -75,7 +75,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "The structure of the data is incorrect"
+                    Message = "Your query is missing some fields."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(email))
@@ -84,7 +84,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Email address cannot be empty"
+                    Message = "Email address cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidEmail(email))
@@ -93,7 +93,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "The email address format is invalid"
+                    Message = "Incorrect email address format."
                 };
             }
             else if (!validationMethods.IsValidLength(email, 254))
@@ -102,7 +102,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Email exceeds the maximum allowed length of 254 characters"
+                    Message = "Email address cannot exceed 254 characters in length."
                 };
             }
             else
@@ -121,7 +121,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "The structure of the data is incorrect"
+                    Message = "Your query is missing some fields."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(email))
@@ -130,7 +130,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Email address cannot be empty"
+                    Message = "Email address cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidEmail(email))
@@ -139,7 +139,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "The email address format is invalid"
+                    Message = "Incorrect email address format."
                 };
             }
             else if (!validationMethods.IsValidLength(email, 254))
@@ -148,7 +148,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Email exceeds the maximum allowed length of 254 characters"
+                    Message = "Email address cannot exceed 254 characters in length."
                 };
             }
             else
@@ -168,7 +168,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "The structure of the data is incorrect"
+                    Message = "Your query is missing some fields."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(register.AccountId))
@@ -177,7 +177,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Account ID cannot be empty"
+                    Message = "Account ID cannot be empty."
                 };
             }
             else if(!validationMethods.IsValidDigit(register.AccountId))
@@ -186,7 +186,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Account ID must be a positive number"
+                    Message = "Account ID must be a positive number."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(register.AccountName))
@@ -195,7 +195,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Account name cannot be empty"
+                    Message = "Account name cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidLength(register.AccountName, 50))
@@ -204,7 +204,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Account name exceeds the maximum allowed length of 50 characters"
+                    Message = "Account name cannot exceed 50 characters in length."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(register.Email))
@@ -213,7 +213,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Email address cannot be empty"
+                    Message = "Email address cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidEmail(register.Email))
@@ -222,7 +222,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "The email address format is invalid"
+                    Message = "Incorrect email address format."
                 };
             }
             else if (!validationMethods.IsValidLength(register.Email, 254))
@@ -231,7 +231,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Email exceeds the maximum allowed length of 254 characters"
+                    Message = "Email address cannot exceed 254 characters in length."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(register.PasswordHash))
@@ -240,7 +240,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Password cannot be empty"
+                    Message = "Password hash cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidLength(register.PasswordHash, 128))
@@ -249,7 +249,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Password exceeds the maximum allowed length of 128 characters"
+                    Message = "Password hash cannot exceed 128 characters in length."
                 };
             }
             else
@@ -269,7 +269,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "The structure of the data is incorrect"
+                    Message = "Your query is missing some fields."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(login.Email))
@@ -278,7 +278,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Email address cannot be empty"
+                    Message = "Email address cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidEmail(login.Email))
@@ -287,7 +287,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "The email address format is invalid"
+                    Message = "Incorrect email address format."
                 };
             }
             else if (!validationMethods.IsValidLength(login.Email, 254))
@@ -296,7 +296,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Email exceeds the maximum allowed length of 254 characters"
+                    Message = "Email address cannot exceed 254 characters in length."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(login.PasswordHash))
@@ -305,7 +305,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Password cannot be empty"
+                    Message = "Password hash cannot be empty."
                 };
             }
             else if (!validationMethods.IsValidLength(login.Email, 128))
@@ -314,7 +314,7 @@ namespace AccountsService.Controllers
                 {
                     Date = currentDateTime,
                     RequestExecution = false,
-                    Message = "Password exceeds the maximum allowed length of 128 characters"
+                    Message = "Password hash cannot exceed 128 characters in length."
                 };
             }
             else
