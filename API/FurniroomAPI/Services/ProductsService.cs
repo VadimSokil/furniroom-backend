@@ -17,32 +17,38 @@ namespace FurniroomAPI.Services
 
         public async Task<ServiceResponseModel> GetAllCategoriesAsync()
         {
-            var endpoint = _endpointURL["GetAllCategories"];
-            var response = await _httpClient.GetAsync(endpoint);
-            response.EnsureSuccessStatusCode();
-
-            var responseBody = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"Response Body: {responseBody}");
-
-            var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
+            try
             {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            });
+                var endpoint = _endpointURL["GetAllCategories"];
+                var response = await _httpClient.GetAsync(endpoint);
+                response.EnsureSuccessStatusCode();
 
-            if (serviceResponse == null)
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                });
+
+                if (serviceResponse == null)
+                {
+                    return new ServiceResponseModel
+                    {
+                        Status = false,
+                        Message = "Invalid response format.",
+                        Data = responseBody
+                    };
+                }
+
+                return serviceResponse;
+            }
+            catch (Exception ex) 
             {
-                Console.WriteLine("Deserialization failed.");
                 return new ServiceResponseModel
                 {
                     Status = false,
-                    Message = "Invalid response format.",
-                    Data = responseBody // Сохранение исходного тела ответа в поле Data для отладки
+                    Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
-
-            Console.WriteLine($"Deserialized Response: Status = {serviceResponse.Status}, Message = {serviceResponse.Message}, Data = {serviceResponse.Data}");
-
-            return serviceResponse;
         }
 
 

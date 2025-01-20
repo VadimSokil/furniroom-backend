@@ -19,14 +19,15 @@ namespace FurniroomAPI.Controllers
         public async Task<ActionResult<GatewayResponseModel>> GetCategories()
         {
             var serviceResponse = await _productsService.GetAllCategoriesAsync();
-
-            return Ok(new
+            var gatewayResponse = new GatewayResponseModel
             {
-                date = currentDateTime,
-                status = serviceResponse.Status,
-                message = serviceResponse.Message ?? "No message provided.",
-                data = serviceResponse.Data ?? "No data available."
-            });
+                Date = currentDateTime,
+                Status = serviceResponse.Status,
+                Message = serviceResponse.Message,
+                Data = serviceResponse.Data
+            };
+
+            return Ok(gatewayResponse);
         }
 
         [HttpGet("subcategories-list")]
