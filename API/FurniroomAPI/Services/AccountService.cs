@@ -34,7 +34,7 @@ namespace FurniroomAPI.Services
 
         public async Task<ServiceResponseModel> DeleteAccountAsync(int accountId)
         {
-            var endpoint = $"{_endpointURL["DeleteAccount"]}/{accountId}";
+            var endpoint = $"{_endpointURL["DeleteAccount"]}?accountId={accountId}";
             var response = await _httpClient.DeleteAsync(endpoint);
             response.EnsureSuccessStatusCode();
 
@@ -45,13 +45,13 @@ namespace FurniroomAPI.Services
 
         public async Task<ServiceResponseModel> GetAccountInformationAsync(int accountId)
         {
-            var endpoint = $"{_endpointURL["GetAccountInformation"]}/{accountId}";
+            var endpoint = $"{_endpointURL["GetAccountInformation"]}?accountId={accountId}";
             return await GetDataAsync(endpoint);
         }
 
         public async Task<ServiceResponseModel> GetAccountOrdersAsync(int accountId)
         {
-            var endpoint = $"{_endpointURL["GetAccountOrders"]}/{accountId}";
+            var endpoint = $"{_endpointURL["GetAccountOrders"]}?accountId={accountId}";
             return await GetDataAsync(endpoint);
         }
 
