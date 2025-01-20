@@ -344,23 +344,34 @@ namespace AccountsService.Services
                 using (var connection = new MySqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
+
+                    using (var command = new MySqlCommand(_requests["DeleteOrders"], connection))
+                    {
+                        command.Parameters.AddWithValue("@AccountId", accountId);
+                        await command.ExecuteNonQueryAsync();
+                    }
+
                     using (var command = new MySqlCommand(_requests["DeleteAccount"], connection))
                     {
                         command.Parameters.AddWithValue("@AccountId", accountId);
 
                         int affectedRows = await command.ExecuteNonQueryAsync();
                         if (affectedRows > 0)
+                        {
                             return new ServiceResponseModel
                             {
                                 Status = true,
                                 Message = "Account and orders successfully deleted."
                             };
+                        }
                         else
+                        {
                             return new ServiceResponseModel
                             {
                                 Status = false,
                                 Message = "Account not found."
                             };
+                        }
                     }
                 }
             }
@@ -381,6 +392,7 @@ namespace AccountsService.Services
                 };
             }
         }
+
 
 
     }
