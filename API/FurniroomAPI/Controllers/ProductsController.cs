@@ -1,6 +1,7 @@
 ﻿using FurniroomAPI.Interfaces;
 using FurniroomAPI.Models.Response;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace FurniroomAPI.Controllers
 {
@@ -19,13 +20,23 @@ namespace FurniroomAPI.Controllers
         public async Task<ActionResult<GatewayResponseModel>> GetCategories()
         {
             var serviceResponse = await _productsService.GetAllCategoriesAsync();
+
+            bool status = serviceResponse.Status;
+            string message = serviceResponse.Message ?? "No message provided";  
+            object data = serviceResponse.Data ?? new List<object>();
+
+            Console.WriteLine($"Status: {status}, Message: {message}, Data: {JsonConvert.SerializeObject(data)}");
+
+            // Создаем ответ для gateway с переменными
             var gatewayResponse = new GatewayResponseModel
             {
                 Date = currentDateTime,
-                Status = serviceResponse.Status,
-                Message = serviceResponse.Message,
-                Data = serviceResponse.Data
+                Status = status,
+                Message = message,
+                Data = data
             };
+
+            // Возвращаем ответ
             return Ok(gatewayResponse);
         }
 
