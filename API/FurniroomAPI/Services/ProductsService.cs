@@ -17,20 +17,43 @@ namespace FurniroomAPI.Services
 
         public async Task<ServiceResponseModel> GetAllCategoriesAsync()
         {
+            // Получаем endpoint из конфигурации
             var endpoint = _endpointURL["GetAllCategories"];
+
+            // Отправляем запрос
             var response = await _httpClient.GetAsync(endpoint);
+
+            // Проверяем успешность запроса
             response.EnsureSuccessStatusCode();
 
+            // Читаем тело ответа
             var responseBody = await response.Content.ReadAsStringAsync();
+
+            // Отладочное сообщение: выводим сырой ответ от сервиса
+            Console.WriteLine($"Response Body: {responseBody}");
+
+            // Пытаемся десериализовать тело в объект
             var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody);
 
+            // Отладочное сообщение: выводим результат десериализации
+            if (serviceResponse != null)
+            {
+                Console.WriteLine($"Deserialized Response: Status = {serviceResponse.Status}, Message = {serviceResponse.Message}, Data = {serviceResponse.Data}");
+            }
+            else
+            {
+                Console.WriteLine("Failed to deserialize response.");
+            }
+
+            // Если десериализация не удалась, возвращаем дефолтные данные с ошибкой
             return serviceResponse ?? new ServiceResponseModel
             {
                 Status = false,
                 Message = "Invalid response format.",
-                Data = new object[] { responseBody }
+                Data = new object[] { responseBody } // Можете сохранить исходный ответ, если десериализация не удалась
             };
         }
+
 
         public async Task<ServiceResponseModel> GetAllDrawingsAsync()
         {
