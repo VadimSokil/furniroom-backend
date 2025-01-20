@@ -45,13 +45,13 @@ namespace FurniroomAPI.Services
 
         public async Task<ServiceResponseModel> GetAccountInformationAsync(int accountId)
         {
-            var endpoint = $"{_endpointURL["GetAccountInformation"]}?accountId={accountId}";
+            var endpoint = _endpointURL["GetAccountOrders"] + "?accountId=" + accountId;
             return await GetDataAsync(endpoint);
         }
 
         public async Task<ServiceResponseModel> GetAccountOrdersAsync(int accountId)
         {
-            var endpoint = $"{_endpointURL["GetAccountOrders"]}?accountId={accountId}";
+            var endpoint = _endpointURL["GetAccountOrders"] + "?accountId=" + accountId;           
             return await GetDataAsync(endpoint);
         }
 
