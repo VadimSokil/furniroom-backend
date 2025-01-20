@@ -26,7 +26,6 @@ namespace FurniroomAPI.Controllers
                 Message = serviceResponse.Message,
                 Data = serviceResponse.Data
             };
-
             return Ok(gatewayResponse);
         }
 

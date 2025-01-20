@@ -40,11 +40,10 @@ namespace FurniroomAPI.Services
             return await FetchDataAsync("GetAllSubcategories");
         }
 
-        private async Task<ServiceResponseModel> FetchDataAsync(string endpointKey)
+        private async Task<ServiceResponseModel> FetchDataAsync(string endpoint)
         {
             try
             {
-                var endpoint = _endpointURL[endpointKey];
                 var response = await _httpClient.GetAsync(endpoint);
                 response.EnsureSuccessStatusCode();
 

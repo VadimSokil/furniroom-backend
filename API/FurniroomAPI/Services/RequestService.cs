@@ -27,11 +27,10 @@ namespace FurniroomAPI.Services
             return await PostDataAsync("AddQuestion", question);
         }
 
-        private async Task<ServiceResponseModel> PostDataAsync<T>(string endpointKey, T data)
+        private async Task<ServiceResponseModel> PostDataAsync<T>(string endpoint, T data)
         {
             try
             {
-                var endpoint = _endpointURL[endpointKey];
                 var jsonContent = JsonSerializer.Serialize(data);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 

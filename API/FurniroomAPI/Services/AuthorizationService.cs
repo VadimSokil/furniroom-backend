@@ -19,13 +19,13 @@ namespace FurniroomAPI.Services
 
         public async Task<ServiceResponseModel> CheckEmailAsync(string email)
         {
-            var endpoint = $"{_endpointURL["CheckEmail"]}?email={Uri.EscapeDataString(email)}";
+            var endpoint = _endpointURL["CheckEmail"] + "?email=" + email;
             return await GetDataAsync(endpoint);
         }
 
         public async Task<ServiceResponseModel> GenerateCodeAsync(string email)
         {
-            var endpoint = $"{_endpointURL["GenerateCode"]}?email={Uri.EscapeDataString(email)}";
+            var endpoint = _endpointURL["GenerateCode"] + "?email=" + email;
             return await GetDataAsync(endpoint);
         }
 
@@ -44,14 +44,12 @@ namespace FurniroomAPI.Services
             return await PostDataAsync("ResetPassword", email);
         }
 
-        private async Task<ServiceResponseModel> GetDataAsync(string endpointKey)
+        private async Task<ServiceResponseModel> GetDataAsync(string endpoint)
         {
             try
             {
-                var endpoint = _endpointURL[endpointKey];
                 var response = await _httpClient.GetAsync(endpoint);
                 response.EnsureSuccessStatusCode();
-
                 var responseBody = await response.Content.ReadAsStringAsync();
                 var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
                 {
@@ -95,11 +93,10 @@ namespace FurniroomAPI.Services
             }
         }
 
-        private async Task<ServiceResponseModel> PostDataAsync<T>(string endpointKey, T data)
+        private async Task<ServiceResponseModel> PostDataAsync<T>(string endpoint, T data)
         {
             try
             {
-                var endpoint = _endpointURL[endpointKey];
                 var jsonContent = JsonSerializer.Serialize(data);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 

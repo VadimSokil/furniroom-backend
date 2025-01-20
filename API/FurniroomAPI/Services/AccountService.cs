@@ -102,7 +102,6 @@ namespace FurniroomAPI.Services
             {
                 var response = await _httpClient.GetAsync(endpoint);
                 response.EnsureSuccessStatusCode();
-
                 var responseBody = await response.Content.ReadAsStringAsync();
                 var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
                 {
