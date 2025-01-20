@@ -34,14 +34,55 @@ namespace FurniroomAPI.Services
 
         public async Task<ServiceResponseModel> DeleteAccountAsync(int accountId)
         {
-            var endpoint = $"{_endpointURL["DeleteAccount"]}?accountId={accountId}";
-            var response = await _httpClient.DeleteAsync(endpoint);
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                var endpoint = _endpointURL["DeleteAccount"] + "?accountId=" + accountId;
+                var response = await _httpClient.DeleteAsync(endpoint);
+                response.EnsureSuccessStatusCode();
 
-            var responseBody = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<ServiceResponseModel>(responseBody) ??
-                   new ServiceResponseModel { Status = false, Message = "Invalid response format." };
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                });
+
+                if (serviceResponse?.Status == null)
+                {
+                    return new ServiceResponseModel
+                    {
+                        Status = false,
+                        Message = "The data transmitted by the service to the gateway is in an incorrect format"
+                    };
+                }
+
+                return serviceResponse;
+            }
+            catch (HttpRequestException httpEx)
+            {
+                return new ServiceResponseModel
+                {
+                    Status = false,
+                    Message = $"HTTP request error: {httpEx.Message}"
+                };
+            }
+            catch (JsonException jsonEx)
+            {
+                return new ServiceResponseModel
+                {
+                    Status = false,
+                    Message = $"Error parsing service response: {jsonEx.Message}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponseModel
+                {
+                    Status = false,
+                    Message = $"An unexpected error occurred: {ex.Message}"
+                };
+            }
         }
+
 
         public async Task<ServiceResponseModel> GetAccountInformationAsync(int accountId)
         {
