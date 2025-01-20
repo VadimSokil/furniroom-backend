@@ -19,30 +19,74 @@ namespace FurniroomAPI.Services
 
         public async Task<ServiceResponseModel> AddOrderAsync(OrderModel order)
         {
-            var endpoint = _endpointURL["AddOrder"];
-            var jsonContent = JsonSerializer.Serialize(order);
-            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-
-            var response = await _httpClient.PostAsync(endpoint, content);
-            response.EnsureSuccessStatusCode();
-
-            var responseBody = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<ServiceResponseModel>(responseBody) ??
-                   new ServiceResponseModel { Status = false, Message = "Invalid response format." };
+            return await PostDataAsync("AddOrder", order);
         }
 
         public async Task<ServiceResponseModel> AddQuestionAsync(QuestionModel question)
         {
-            var endpoint = _endpointURL["AddQuestion"];
-            var jsonContent = JsonSerializer.Serialize(question);
-            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            return await PostDataAsync("AddQuestion", question);
+        }
 
-            var response = await _httpClient.PostAsync(endpoint, content);
-            response.EnsureSuccessStatusCode();
+        private async Task<ServiceResponseModel> PostDataAsync<T>(string endpointKey, T data)
+        {
+            try
+            {
+                if (!_endpointURL.TryGetValue(endpointKey, out var endpoint))
+                {
+                    return new ServiceResponseModel
+                    {
+                        Status = false,
+                        Message = $"Endpoint key {endpointKey} not found in configuration."
+                    };
+                }
 
-            var responseBody = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<ServiceResponseModel>(responseBody) ??
-                   new ServiceResponseModel { Status = false, Message = "Invalid response format." };
+                var jsonContent = JsonSerializer.Serialize(data);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync(endpoint, content);
+                response.EnsureSuccessStatusCode();
+
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                });
+
+                if (serviceResponse?.Status == null)
+                {
+                    return new ServiceResponseModel
+                    {
+                        Status = false,
+                        Message = "The data transmitted by the service to the gateway is in an incorrect format"
+                    };
+                }
+
+                return serviceResponse;
+            }
+            catch (HttpRequestException httpEx)
+            {
+                return new ServiceResponseModel
+                {
+                    Status = false,
+                    Message = $"HTTP request error: {httpEx.Message}"
+                };
+            }
+            catch (JsonException jsonEx)
+            {
+                return new ServiceResponseModel
+                {
+                    Status = false,
+                    Message = $"Error parsing service response: {jsonEx.Message}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponseModel
+                {
+                    Status = false,
+                    Message = $"An unexpected error occurred: {ex.Message}"
+                };
+            }
         }
     }
 }
