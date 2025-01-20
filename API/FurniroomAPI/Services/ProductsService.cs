@@ -22,8 +22,14 @@ namespace FurniroomAPI.Services
             response.EnsureSuccessStatusCode();
 
             var responseBody = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<ServiceResponseModel>(responseBody) ??
-                   new ServiceResponseModel { Status = false, Message = "Invalid response format." };
+            var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody);
+
+            return serviceResponse ?? new ServiceResponseModel
+            {
+                Status = false,
+                Message = "Invalid response format.",
+                Data = new object[] { responseBody }
+            };
         }
 
         public async Task<ServiceResponseModel> GetAllDrawingsAsync()
