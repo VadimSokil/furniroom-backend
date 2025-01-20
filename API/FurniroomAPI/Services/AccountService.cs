@@ -1,4 +1,5 @@
-﻿using FurniroomAPI.Interfaces;
+﻿using AccountsService.Models.Account;
+using FurniroomAPI.Interfaces;
 using System.Text;
 using System.Text.Json;
 
@@ -15,10 +16,10 @@ namespace FurniroomAPI.Services
             _endpointURL = endpointURL;
         }
 
-        public async Task<string> ChangeEmailAsync(string oldEmail, string newEmail)
+        public async Task<string> ChangeEmailAsync(ChangeEmailModel changeEmail)
         {
             var endpoint = _endpointURL["ChangeEmail"];
-            var requestBody = new { OldEmail = oldEmail, NewEmail = newEmail };
+            var requestBody = new { OldEmail = changeEmail.OldEmail, NewEmail = changeEmail.NewEmail };
             var jsonContent = JsonSerializer.Serialize(requestBody);
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
@@ -28,10 +29,10 @@ namespace FurniroomAPI.Services
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<string> ChangeNameAsync(string oldName, string newName)
+        public async Task<string> ChangeNameAsync(ChangeNameModel changeName)
         {
             var endpoint = _endpointURL["ChangeName"];
-            var requestBody = new { OldName = oldName, NewName = newName };
+            var requestBody = new { OldName = changeName.OldName, NewName = changeName.NewName };
             var jsonContent = JsonSerializer.Serialize(requestBody);
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
@@ -41,10 +42,10 @@ namespace FurniroomAPI.Services
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<string> ChangePasswordAsync(string oldPasswordHash, string newPasswordHash)
+        public async Task<string> ChangePasswordAsync(ChangePasswordModel changePassword)
         {
             var endpoint = _endpointURL["ChangePassword"];
-            var requestBody = new { OldPasswordHash = oldPasswordHash, NewPasswordHash = newPasswordHash };
+            var requestBody = new { OldPasswordHash = changePassword.OldPasswordHash, NewPasswordHash = changePassword.NewPasswordHash };
             var jsonContent = JsonSerializer.Serialize(requestBody);
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 

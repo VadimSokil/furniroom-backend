@@ -18,21 +18,20 @@ namespace FurniroomAPI.Services
 
         public async Task<string> CheckEmailAsync(string email)
         {
-            var endpoint = _endpointURL["CheckEmail"];
-            var jsonContent = JsonSerializer.Serialize(email);
-            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(endpoint, content);
+            var endpoint = $"{_endpointURL["CheckEmail"]}?email={Uri.EscapeDataString(email)}";
+            var response = await _httpClient.GetAsync(endpoint);
+            response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
 
         public async Task<string> GenerateCodeAsync(string email)
         {
-            var endpoint = _endpointURL["GenerateCode"];
-            var jsonContent = JsonSerializer.Serialize(email);
-            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync(endpoint, content);
+            var endpoint = $"{_endpointURL["GenerateCode"]}?email={Uri.EscapeDataString(email)}";
+            var response = await _httpClient.GetAsync(endpoint);
+            response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
+
 
         public async Task<int> LoginAsync(LoginModel login)
         {

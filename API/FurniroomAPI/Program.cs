@@ -1,5 +1,6 @@
 using FurniroomAPI.Interfaces;
 using FurniroomAPI.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FurniroomAPI
 {
@@ -33,6 +34,11 @@ namespace FurniroomAPI
                           .AllowAnyMethod()
                           .AllowAnyHeader();
                 });
+            });
+
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
             });
 
             builder.Services.AddControllers();

@@ -15,15 +15,15 @@ namespace FurniroomAPI.Controllers
             _authorizationService = authorizationService;
         }
 
-        [HttpPost("check-email")]
-        public async Task<ActionResult<string>> CheckEmail([FromBody] string email)
+        [HttpGet("check-email")]
+        public async Task<ActionResult<string>> CheckEmail([FromQuery] string email)
         {
             var result = await _authorizationService.CheckEmailAsync(email);
             return Ok(result);
         }
 
-        [HttpPost("generate-code")]
-        public async Task<ActionResult<string>> GenerateCode([FromBody] string email)
+        [HttpGet("generate-code")]
+        public async Task<ActionResult<string>> GenerateCode([FromQuery] string email)
         {
             var result = await _authorizationService.GenerateCodeAsync(email);
             return Ok(result);
