@@ -44,15 +44,7 @@ namespace FurniroomAPI.Services
         {
             try
             {
-                if (!_endpointURL.TryGetValue(endpointKey, out var endpoint))
-                {
-                    return new ServiceResponseModel
-                    {
-                        Status = false,
-                        Message = $"Endpoint key {endpointKey} not found in configuration."
-                    };
-                }
-
+                var endpoint = _endpointURL[endpointKey];
                 var response = await _httpClient.GetAsync(endpoint);
                 response.EnsureSuccessStatusCode();
 
