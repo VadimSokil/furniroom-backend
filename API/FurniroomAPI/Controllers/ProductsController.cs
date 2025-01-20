@@ -20,22 +20,13 @@ namespace FurniroomAPI.Controllers
         {
             var serviceResponse = await _productsService.GetAllCategoriesAsync();
 
-            // Помещаем данные из ответа сервиса в переменные
-            bool status = serviceResponse.Status;
-            string message = serviceResponse.Message ?? "No message provided";  // Если message null, присваиваем дефолтное значение
-            object data = serviceResponse.Data ?? new List<object>();  // Если data null, создаем пустой список
-
-            // Создаем ответ для gateway с переменными
-            var gatewayResponse = new GatewayResponseModel
+            return Ok(new
             {
-                Date = currentDateTime,
-                Status = status,
-                Message = message,
-                Data = data
-            };
-
-            // Возвращаем ответ
-            return Ok(gatewayResponse);
+                date = currentDateTime,
+                status = serviceResponse.Status,
+                message = serviceResponse.Message ?? "No message provided.",
+                data = serviceResponse.Data ?? "No data available."
+            });
         }
 
         [HttpGet("subcategories-list")]
