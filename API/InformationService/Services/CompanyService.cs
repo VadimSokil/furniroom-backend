@@ -10,15 +10,13 @@ namespace InformationService.Services
     {
         private readonly string _connectionString;
         private readonly Dictionary<string, string> _requests;
-        public string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
-
         public CompanyService(string connectionString, Dictionary<string, string> requests)
         {
             _connectionString = connectionString;
             _requests = requests;
         }
 
-        public async Task<ResponseModel> GetCompanyInformationAsync()
+        public async Task<ServiceResponseModel> GetCompanyInformationAsync()
         {
             try
             {
@@ -44,36 +42,33 @@ namespace InformationService.Services
                     }
                 }
 
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = true,
+                    Status = true,
                     Message = "Data retrieved successfully.",
                     Data = notes
                 };
             }
             catch (MySqlException ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
 
         }
 
-        public async Task<ResponseModel> GetDeliveryInformationAsync()
+        public async Task<ServiceResponseModel> GetDeliveryInformationAsync()
         {
             try
             {
@@ -99,35 +94,32 @@ namespace InformationService.Services
                     }
                 }
 
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = true,
+                    Status = true,
                     Message = "Data retrieved successfully.",
                     Data = notes
                 };
             }
             catch (MySqlException ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }
 
-        public async Task<ResponseModel> GetPaymentInformationAsync()
+        public async Task<ServiceResponseModel> GetPaymentInformationAsync()
         {
             try
             {
@@ -153,29 +145,26 @@ namespace InformationService.Services
                     }
                 }
 
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = true,
+                    Status = true,
                     Message = "Data retrieved successfully.",
                     Data = notes
                 };
             }
             catch (MySqlException ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }

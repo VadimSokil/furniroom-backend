@@ -4,10 +4,10 @@ namespace InformationService.Interfaces
 {
     public interface IProductsService
     {
-        public Task<ResponseModel> GetAllCategoriesAsync();
-        public Task<ResponseModel> GetAllSubcategoriesAsync();
-        public Task<ResponseModel> GetAllProductsAsync();
-        public Task<ResponseModel> GetAllImagesAsync();
-        public Task<ResponseModel> GetAllDrawingsAsync();
+        public Task<ServiceResponseModel> GetAllCategoriesAsync();
+        public Task<ServiceResponseModel> GetAllSubcategoriesAsync();
+        public Task<ServiceResponseModel> GetAllProductsAsync();
+        public Task<ServiceResponseModel> GetAllImagesAsync();
+        public Task<ServiceResponseModel> GetAllDrawingsAsync();
     }
 }

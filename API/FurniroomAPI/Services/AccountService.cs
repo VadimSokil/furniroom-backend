@@ -1,4 +1,5 @@
 ﻿using AccountsService.Models.Account;
+using AccountsService.Models.Response;
 using FurniroomAPI.Interfaces;
 using System.Text;
 using System.Text.Json;
@@ -16,70 +17,79 @@ namespace FurniroomAPI.Services
             _endpointURL = endpointURL;
         }
 
-        public async Task<string> ChangeEmailAsync(ChangeEmailModel changeEmail)
+        public async Task<ServiceResponseModel> ChangeEmailAsync(ChangeEmailModel changeEmail)
         {
             var endpoint = _endpointURL["ChangeEmail"];
-            var requestBody = new { OldEmail = changeEmail.OldEmail, NewEmail = changeEmail.NewEmail };
-            var jsonContent = JsonSerializer.Serialize(requestBody);
-            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            var requestBody = JsonSerializer.Serialize(changeEmail);
+            var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
 
             var response = await _httpClient.PutAsync(endpoint, content);
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadAsStringAsync();
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<ServiceResponseModel>(responseBody) ??
+                   new ServiceResponseModel { Status = false, Message = "Invalid response format." };
         }
 
-        public async Task<string> ChangeNameAsync(ChangeNameModel changeName)
+        public async Task<ServiceResponseModel> ChangeNameAsync(ChangeNameModel changeName)
         {
             var endpoint = _endpointURL["ChangeName"];
-            var requestBody = new { OldName = changeName.OldName, NewName = changeName.NewName };
-            var jsonContent = JsonSerializer.Serialize(requestBody);
-            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            var requestBody = JsonSerializer.Serialize(changeName);
+            var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
 
             var response = await _httpClient.PutAsync(endpoint, content);
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadAsStringAsync();
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<ServiceResponseModel>(responseBody) ??
+                   new ServiceResponseModel { Status = false, Message = "Invalid response format." };
         }
 
-        public async Task<string> ChangePasswordAsync(ChangePasswordModel changePassword)
+        public async Task<ServiceResponseModel> ChangePasswordAsync(ChangePasswordModel changePassword)
         {
             var endpoint = _endpointURL["ChangePassword"];
-            var requestBody = new { OldPasswordHash = changePassword.OldPasswordHash, NewPasswordHash = changePassword.NewPasswordHash };
-            var jsonContent = JsonSerializer.Serialize(requestBody);
-            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            var requestBody = JsonSerializer.Serialize(changePassword);
+            var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
 
             var response = await _httpClient.PutAsync(endpoint, content);
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadAsStringAsync();
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<ServiceResponseModel>(responseBody) ??
+                   new ServiceResponseModel { Status = false, Message = "Invalid response format." };
         }
 
-        public async Task<string> DeleteAccountAsync(int? accountId)
+        public async Task<ServiceResponseModel> DeleteAccountAsync(int accountId)
         {
             var endpoint = $"{_endpointURL["DeleteAccount"]}/{accountId}";
             var response = await _httpClient.DeleteAsync(endpoint);
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadAsStringAsync();
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<ServiceResponseModel>(responseBody) ??
+                   new ServiceResponseModel { Status = false, Message = "Invalid response format." };
         }
 
-        public async Task<string> GetAccountInformationAsync(int? accountId)
+        public async Task<ServiceResponseModel> GetAccountInformationAsync(int accountId)
         {
-            var endpoint = $"{_endpointURL["GetAccountInformation"]}/{accountId}"; 
+            var endpoint = $"{_endpointURL["GetAccountInformation"]}/{accountId}";
             var response = await _httpClient.GetAsync(endpoint);
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadAsStringAsync();
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<ServiceResponseModel>(responseBody) ??
+                   new ServiceResponseModel { Status = false, Message = "Invalid response format." };
         }
 
-        public async Task<string> GetAccountOrdersAsync(int? accountId)
+        public async Task<ServiceResponseModel> GetAccountOrdersAsync(int accountId)
         {
             var endpoint = $"{_endpointURL["GetAccountOrders"]}/{accountId}";
             var response = await _httpClient.GetAsync(endpoint);
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadAsStringAsync();
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<ServiceResponseModel>(responseBody) ??
+                   new ServiceResponseModel { Status = false, Message = "Invalid response format." };
         }
     }
 }

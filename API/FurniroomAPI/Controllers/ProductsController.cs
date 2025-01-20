@@ -1,4 +1,5 @@
 ﻿using FurniroomAPI.Interfaces;
+using FurniroomAPI.Models.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FurniroomAPI.Controllers
@@ -8,45 +9,80 @@ namespace FurniroomAPI.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProductsService _productsService;
-
+        public string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
         public ProductsController(IProductsService productsService)
         {
             _productsService = productsService;
         }
 
         [HttpGet("categories-list")]
-        public async Task<ActionResult<string>> GetCategories()
+        public async Task<ActionResult<GatewayResponseModel>> GetCategories()
         {
-            var result = await _productsService.GetAllCategoriesAsync();
-            return Ok(result);
+            var serviceResponse = await _productsService.GetAllCategoriesAsync();
+            var gatewayResponse = new GatewayResponseModel
+            {
+                Date = currentDateTime,
+                Status = serviceResponse.Status,
+                Message = serviceResponse.Message,
+                Data = serviceResponse.Data
+            };
+            return Ok(gatewayResponse);
         }
 
         [HttpGet("subcategories-list")]
-        public async Task<ActionResult<string>> GetSubcategories()
+        public async Task<ActionResult<GatewayResponseModel>> GetSubcategories()
         {
-            var result = await _productsService.GetAllSubcategoriesAsync();
-            return Ok(result);
+            var serviceResponse = await _productsService.GetAllSubcategoriesAsync();
+            var gatewayResponse = new GatewayResponseModel
+            {
+                Date = currentDateTime,
+                Status = serviceResponse.Status,
+                Message = serviceResponse.Message,
+                Data = serviceResponse.Data
+            };
+            return Ok(gatewayResponse);
         }
 
         [HttpGet("products-list")]
-        public async Task<ActionResult<string>> GetProducts()
+        public async Task<ActionResult<GatewayResponseModel>> GetProducts()
         {
-            var result = await _productsService.GetAllProductsAsync();
-            return Ok(result);
+            var serviceResponse = await _productsService.GetAllProductsAsync();
+            var gatewayResponse = new GatewayResponseModel
+            {
+                Date = currentDateTime,
+                Status = serviceResponse.Status,
+                Message = serviceResponse.Message,
+                Data = serviceResponse.Data
+            };
+            return Ok(gatewayResponse);
         }
 
         [HttpGet("images-list")]
-        public async Task<ActionResult<string>> GetImages()
+        public async Task<ActionResult<GatewayResponseModel>> GetImages()
         {
-            var result = await _productsService.GetAllImagesAsync();
-            return Ok(result);
+            var serviceResponse = await _productsService.GetAllImagesAsync();
+            var gatewayResponse = new GatewayResponseModel
+            {
+                Date = currentDateTime,
+                Status = serviceResponse.Status,
+                Message = serviceResponse.Message,
+                Data = serviceResponse.Data
+            };
+            return Ok(gatewayResponse);
         }
 
         [HttpGet("drawings-list")]
-        public async Task<ActionResult<string>> GetDrawingss()
+        public async Task<ActionResult<GatewayResponseModel>> GetDrawingss()
         {
-            var result = await _productsService.GetAllDrawingsAsync();
-            return Ok(result);
+            var serviceResponse = await _productsService.GetAllDrawingsAsync();
+            var gatewayResponse = new GatewayResponseModel
+            {
+                Date = currentDateTime,
+                Status = serviceResponse.Status,
+                Message = serviceResponse.Message,
+                Data = serviceResponse.Data
+            };
+            return Ok(gatewayResponse);
         }
     }
 }

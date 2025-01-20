@@ -9,7 +9,6 @@ namespace AccountsService.Services
     {
         private readonly string _connectionString;
         private readonly Dictionary<string, string> _requests;
-        public string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
 
         public RequestService(string connectionString, Dictionary<string, string> requests)
         {
@@ -17,7 +16,7 @@ namespace AccountsService.Services
             _requests = requests;
         }
 
-        public async Task<ResponseModel> AddOrderAsync(OrderModel order)
+        public async Task<ServiceResponseModel> AddOrderAsync(OrderModel order)
         {
             try
             {
@@ -32,10 +31,9 @@ namespace AccountsService.Services
 
                         if (orderExists)
                         {
-                            return new ResponseModel
+                            return new ServiceResponseModel
                             {
-                                Date = currentDateTime,
-                                RequestExecution = false,
+                                Status = false,
                                 Message = "This Order ID is already in use."
                             };
                         }
@@ -62,34 +60,31 @@ namespace AccountsService.Services
                     }
                 }
 
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = true,
+                    Status = true,
                     Message = "Order successfully added."
                 };
             }
             catch (MySqlException ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }
 
-        public async Task<ResponseModel> AddQuestionAsync(QuestionModel question)
+        public async Task<ServiceResponseModel> AddQuestionAsync(QuestionModel question)
         {
             try
             {
@@ -104,10 +99,9 @@ namespace AccountsService.Services
 
                         if (questionExists)
                         {
-                            return new ResponseModel
+                            return new ServiceResponseModel
                             {
-                                Date = currentDateTime,
-                                RequestExecution = false,
+                                Status = false,
                                 Message = "This Question ID is already in use."
                             };
                         }
@@ -125,28 +119,25 @@ namespace AccountsService.Services
                     }
                 }
 
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = true,
+                    Status = true,
                     Message = "Question successfully added."
                 };
             }
             catch (MySqlException ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }

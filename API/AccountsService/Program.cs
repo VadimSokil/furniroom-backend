@@ -1,7 +1,5 @@
 using AccountsService.Interfaces;
 using AccountsService.Services;
-using AccountsService.Validation;
-using Microsoft.AspNetCore.Mvc;
 
 namespace AccountsService
 {
@@ -25,7 +23,6 @@ namespace AccountsService
             builder.Services.AddScoped<IAuthorizationService, AuthorizationService>(provider => new AuthorizationService(connectionString, serviceEmail, servicePassword, requests));
             builder.Services.AddScoped<IAccountService, AccountService>(provider => new AccountService(connectionString, requests));
             builder.Services.AddScoped<IRequestService, RequestService>(provider => new RequestService(connectionString, requests));
-            builder.Services.AddScoped<ValidationMethods>();
 
             builder.Services.AddCors(options =>
             {
@@ -35,11 +32,6 @@ namespace AccountsService
                           .AllowAnyMethod()
                           .AllowAnyHeader();
                 });
-            });
-
-            builder.Services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
             });
 
             builder.Services.AddControllers();

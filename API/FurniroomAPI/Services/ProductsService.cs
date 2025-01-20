@@ -1,4 +1,6 @@
-﻿using FurniroomAPI.Interfaces;
+﻿using AccountsService.Models.Response;
+using FurniroomAPI.Interfaces;
+using System.Text.Json;
 
 namespace FurniroomAPI.Services
 {
@@ -13,49 +15,59 @@ namespace FurniroomAPI.Services
             _endpointURL = endpointURL;
         }
 
-        public async Task<string> GetAllCategoriesAsync()
+        public async Task<ServiceResponseModel> GetAllCategoriesAsync()
         {
             var endpoint = _endpointURL["GetAllCategories"];
             var response = await _httpClient.GetAsync(endpoint);
             response.EnsureSuccessStatusCode();
-            var content = await response.Content.ReadAsStringAsync();
-            return content;
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<ServiceResponseModel>(responseBody) ??
+                   new ServiceResponseModel { Status = false, Message = "Invalid response format." };
         }
 
-        public async Task<string> GetAllDrawingsAsync()
+        public async Task<ServiceResponseModel> GetAllDrawingsAsync()
         {
             var endpoint = _endpointURL["GetAllDrawings"];
             var response = await _httpClient.GetAsync(endpoint);
             response.EnsureSuccessStatusCode();
-            var content = await response.Content.ReadAsStringAsync();
-            return content;
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<ServiceResponseModel>(responseBody) ??
+                   new ServiceResponseModel { Status = false, Message = "Invalid response format." };
         }
 
-        public async Task<string> GetAllImagesAsync()
+        public async Task<ServiceResponseModel> GetAllImagesAsync()
         {
             var endpoint = _endpointURL["GetAllImages"];
             var response = await _httpClient.GetAsync(endpoint);
             response.EnsureSuccessStatusCode();
-            var content = await response.Content.ReadAsStringAsync();
-            return content;
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<ServiceResponseModel>(responseBody) ??
+                   new ServiceResponseModel { Status = false, Message = "Invalid response format." };
         }
 
-        public async Task<string> GetAllProductsAsync()
+        public async Task<ServiceResponseModel> GetAllProductsAsync()
         {
             var endpoint = _endpointURL["GetAllProducts"];
             var response = await _httpClient.GetAsync(endpoint);
             response.EnsureSuccessStatusCode();
-            var content = await response.Content.ReadAsStringAsync();
-            return content;
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<ServiceResponseModel>(responseBody) ??
+                   new ServiceResponseModel { Status = false, Message = "Invalid response format." };
         }
 
-        public async Task<string> GetAllSubcategoriesAsync()
+        public async Task<ServiceResponseModel> GetAllSubcategoriesAsync()
         {
             var endpoint = _endpointURL["GetAllSubcategories"];
             var response = await _httpClient.GetAsync(endpoint);
             response.EnsureSuccessStatusCode();
-            var content = await response.Content.ReadAsStringAsync();
-            return content;
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<ServiceResponseModel>(responseBody) ??
+                   new ServiceResponseModel { Status = false, Message = "Invalid response format." };
         }
     }
 }

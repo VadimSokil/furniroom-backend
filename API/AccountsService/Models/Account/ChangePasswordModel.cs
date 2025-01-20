@@ -1,12 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace AccountsService.Models.Account
+﻿namespace AccountsService.Models.Account
 {
     public class ChangePasswordModel
     {
-        [Required]
-        public string? OldPasswordHash { get; set; }
-        [Required]
-        public string? NewPasswordHash { get; set; }
+        public string OldPasswordHash { get; set; }
+        public string NewPasswordHash { get; set; }
     }
 }

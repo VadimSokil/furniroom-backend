@@ -1,12 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace AccountsService.Models.Account
+﻿namespace AccountsService.Models.Account
 {
     public class ChangeEmailModel
     {
-        [Required]
-        public string? OldEmail { get; set; }
-        [Required]
-        public string? NewEmail { get; set; }
+        public string OldEmail { get; set; }
+        public string NewEmail { get; set; }
     }
 }

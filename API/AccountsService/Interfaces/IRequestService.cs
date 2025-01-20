@@ -5,7 +5,7 @@ namespace AccountsService.Interfaces
 {
     public interface IRequestService
     {
-        public Task<ResponseModel> AddOrderAsync(OrderModel order);
-        public Task<ResponseModel> AddQuestionAsync(QuestionModel question);
+        public Task<ServiceResponseModel> AddOrderAsync(OrderModel order);
+        public Task<ServiceResponseModel> AddQuestionAsync(QuestionModel question);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FurniroomAPI.Interfaces;
+using FurniroomAPI.Models.Response;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FurniroomAPI.Controllers
@@ -8,7 +9,7 @@ namespace FurniroomAPI.Controllers
     public class CompanyController : ControllerBase
     {
         private readonly ICompanyService _companyService;
-
+        public string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
         public CompanyController(ICompanyService companyService)
         {
             _companyService = companyService;
@@ -17,22 +18,43 @@ namespace FurniroomAPI.Controllers
         [HttpGet("company-information")]
         public async Task<ActionResult<string>> GetCompany()
         {
-            var result = await _companyService.GetCompanyInformationAsync();
-            return Ok(result);
+            var serviceResponse = await _companyService.GetCompanyInformationAsync();
+            var gatewayResponse = new GatewayResponseModel
+            {
+                Date = currentDateTime,
+                Status = serviceResponse.Status,
+                Message = serviceResponse.Message,
+                Data = serviceResponse.Data
+            };
+            return Ok(gatewayResponse);
         }
 
         [HttpGet("delivery-information")]
         public async Task<ActionResult<string>> GetDelivery()
         {
-            var result = await _companyService.GetDeliveryInformationAsync();
-            return Ok(result);
+            var serviceResponse = await _companyService.GetDeliveryInformationAsync();
+            var gatewayResponse = new GatewayResponseModel
+            {
+                Date = currentDateTime,
+                Status = serviceResponse.Status,
+                Message = serviceResponse.Message,
+                Data = serviceResponse.Data
+            };
+            return Ok(gatewayResponse);
         }
 
         [HttpGet("payment-information")]
         public async Task<ActionResult<string>> GetPayment()
         {
-            var result = await _companyService.GetPaymentInformationAsync();
-            return Ok(result);
+            var serviceResponse = await _companyService.GetPaymentInformationAsync();
+            var gatewayResponse = new GatewayResponseModel
+            {
+                Date = currentDateTime,
+                Status = serviceResponse.Status,
+                Message = serviceResponse.Message,
+                Data = serviceResponse.Data
+            };
+            return Ok(gatewayResponse);
         }
     }
 }

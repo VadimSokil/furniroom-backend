@@ -1,4 +1,6 @@
-﻿using FurniroomAPI.Interfaces;
+﻿using AccountsService.Models.Response;
+using FurniroomAPI.Interfaces;
+using System.Text.Json;
 
 namespace FurniroomAPI.Services
 {
@@ -13,31 +15,37 @@ namespace FurniroomAPI.Services
             _endpointURL = endpointURL;
         }
 
-        public async Task<string> GetCompanyInformationAsync()
+        public async Task<ServiceResponseModel> GetCompanyInformationAsync()
         {
             var endpoint = _endpointURL["GetCompanyInformation"];
             var response = await _httpClient.GetAsync(endpoint);
             response.EnsureSuccessStatusCode();
-            var content = await response.Content.ReadAsStringAsync();
-            return content;
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<ServiceResponseModel>(responseBody) ??
+                   new ServiceResponseModel { Status = false, Message = "Invalid response format." };
         }
 
-        public async Task<string> GetDeliveryInformationAsync()
+        public async Task<ServiceResponseModel> GetDeliveryInformationAsync()
         {
             var endpoint = _endpointURL["GetDeliveryInformation"];
             var response = await _httpClient.GetAsync(endpoint);
             response.EnsureSuccessStatusCode();
-            var content = await response.Content.ReadAsStringAsync();
-            return content;
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<ServiceResponseModel>(responseBody) ??
+                   new ServiceResponseModel { Status = false, Message = "Invalid response format." };
         }
 
-        public async Task<string> GetPaymentInformationAsync()
+        public async Task<ServiceResponseModel> GetPaymentInformationAsync()
         {
             var endpoint = _endpointURL["GetPaymentInformation"];
             var response = await _httpClient.GetAsync(endpoint);
             response.EnsureSuccessStatusCode();
-            var content = await response.Content.ReadAsStringAsync();
-            return content;
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<ServiceResponseModel>(responseBody) ??
+                   new ServiceResponseModel { Status = false, Message = "Invalid response format." };
         }
     }
 }

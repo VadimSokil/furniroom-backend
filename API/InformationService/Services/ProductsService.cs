@@ -10,15 +10,13 @@ namespace InformationService.Services
     {
         private readonly string _connectionString;
         private readonly Dictionary<string, string> _requests;
-        public string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
-
         public ProductsService(string connectionString, Dictionary<string, string> requests)
         {
             _connectionString = connectionString;
             _requests = requests;
         }
 
-        public async Task<ResponseModel> GetAllCategoriesAsync()
+        public async Task<ServiceResponseModel> GetAllCategoriesAsync()
         {
             try
             {
@@ -44,35 +42,32 @@ namespace InformationService.Services
                     }
                 }
 
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = true,
+                    Status = true,
                     Message = "Data retrieved successfully.",
                     Data = categories
                 };
             }
             catch (MySqlException ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }
 
-        public async Task<ResponseModel> GetAllSubcategoriesAsync()
+        public async Task<ServiceResponseModel> GetAllSubcategoriesAsync()
         {
             try
             {
@@ -99,35 +94,32 @@ namespace InformationService.Services
                     }
                 }
 
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = true,
+                    Status = true,
                     Message = "Data retrieved successfully.",
                     Data = subcategories
                 };
             }
             catch (MySqlException ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }
 
-        public async Task<ResponseModel> GetAllProductsAsync()
+        public async Task<ServiceResponseModel> GetAllProductsAsync()
         {
             try
             {
@@ -156,34 +148,31 @@ namespace InformationService.Services
                     }
                 }
 
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = true,
+                    Status = true,
                     Message = "Data retrieved successfully.",
                     Data = products
                 };
             }
             catch (MySqlException ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }
-        public async Task<ResponseModel> GetAllImagesAsync()
+        public async Task<ServiceResponseModel> GetAllImagesAsync()
         {
             try
             {
@@ -210,35 +199,32 @@ namespace InformationService.Services
                     }
                 }
 
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = true,
+                    Status = true,
                     Message = "Data retrieved successfully.",
                     Data = images
                 };
             }
             catch (MySqlException ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }
 
-        public async Task<ResponseModel> GetAllDrawingsAsync()
+        public async Task<ServiceResponseModel> GetAllDrawingsAsync()
         {
             try
             {
@@ -267,29 +253,26 @@ namespace InformationService.Services
                     }
                 }
 
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = true,
+                    Status = true,
                     Message = "Data retrieved successfully.",
                     Data = drawings
                 };
             }
             catch (MySqlException ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }

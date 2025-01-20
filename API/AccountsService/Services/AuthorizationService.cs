@@ -17,7 +17,6 @@ namespace AccountsService.Services
         private readonly Dictionary<string, string> _requests;
         private const string SmtpHost = "smtp.gmail.com";
         private const int SmtpPort = 587;
-        public string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
 
         public AuthorizationService(string connectionString, string serviceEmail, string servicePassword, Dictionary<string, string> requests)
         {
@@ -64,7 +63,7 @@ namespace AccountsService.Services
             }
         }
 
-        public async Task<ResponseModel> CheckEmailAsync(string email)
+        public async Task<ServiceResponseModel> CheckEmailAsync(string email)
         {
             try
             {
@@ -79,45 +78,41 @@ namespace AccountsService.Services
 
                         if (result > 0)
                         {
-                            return new ResponseModel
+                            return new ServiceResponseModel
                             {
-                                Date = currentDateTime,
-                                RequestExecution = true,
+                                Status = true,
                                 Message = "This email address is already in use."
                             };
                         }
                     }
                 }
 
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = true,
+                    Status = true,
                     Message = "This email address is available."
                 };
             }
             catch (MySqlException ex) 
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex) 
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }
 
 
-        public async Task<ResponseModel> GenerateCodeAsync(string email)
+        public async Task<ServiceResponseModel> GenerateCodeAsync(string email)
         {
             try
             {
@@ -126,36 +121,33 @@ namespace AccountsService.Services
                 string messageBody = $"Hi, your verification code: {verificationCode}";
                 await SendEmailAsync(email, messageBody, "Verification code");
 
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = true,
+                    Status = true,
                     Message = "Verification code has been generated.",
                     Data = verificationCode
                 };
             }
             catch (MySqlException ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
 
         }
 
-        public async Task<ResponseModel> ResetPasswordAsync(string email)
+        public async Task<ServiceResponseModel> ResetPasswordAsync(string email)
         {
             try
             {
@@ -170,10 +162,9 @@ namespace AccountsService.Services
 
                         if (!emailExists)
                         {
-                            return new ResponseModel
+                            return new ServiceResponseModel
                             {
-                                Date = currentDateTime,
-                                RequestExecution = false,
+                                Status = false,
                                 Message = "Email address is not found."
                             };
                         }
@@ -195,10 +186,9 @@ namespace AccountsService.Services
 
                     await SendEmailAsync(email, $"Hi, your new password: {newPassword}", "Reset Password");
 
-                    return new ResponseModel
+                    return new ServiceResponseModel
                     {
-                        Date = currentDateTime,
-                        RequestExecution = true,
+                        Status = true,
                         Message = "Password successfully reseted.",
                         Data = newPassword
                     };
@@ -207,25 +197,23 @@ namespace AccountsService.Services
             }
             catch (MySqlException ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"Database error: {ex.Message}"
                 };
             }
             catch (Exception ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"Unexpected error: {ex.Message}"
                 };
             }
         }
 
-        public async Task<ResponseModel> LoginAsync(LoginModel login)
+        public async Task<ServiceResponseModel> LoginAsync(LoginModel login)
         {
             try
             {
@@ -241,18 +229,16 @@ namespace AccountsService.Services
                         var result = await command.ExecuteScalarAsync();
                         if (result == null)
                         {
-                            return new ResponseModel
+                            return new ServiceResponseModel
                             {
-                                Date = currentDateTime,
-                                RequestExecution = true,
+                                Status = true,
                                 Message = $"Incorrect email address or password."
                             };
                         }
 
-                        return new ResponseModel
+                        return new ServiceResponseModel
                         {
-                            Date = currentDateTime,
-                            RequestExecution = true,
+                            Status = true,
                             Message = "Data confirmed.",
                             Data = result
                         };
@@ -261,25 +247,23 @@ namespace AccountsService.Services
             }
             catch (MySqlException ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }
         }
 
-        public async Task<ResponseModel> RegisterAsync(RegisterModel register)
+        public async Task<ServiceResponseModel> RegisterAsync(RegisterModel register)
         {
             try
             {
@@ -294,10 +278,9 @@ namespace AccountsService.Services
 
                         if (idExists)
                         {
-                            return new ResponseModel
+                            return new ServiceResponseModel
                             {
-                                Date = currentDateTime,
-                                RequestExecution = false,
+                                Status = false,
                                 Message = "This Account ID is already in use."
                             };
                         }
@@ -310,10 +293,9 @@ namespace AccountsService.Services
 
                         if (emailExists)
                         {
-                            return new ResponseModel
+                            return new ServiceResponseModel
                             {
-                                Date = currentDateTime,
-                                RequestExecution = false,
+                                Status = false,
                                 Message = "This Email is already in use."
                             };
                         }
@@ -326,10 +308,9 @@ namespace AccountsService.Services
 
                         if (nameExists)
                         {
-                            return new ResponseModel
+                            return new ServiceResponseModel
                             {
-                                Date = currentDateTime,
-                                RequestExecution = false,
+                                Status = false,
                                 Message = "This Account name is already in use."
                             };
                         }
@@ -346,28 +327,25 @@ namespace AccountsService.Services
                     }
                 }
 
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = true,
+                    Status = true,
                     Message = "Account successfully created."
                 };
             }
             catch (MySqlException ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"A database error occurred: {ex.Message}"
                 };
             }
             catch (Exception ex)
             {
-                return new ResponseModel
+                return new ServiceResponseModel
                 {
-                    Date = currentDateTime,
-                    RequestExecution = false,
+                    Status = false,
                     Message = $"An unexpected error occurred: {ex.Message}"
                 };
             }

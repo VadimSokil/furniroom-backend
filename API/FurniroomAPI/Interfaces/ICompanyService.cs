@@ -1,9 +1,11 @@
-﻿namespace FurniroomAPI.Interfaces
+﻿using AccountsService.Models.Response;
+
+namespace FurniroomAPI.Interfaces
 {
     public interface ICompanyService
     {
-        public Task<string> GetCompanyInformationAsync();
-        public Task<string> GetDeliveryInformationAsync();
-        public Task<string> GetPaymentInformationAsync();
+        public Task<ServiceResponseModel> GetCompanyInformationAsync();
+        public Task<ServiceResponseModel> GetDeliveryInformationAsync();
+        public Task<ServiceResponseModel> GetPaymentInformationAsync();
     }
 }

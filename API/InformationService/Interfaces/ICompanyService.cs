@@ -4,8 +4,8 @@ namespace InformationService.Interfaces
 {
     public interface ICompanyService
     {
-        public Task<ResponseModel> GetCompanyInformationAsync();
-        public Task<ResponseModel> GetDeliveryInformationAsync();
-        public Task<ResponseModel> GetPaymentInformationAsync();
+        public Task<ServiceResponseModel> GetCompanyInformationAsync();
+        public Task<ServiceResponseModel> GetDeliveryInformationAsync();
+        public Task<ServiceResponseModel> GetPaymentInformationAsync();
     }
 }

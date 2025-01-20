@@ -2,8 +2,6 @@
 using AccountsService.Interfaces;
 using AccountsService.Models.Authorization;
 using AccountsService.Models.Response;
-using AccountsService.Validation;
-using System.ComponentModel.DataAnnotations;
 
 namespace AccountsService.Controllers
 {
@@ -12,8 +10,6 @@ namespace AccountsService.Controllers
     public class AuthorizationController : ControllerBase
     {
         private readonly IAuthorizationService _authorizationService;
-        public string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
-        public ValidationMethods validationMethods = new ValidationMethods();
 
         public AuthorizationController(IAuthorizationService authorizationService)
         {
@@ -21,307 +17,39 @@ namespace AccountsService.Controllers
         }
 
         [HttpGet("check-email")]
-        public async Task<ActionResult<ResponseModel>> CheckEmail([FromQuery][Required]string? email)
+        public async Task<ActionResult<ServiceResponseModel>> CheckEmail([FromQuery]string email)
         {
-            if (!ModelState.IsValid)
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Your query is missing some fields."
-                };
-            }
-            else if (!validationMethods.IsNotEmptyValue(email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email address cannot be empty."
-                };
-            }
-            else if (!validationMethods.IsValidEmail(email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Incorrect email address format."
-                };
-            }
-            else if (!validationMethods.IsValidLength(email, 254))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email address cannot exceed 254 characters in length."
-                };
-            }
-            else
-            {
-                var result = await _authorizationService.CheckEmailAsync(email);
-                return Ok(result);
-            }
+            var result = await _authorizationService.CheckEmailAsync(email);
+            return Ok(result);
         }
 
         [HttpGet("generate-code")]
-        public async Task<ActionResult<ResponseModel>> GenerateCode([FromQuery][Required]string? email)
+        public async Task<ActionResult<ServiceResponseModel>> GenerateCode([FromQuery]string email)
         {
-            if (!ModelState.IsValid)
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Your query is missing some fields."
-                };
-            }
-            else if (!validationMethods.IsNotEmptyValue(email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email address cannot be empty."
-                };
-            }
-            else if (!validationMethods.IsValidEmail(email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Incorrect email address format."
-                };
-            }
-            else if (!validationMethods.IsValidLength(email, 254))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email address cannot exceed 254 characters in length."
-                };
-            }
-            else
-            {
-                var result = await _authorizationService.GenerateCodeAsync(email);
-                return Ok(result);
-            }
+            var result = await _authorizationService.GenerateCodeAsync(email);
+            return Ok(result);
         }
 
         [HttpPost("reset-password")]
-        public async Task<ActionResult<ResponseModel>> ResetPassword([FromQuery][Required] string? email)
+        public async Task<ActionResult<ServiceResponseModel>> ResetPassword([FromQuery]string email)
         {
-            if (!ModelState.IsValid)
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Your query is missing some fields."
-                };
-            }
-            else if (!validationMethods.IsNotEmptyValue(email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email address cannot be empty."
-                };
-            }
-            else if (!validationMethods.IsValidEmail(email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Incorrect email address format."
-                };
-            }
-            else if (!validationMethods.IsValidLength(email, 254))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email address cannot exceed 254 characters in length."
-                };
-            }
-            else
-            {
-                var result = await _authorizationService.ResetPasswordAsync(email);
-                return Ok(result);
-            }
+            var result = await _authorizationService.ResetPasswordAsync(email);
+            return Ok(result);
         }
 
 
         [HttpPost("register")]
-        public async Task<ActionResult<ResponseModel>> Register([FromBody] RegisterModel register)
+        public async Task<ActionResult<ServiceResponseModel>> Register([FromBody] RegisterModel register)
         {
-            if (!ModelState.IsValid)
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Your query is missing some fields."
-                };
-            }
-            else if (!validationMethods.IsNotEmptyValue(register.AccountId))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Account ID cannot be empty."
-                };
-            }
-            else if(!validationMethods.IsValidDigit(register.AccountId))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Account ID must be a positive number."
-                };
-            }
-            else if (!validationMethods.IsNotEmptyValue(register.AccountName))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Account name cannot be empty."
-                };
-            }
-            else if (!validationMethods.IsValidLength(register.AccountName, 50))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Account name cannot exceed 50 characters in length."
-                };
-            }
-            else if (!validationMethods.IsNotEmptyValue(register.Email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email address cannot be empty."
-                };
-            }
-            else if (!validationMethods.IsValidEmail(register.Email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Incorrect email address format."
-                };
-            }
-            else if (!validationMethods.IsValidLength(register.Email, 254))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email address cannot exceed 254 characters in length."
-                };
-            }
-            else if (!validationMethods.IsNotEmptyValue(register.PasswordHash))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Password hash cannot be empty."
-                };
-            }
-            else if (!validationMethods.IsValidLength(register.PasswordHash, 128))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Password hash cannot exceed 128 characters in length."
-                };
-            }
-            else
-            {
-                var result = await _authorizationService.RegisterAsync(register);
-                return Ok(result);
-            }
-
+            var result = await _authorizationService.RegisterAsync(register);
+            return Ok(result);
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<ResponseModel>> Login([FromBody] LoginModel login)
+        public async Task<ActionResult<ServiceResponseModel>> Login([FromBody] LoginModel login)
         {
-            if (!ModelState.IsValid)
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Your query is missing some fields."
-                };
-            }
-            else if (!validationMethods.IsNotEmptyValue(login.Email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email address cannot be empty."
-                };
-            }
-            else if (!validationMethods.IsValidEmail(login.Email))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Incorrect email address format."
-                };
-            }
-            else if (!validationMethods.IsValidLength(login.Email, 254))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Email address cannot exceed 254 characters in length."
-                };
-            }
-            else if (!validationMethods.IsNotEmptyValue(login.PasswordHash))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Password hash cannot be empty."
-                };
-            }
-            else if (!validationMethods.IsValidLength(login.Email, 128))
-            {
-                return new ResponseModel
-                {
-                    Date = currentDateTime,
-                    RequestExecution = false,
-                    Message = "Password hash cannot exceed 128 characters in length."
-                };
-            }
-            else
-            {
-                var result = await _authorizationService.LoginAsync(login);
-                return Ok(result);
-            }
+            var result = await _authorizationService.LoginAsync(login);
+            return Ok(result);
         }
     }
 }

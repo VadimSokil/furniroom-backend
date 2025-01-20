@@ -1,4 +1,4 @@
-﻿namespace AccountsService.Validation
+﻿namespace FurniroomAPI.Validation
 {
     public class ValidationMethods
     {
