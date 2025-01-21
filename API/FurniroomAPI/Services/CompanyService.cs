@@ -17,26 +17,28 @@ namespace FurniroomAPI.Services
 
         public async Task<ServiceResponseModel> GetCompanyInformationAsync()
         {
-            return await FetchDataAsync("GetCompanyInformation");
+            var endpoint = _endpointURL["GetCompanyInformation"];
+            return await GetDataAsync(endpoint);
         }
 
         public async Task<ServiceResponseModel> GetDeliveryInformationAsync()
         {
-            return await FetchDataAsync("GetDeliveryInformation");
+            var endpoint = _endpointURL["GetDeliveryInformation"];
+            return await GetDataAsync(endpoint);
         }
 
         public async Task<ServiceResponseModel> GetPaymentInformationAsync()
         {
-            return await FetchDataAsync("GetPaymentInformation");
+            var endpoint = _endpointURL["GetPaymentInformation"];
+            return await GetDataAsync(endpoint);
         }
 
-        private async Task<ServiceResponseModel> FetchDataAsync(string endpoint)
+        private async Task<ServiceResponseModel> GetDataAsync(string endpoint)
         {
             try
             {
                 var response = await _httpClient.GetAsync(endpoint);
                 response.EnsureSuccessStatusCode();
-
                 var responseBody = await response.Content.ReadAsStringAsync();
                 var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
                 {

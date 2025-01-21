@@ -17,36 +17,40 @@ namespace FurniroomAPI.Services
 
         public async Task<ServiceResponseModel> GetAllCategoriesAsync()
         {
-            return await FetchDataAsync("GetAllCategories");
+            var endpoint = _endpointURL["GetAllCategories"];
+            return await GetDataAsync(endpoint);
         }
 
         public async Task<ServiceResponseModel> GetAllDrawingsAsync()
         {
-            return await FetchDataAsync("GetAllDrawings");
+            var endpoint = _endpointURL["GetAllDrawings"];
+            return await GetDataAsync(endpoint);
         }
 
         public async Task<ServiceResponseModel> GetAllImagesAsync()
         {
-            return await FetchDataAsync("GetAllImages");
+            var endpoint = _endpointURL["GetAllImages"];
+            return await GetDataAsync(endpoint);
         }
 
         public async Task<ServiceResponseModel> GetAllProductsAsync()
         {
-            return await FetchDataAsync("GetAllProducts");
+            var endpoint = _endpointURL["GetAllProducts"];
+            return await GetDataAsync(endpoint);
         }
 
         public async Task<ServiceResponseModel> GetAllSubcategoriesAsync()
         {
-            return await FetchDataAsync("GetAllSubcategories");
+            var endpoint = _endpointURL["GetAllSubcategories"];
+            return await GetDataAsync(endpoint);
         }
 
-        private async Task<ServiceResponseModel> FetchDataAsync(string endpoint)
+        private async Task<ServiceResponseModel> GetDataAsync(string endpoint)
         {
             try
             {
                 var response = await _httpClient.GetAsync(endpoint);
                 response.EnsureSuccessStatusCode();
-
                 var responseBody = await response.Content.ReadAsStringAsync();
                 var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
                 {
