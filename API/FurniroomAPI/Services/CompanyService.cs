@@ -17,28 +17,114 @@ namespace FurniroomAPI.Services
 
         public async Task<ServiceResponseModel> GetCompanyInformationAsync()
         {
-            var endpoint = _endpointURL["GetCompanyInformation"];
-            return await GetDataAsync(endpoint);
+            try
+            {
+                var endpoint = _endpointURL["GetCompanyInformation"];
+                var response = await _httpClient.GetAsync(endpoint);
+                response.EnsureSuccessStatusCode();
+
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                });
+
+                if (serviceResponse?.Status == null)
+                {
+                    return new ServiceResponseModel
+                    {
+                        Status = false,
+                        Message = "The data transmitted by the service to the gateway is in an incorrect format"
+                    };
+                }
+
+                return serviceResponse;
+            }
+            catch (HttpRequestException httpEx)
+            {
+                return new ServiceResponseModel
+                {
+                    Status = false,
+                    Message = $"HTTP request error: {httpEx.Message}"
+                };
+            }
+            catch (JsonException jsonEx)
+            {
+                return new ServiceResponseModel
+                {
+                    Status = false,
+                    Message = $"Error parsing service response: {jsonEx.Message}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponseModel
+                {
+                    Status = false,
+                    Message = $"An unexpected error occurred: {ex.Message}"
+                };
+            }
         }
 
         public async Task<ServiceResponseModel> GetDeliveryInformationAsync()
         {
-            var endpoint = _endpointURL["GetDeliveryInformation"];
-            return await GetDataAsync(endpoint);
+            try
+            {
+                var endpoint = _endpointURL["GetDeliveryInformation"];
+                var response = await _httpClient.GetAsync(endpoint);
+                response.EnsureSuccessStatusCode();
+
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                });
+
+                if (serviceResponse?.Status == null)
+                {
+                    return new ServiceResponseModel
+                    {
+                        Status = false,
+                        Message = "The data transmitted by the service to the gateway is in an incorrect format"
+                    };
+                }
+
+                return serviceResponse;
+            }
+            catch (HttpRequestException httpEx)
+            {
+                return new ServiceResponseModel
+                {
+                    Status = false,
+                    Message = $"HTTP request error: {httpEx.Message}"
+                };
+            }
+            catch (JsonException jsonEx)
+            {
+                return new ServiceResponseModel
+                {
+                    Status = false,
+                    Message = $"Error parsing service response: {jsonEx.Message}"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponseModel
+                {
+                    Status = false,
+                    Message = $"An unexpected error occurred: {ex.Message}"
+                };
+            }
         }
 
         public async Task<ServiceResponseModel> GetPaymentInformationAsync()
         {
-            var endpoint = _endpointURL["GetPaymentInformation"];
-            return await GetDataAsync(endpoint);
-        }
-
-        private async Task<ServiceResponseModel> GetDataAsync(string endpoint)
-        {
             try
             {
+                var endpoint = _endpointURL["GetPaymentInformation"];
                 var response = await _httpClient.GetAsync(endpoint);
                 response.EnsureSuccessStatusCode();
+
                 var responseBody = await response.Content.ReadAsStringAsync();
                 var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
                 {
