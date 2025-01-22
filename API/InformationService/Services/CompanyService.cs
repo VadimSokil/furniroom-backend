@@ -10,6 +10,7 @@ namespace InformationService.Services
     {
         private readonly string _connectionString;
         private readonly Dictionary<string, string> _requests;
+
         public CompanyService(string connectionString, Dictionary<string, string> requests)
         {
             _connectionString = connectionString;
@@ -18,118 +19,30 @@ namespace InformationService.Services
 
         public async Task<ServiceResponseModel> GetCompanyInformationAsync()
         {
-            try
-            {
-                var notes = new List<CompanyModel>();
-
-                using (var connection = new MySqlConnection(_connectionString))
-                {
-                    await connection.OpenAsync();
-
-                    using (var command = new MySqlCommand(_requests["GetCompanyInformation"], connection))
-                    {
-                        using (var reader = await command.ExecuteReaderAsync())
-                        {
-                            while (await reader.ReadAsync())
-                            {
-                                notes.Add(new CompanyModel
-                                {
-                                    NoteId = reader.GetInt32("NoteId"),
-                                    Note = reader.GetString("Note")
-                                });
-                            }
-                        }
-                    }
-                }
-
-                return new ServiceResponseModel
-                {
-                    Status = true,
-                    Message = "Data retrieved successfully.",
-                    Data = notes
-                };
-            }
-            catch (MySqlException ex)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"A database error occurred: {ex.Message}"
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
-            }
-
+            return await GetInformationAsync("GetCompanyInformation");
         }
 
         public async Task<ServiceResponseModel> GetDeliveryInformationAsync()
         {
-            try
-            {
-                var notes = new List<CompanyModel>();
-
-                using (var connection = new MySqlConnection(_connectionString))
-                {
-                    await connection.OpenAsync();
-
-                    using (var command = new MySqlCommand(_requests["GetDeliveryInformation"], connection))
-                    {
-                        using (var reader = await command.ExecuteReaderAsync())
-                        {
-                            while (await reader.ReadAsync())
-                            {
-                                notes.Add(new CompanyModel
-                                {
-                                    NoteId = reader.GetInt32("NoteId"),
-                                    Note = reader.GetString("Note")
-                                });
-                            }
-                        }
-                    }
-                }
-
-                return new ServiceResponseModel
-                {
-                    Status = true,
-                    Message = "Data retrieved successfully.",
-                    Data = notes
-                };
-            }
-            catch (MySqlException ex)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"A database error occurred: {ex.Message}"
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
-            }
+            return await GetInformationAsync("GetDeliveryInformation");
         }
 
         public async Task<ServiceResponseModel> GetPaymentInformationAsync()
         {
+            return await GetInformationAsync("GetPaymentInformation");
+        }
+
+        private async Task<ServiceResponseModel> GetInformationAsync(string requestKey)
+        {
+            var notes = new List<CompanyModel>();
+
             try
             {
-                var notes = new List<CompanyModel>();
-
                 using (var connection = new MySqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
 
-                    using (var command = new MySqlCommand(_requests["GetPaymentInformation"], connection))
+                    using (var command = new MySqlCommand(_requests[requestKey], connection))
                     {
                         using (var reader = await command.ExecuteReaderAsync())
                         {
@@ -154,20 +67,21 @@ namespace InformationService.Services
             }
             catch (MySqlException ex)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"A database error occurred: {ex.Message}"
-                };
+                return CreateErrorResponse($"A database error occurred: {ex.Message}");
             }
             catch (Exception ex)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
+                return CreateErrorResponse($"An unexpected error occurred: {ex.Message}");
             }
+        }
+
+        private ServiceResponseModel CreateErrorResponse(string message)
+        {
+            return new ServiceResponseModel
+            {
+                Status = false,
+                Message = message
+            };
         }
     }
 }
