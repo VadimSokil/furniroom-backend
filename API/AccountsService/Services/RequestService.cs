@@ -18,73 +18,38 @@ namespace AccountsService.Services
 
         public async Task<ServiceResponseModel> AddOrderAsync(OrderModel order)
         {
-            try
+            return await AddEntityAsync(order.OrderId.ToString(), _requests["OrderUniqueCheck"], _requests["AddOrder"], new Dictionary<string, object>
             {
-                using (var connection = new MySqlConnection(_connectionString))
-                {
-                    await connection.OpenAsync();
-
-                    using (var checkCommand = new MySqlCommand(_requests["OrderUniqueCheck"], connection))
-                    {
-                        checkCommand.Parameters.AddWithValue("@OrderId", order.OrderId); 
-                        var orderExists = Convert.ToInt32(await checkCommand.ExecuteScalarAsync()) > 0;
-
-                        if (orderExists)
-                        {
-                            return new ServiceResponseModel
-                            {
-                                Status = false,
-                                Message = "This Order ID is already in use."
-                            };
-                        }
-                    }
-
-                    using (var command = new MySqlCommand(_requests["AddOrder"], connection))
-                    {
-                        command.Parameters.AddWithValue("@OrderId", order.OrderId); 
-                        command.Parameters.AddWithValue("@OrderDate", order.OrderDate);
-                        command.Parameters.AddWithValue("@AccountId", order.AccountId);
-                        command.Parameters.AddWithValue("@PhoneNumber", order.PhoneNumber);
-                        command.Parameters.AddWithValue("@Country", order.Country);
-                        command.Parameters.AddWithValue("@Region", order.Region);
-                        command.Parameters.AddWithValue("@District", order.District);
-                        command.Parameters.AddWithValue("@City", order.City);
-                        command.Parameters.AddWithValue("@Village", order.Village);
-                        command.Parameters.AddWithValue("@Street", order.Street);
-                        command.Parameters.AddWithValue("@HouseNumber", order.HouseNumber);
-                        command.Parameters.AddWithValue("@ApartmentNumber", order.ApartmentNumber);
-                        command.Parameters.AddWithValue("@OrderText", order.OrderText);
-                        command.Parameters.AddWithValue("@DeliveryType", order.DeliveryType);
-
-                        await command.ExecuteNonQueryAsync();
-                    }
-                }
-
-                return new ServiceResponseModel
-                {
-                    Status = true,
-                    Message = "Order successfully added."
-                };
-            }
-            catch (MySqlException ex)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"A database error occurred: {ex.Message}"
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
-            }
+                { "@OrderId", order.OrderId },
+                { "@OrderDate", order.OrderDate },
+                { "@AccountId", order.AccountId },
+                { "@PhoneNumber", order.PhoneNumber },
+                { "@Country", order.Country },
+                { "@Region", order.Region },
+                { "@District", order.District },
+                { "@City", order.City },
+                { "@Village", order.Village },
+                { "@Street", order.Street },
+                { "@HouseNumber", order.HouseNumber },
+                { "@ApartmentNumber", order.ApartmentNumber },
+                { "@OrderText", order.OrderText },
+                { "@DeliveryType", order.DeliveryType }
+            });
         }
 
         public async Task<ServiceResponseModel> AddQuestionAsync(QuestionModel question)
+        {
+            return await AddEntityAsync(question.QuestionId.ToString(), _requests["QuestionUniqueCheck"], _requests["AddQuestion"], new Dictionary<string, object>
+            {
+                { "@QuestionId", question.QuestionId },
+                { "@QuestionDate", question.QuestionDate },
+                { "@UserName", question.UserName },
+                { "@PhoneNumber", question.PhoneNumber },
+                { "@QuestionText", question.QuestionText }
+            });
+        }
+
+        private async Task<ServiceResponseModel> AddEntityAsync(string entityId, string uniqueCheckQuery, string addQuery, Dictionary<string, object> parameters)
         {
             try
             {
@@ -92,28 +57,23 @@ namespace AccountsService.Services
                 {
                     await connection.OpenAsync();
 
-                    using (var checkCommand = new MySqlCommand(_requests["QuestionUniqueCheck"], connection))
+                    using (var checkCommand = new MySqlCommand(uniqueCheckQuery, connection))
                     {
-                        checkCommand.Parameters.AddWithValue("@QuestionId", question.QuestionId); 
-                        var questionExists = Convert.ToInt32(await checkCommand.ExecuteScalarAsync()) > 0;
+                        checkCommand.Parameters.AddWithValue("@EntityId", entityId);
+                        var exists = Convert.ToInt32(await checkCommand.ExecuteScalarAsync()) > 0;
 
-                        if (questionExists)
+                        if (exists)
                         {
-                            return new ServiceResponseModel
-                            {
-                                Status = false,
-                                Message = "This Question ID is already in use."
-                            };
+                            return CreateErrorResponse("This ID is already in use.");
                         }
                     }
 
-                    using (var command = new MySqlCommand(_requests["AddQuestion"], connection))
+                    using (var command = new MySqlCommand(addQuery, connection))
                     {
-                        command.Parameters.AddWithValue("@QuestionId", question.QuestionId); 
-                        command.Parameters.AddWithValue("@QuestionDate", question.QuestionDate);
-                        command.Parameters.AddWithValue("@UserName", question.UserName);
-                        command.Parameters.AddWithValue("@PhoneNumber", question.PhoneNumber);
-                        command.Parameters.AddWithValue("@QuestionText", question.QuestionText);
+                        foreach (var parameter in parameters)
+                        {
+                            command.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                        }
 
                         await command.ExecuteNonQueryAsync();
                     }
@@ -122,25 +82,26 @@ namespace AccountsService.Services
                 return new ServiceResponseModel
                 {
                     Status = true,
-                    Message = "Question successfully added."
+                    Message = "Entity successfully added."
                 };
             }
             catch (MySqlException ex)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"A database error occurred: {ex.Message}"
-                };
+                return CreateErrorResponse($"A database error occurred: {ex.Message}");
             }
             catch (Exception ex)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
+                return CreateErrorResponse($"An unexpected error occurred: {ex.Message}");
             }
+        }
+
+        private ServiceResponseModel CreateErrorResponse(string message)
+        {
+            return new ServiceResponseModel
+            {
+                Status = false,
+                Message = message
+            };
         }
     }
 }
