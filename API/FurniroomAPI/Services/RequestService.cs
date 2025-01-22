@@ -19,64 +19,20 @@ namespace FurniroomAPI.Services
 
         public async Task<ServiceResponseModel> AddOrderAsync(OrderModel order)
         {
-            try
-            {
-                var endpoint = _endpointURL["AddOrder"];
-                var jsonContent = JsonSerializer.Serialize(order);
-                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-
-                var response = await _httpClient.PostAsync(endpoint, content);
-                response.EnsureSuccessStatusCode();
-
-                var responseBody = await response.Content.ReadAsStringAsync();
-                var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                });
-
-                if (serviceResponse?.Status == null)
-                {
-                    return new ServiceResponseModel
-                    {
-                        Status = false,
-                        Message = "The data transmitted by the service to the gateway is in an incorrect format"
-                    };
-                }
-
-                return serviceResponse;
-            }
-            catch (HttpRequestException httpEx)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"HTTP request error: {httpEx.Message}"
-                };
-            }
-            catch (JsonException jsonEx)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"Error parsing service response: {jsonEx.Message}"
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
-            }
+            return await PostInformationAsync("AddOrder", order);
         }
 
         public async Task<ServiceResponseModel> AddQuestionAsync(QuestionModel question)
         {
+            return await PostInformationAsync("AddQuestion", question);
+        }
+
+        private async Task<ServiceResponseModel> PostInformationAsync<T>(string endpointKey, T model)
+        {
             try
             {
-                var endpoint = _endpointURL["AddQuestion"];
-                var jsonContent = JsonSerializer.Serialize(question);
+                var endpoint = _endpointURL[endpointKey];
+                var jsonContent = JsonSerializer.Serialize(model);
                 var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
                 var response = await _httpClient.PostAsync(endpoint, content);
@@ -90,39 +46,32 @@ namespace FurniroomAPI.Services
 
                 if (serviceResponse?.Status == null)
                 {
-                    return new ServiceResponseModel
-                    {
-                        Status = false,
-                        Message = "The data transmitted by the service to the gateway is in an incorrect format"
-                    };
+                    return CreateErrorResponse("The data transmitted by the service to the gateway is in an incorrect format");
                 }
 
                 return serviceResponse;
             }
             catch (HttpRequestException httpEx)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"HTTP request error: {httpEx.Message}"
-                };
+                return CreateErrorResponse($"HTTP request error: {httpEx.Message}");
             }
             catch (JsonException jsonEx)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"Error parsing service response: {jsonEx.Message}"
-                };
+                return CreateErrorResponse($"Error parsing service response: {jsonEx.Message}");
             }
             catch (Exception ex)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
+                return CreateErrorResponse($"An unexpected error occurred: {ex.Message}");
             }
+        }
+
+        private ServiceResponseModel CreateErrorResponse(string message)
+        {
+            return new ServiceResponseModel
+            {
+                Status = false,
+                Message = message
+            };
         }
     }
 }
