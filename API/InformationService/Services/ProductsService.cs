@@ -2,7 +2,6 @@
 using InformationService.Models.Products;
 using InformationService.Models.Response;
 using MySql.Data.MySqlClient;
-using System.Data;
 
 namespace InformationService.Services
 {

@@ -26,7 +26,7 @@ namespace AccountsService.Services
 
                     using (var checkCommand = new MySqlCommand(_requests["OrderUniqueCheck"], connection))
                     {
-                        checkCommand.Parameters.AddWithValue("@OrderId", order.OrderId);
+                        checkCommand.Parameters.AddWithValue("@OrderId", order.OrderId); 
                         var orderExists = Convert.ToInt32(await checkCommand.ExecuteScalarAsync()) > 0;
 
                         if (orderExists)
@@ -41,7 +41,7 @@ namespace AccountsService.Services
 
                     using (var command = new MySqlCommand(_requests["AddOrder"], connection))
                     {
-                        command.Parameters.AddWithValue("@OrderId", order.OrderId);
+                        command.Parameters.AddWithValue("@OrderId", order.OrderId); 
                         command.Parameters.AddWithValue("@OrderDate", order.OrderDate);
                         command.Parameters.AddWithValue("@AccountId", order.AccountId);
                         command.Parameters.AddWithValue("@PhoneNumber", order.PhoneNumber);
@@ -94,7 +94,7 @@ namespace AccountsService.Services
 
                     using (var checkCommand = new MySqlCommand(_requests["QuestionUniqueCheck"], connection))
                     {
-                        checkCommand.Parameters.AddWithValue("@QuestionId", question.QuestionId);
+                        checkCommand.Parameters.AddWithValue("@QuestionId", question.QuestionId); 
                         var questionExists = Convert.ToInt32(await checkCommand.ExecuteScalarAsync()) > 0;
 
                         if (questionExists)
@@ -109,7 +109,7 @@ namespace AccountsService.Services
 
                     using (var command = new MySqlCommand(_requests["AddQuestion"], connection))
                     {
-                        command.Parameters.AddWithValue("@QuestionId", question.QuestionId);
+                        command.Parameters.AddWithValue("@QuestionId", question.QuestionId); 
                         command.Parameters.AddWithValue("@QuestionDate", question.QuestionDate);
                         command.Parameters.AddWithValue("@UserName", question.UserName);
                         command.Parameters.AddWithValue("@PhoneNumber", question.PhoneNumber);
