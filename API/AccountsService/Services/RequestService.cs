@@ -18,42 +18,50 @@ namespace AccountsService.Services
 
         public async Task<ServiceResponseModel> AddOrderAsync(OrderModel order)
         {
-            var parameters = new Dictionary<string, object>
-            {
-                { "@OrderId", order.OrderId },
-                { "@OrderDate", order.OrderDate },
-                { "@AccountId", order.AccountId },
-                { "@PhoneNumber", order.PhoneNumber },
-                { "@Country", order.Country },
-                { "@Region", order.Region },
-                { "@District", order.District },
-                { "@City", order.City },
-                { "@Village", order.Village },
-                { "@Street", order.Street },
-                { "@HouseNumber", order.HouseNumber },
-                { "@ApartmentNumber", order.ApartmentNumber },
-                { "@OrderText", order.OrderText },
-                { "@DeliveryType", order.DeliveryType }
-            };
-
-            return await AddEntityAsync(order.OrderId.ToString(), _requests["OrderUniqueCheck"], _requests["AddOrder"], parameters);
+            return await ExecuteAddCommandAsync(
+                uniqueCheckQuery: _requests["OrderUniqueCheck"],
+                addQuery: _requests["AddOrder"],
+                uniqueParameter: new KeyValuePair<string, object>("@OrderId", order.OrderId),
+                parameters: new Dictionary<string, object>
+                {
+                    { "@OrderId", order.OrderId },
+                    { "@OrderDate", order.OrderDate },
+                    { "@AccountId", order.AccountId },
+                    { "@PhoneNumber", order.PhoneNumber },
+                    { "@Country", order.Country },
+                    { "@Region", order.Region },
+                    { "@District", order.District },
+                    { "@City", order.City },
+                    { "@Village", order.Village },
+                    { "@Street", order.Street },
+                    { "@HouseNumber", order.HouseNumber },
+                    { "@ApartmentNumber", order.ApartmentNumber },
+                    { "@OrderText", order.OrderText },
+                    { "@DeliveryType", order.DeliveryType }
+                });
         }
 
         public async Task<ServiceResponseModel> AddQuestionAsync(QuestionModel question)
         {
-            var parameters = new Dictionary<string, object>
-            {
-                { "@QuestionId", question.QuestionId },
-                { "@QuestionDate", question.QuestionDate },
-                { "@UserName", question.UserName },
-                { "@PhoneNumber", question.PhoneNumber },
-                { "@QuestionText", question.QuestionText }
-            };
-
-            return await AddEntityAsync(question.QuestionId.ToString(), _requests["QuestionUniqueCheck"], _requests["AddQuestion"], parameters);
+            return await ExecuteAddCommandAsync(
+                uniqueCheckQuery: _requests["QuestionUniqueCheck"],
+                addQuery: _requests["AddQuestion"],
+                uniqueParameter: new KeyValuePair<string, object>("@QuestionId", question.QuestionId),
+                parameters: new Dictionary<string, object>
+                {
+                    { "@QuestionId", question.QuestionId },
+                    { "@QuestionDate", question.QuestionDate },
+                    { "@UserName", question.UserName },
+                    { "@PhoneNumber", question.PhoneNumber },
+                    { "@QuestionText", question.QuestionText }
+                });
         }
 
-        private async Task<ServiceResponseModel> AddEntityAsync(string entityId, string uniqueCheckQuery, string addQuery, Dictionary<string, object> parameters)
+        private async Task<ServiceResponseModel> ExecuteAddCommandAsync(
+            string uniqueCheckQuery,
+            string addQuery,
+            KeyValuePair<string, object> uniqueParameter,
+            Dictionary<string, object> parameters)
         {
             try
             {
@@ -64,16 +72,17 @@ namespace AccountsService.Services
                     // Проверка уникальности
                     using (var checkCommand = new MySqlCommand(uniqueCheckQuery, connection))
                     {
-                        checkCommand.Parameters.AddWithValue("@EntityId", entityId);
+                        checkCommand.Parameters.AddWithValue(uniqueParameter.Key, uniqueParameter.Value);
+
                         var exists = Convert.ToInt32(await checkCommand.ExecuteScalarAsync()) > 0;
 
                         if (exists)
                         {
-                            return CreateErrorResponse("This ID is already in use.");
+                            return CreateErrorResponse($"This ID ({uniqueParameter.Value}) is already in use.");
                         }
                     }
 
-                    // Добавление сущности
+                    // Выполнение команды добавления
                     using (var command = new MySqlCommand(addQuery, connection))
                     {
                         foreach (var parameter in parameters)
