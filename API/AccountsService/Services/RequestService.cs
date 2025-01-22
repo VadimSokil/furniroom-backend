@@ -18,7 +18,7 @@ namespace AccountsService.Services
 
         public async Task<ServiceResponseModel> AddOrderAsync(OrderModel order)
         {
-            return await AddEntityAsync(order.OrderId.ToString(), _requests["OrderUniqueCheck"], _requests["AddOrder"], new Dictionary<string, object>
+            var parameters = new Dictionary<string, object>
             {
                 { "@OrderId", order.OrderId },
                 { "@OrderDate", order.OrderDate },
@@ -34,19 +34,23 @@ namespace AccountsService.Services
                 { "@ApartmentNumber", order.ApartmentNumber },
                 { "@OrderText", order.OrderText },
                 { "@DeliveryType", order.DeliveryType }
-            });
+            };
+
+            return await AddEntityAsync(order.OrderId.ToString(), _requests["OrderUniqueCheck"], _requests["AddOrder"], parameters);
         }
 
         public async Task<ServiceResponseModel> AddQuestionAsync(QuestionModel question)
         {
-            return await AddEntityAsync(question.QuestionId.ToString(), _requests["QuestionUniqueCheck"], _requests["AddQuestion"], new Dictionary<string, object>
+            var parameters = new Dictionary<string, object>
             {
                 { "@QuestionId", question.QuestionId },
                 { "@QuestionDate", question.QuestionDate },
                 { "@UserName", question.UserName },
                 { "@PhoneNumber", question.PhoneNumber },
                 { "@QuestionText", question.QuestionText }
-            });
+            };
+
+            return await AddEntityAsync(question.QuestionId.ToString(), _requests["QuestionUniqueCheck"], _requests["AddQuestion"], parameters);
         }
 
         private async Task<ServiceResponseModel> AddEntityAsync(string entityId, string uniqueCheckQuery, string addQuery, Dictionary<string, object> parameters)
@@ -57,6 +61,7 @@ namespace AccountsService.Services
                 {
                     await connection.OpenAsync();
 
+                    // Проверка уникальности
                     using (var checkCommand = new MySqlCommand(uniqueCheckQuery, connection))
                     {
                         checkCommand.Parameters.AddWithValue("@EntityId", entityId);
@@ -68,6 +73,7 @@ namespace AccountsService.Services
                         }
                     }
 
+                    // Добавление сущности
                     using (var command = new MySqlCommand(addQuery, connection))
                     {
                         foreach (var parameter in parameters)
