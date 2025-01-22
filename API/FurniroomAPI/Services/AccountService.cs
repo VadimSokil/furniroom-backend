@@ -19,317 +19,122 @@ namespace FurniroomAPI.Services
 
         public async Task<ServiceResponseModel> ChangeEmailAsync(ChangeEmailModel changeEmail)
         {
-            try
-            {
-                var endpoint = _endpointURL["ChangeEmail"];
-                var requestBody = JsonSerializer.Serialize(changeEmail);
-                var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
-
-                var response = await _httpClient.PutAsync(endpoint, content);
-                response.EnsureSuccessStatusCode();
-
-                var responseBody = await response.Content.ReadAsStringAsync();
-                var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                });
-
-                if (serviceResponse?.Status == null)
-                {
-                    return new ServiceResponseModel
-                    {
-                        Status = false,
-                        Message = "The data transmitted by the service to the gateway is in an incorrect format"
-                    };
-                }
-
-                return serviceResponse;
-            }
-            catch (HttpRequestException httpEx)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"HTTP request error: {httpEx.Message}"
-                };
-            }
-            catch (JsonException jsonEx)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"Error parsing service response: {jsonEx.Message}"
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
-            }
+            return await PutInformationAsync("ChangeEmail", changeEmail);
         }
 
         public async Task<ServiceResponseModel> ChangeNameAsync(ChangeNameModel changeName)
         {
-            try
-            {
-                var endpoint = _endpointURL["ChangeName"];
-                var requestBody = JsonSerializer.Serialize(changeName);
-                var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
-
-                var response = await _httpClient.PutAsync(endpoint, content);
-                response.EnsureSuccessStatusCode();
-
-                var responseBody = await response.Content.ReadAsStringAsync();
-                var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                });
-
-                if (serviceResponse?.Status == null)
-                {
-                    return new ServiceResponseModel
-                    {
-                        Status = false,
-                        Message = "The data transmitted by the service to the gateway is in an incorrect format"
-                    };
-                }
-
-                return serviceResponse;
-            }
-            catch (HttpRequestException httpEx)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"HTTP request error: {httpEx.Message}"
-                };
-            }
-            catch (JsonException jsonEx)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"Error parsing service response: {jsonEx.Message}"
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
-            }
+            return await PutInformationAsync("ChangeName", changeName);
         }
 
         public async Task<ServiceResponseModel> ChangePasswordAsync(ChangePasswordModel changePassword)
         {
+            return await PutInformationAsync("ChangePassword", changePassword);
+        }
+
+        public async Task<ServiceResponseModel> DeleteAccountAsync(int accountId)
+        {
+            return await DeleteInformationAsync("DeleteAccount", accountId);
+        }
+
+        public async Task<ServiceResponseModel> GetAccountInformationAsync(int accountId)
+        {
+            return await GetInformationAsync("GetAccountInformation", accountId);
+        }
+
+        public async Task<ServiceResponseModel> GetAccountOrdersAsync(int accountId)
+        {
+            return await GetInformationAsync("GetAccountOrders", accountId);
+        }
+
+        private async Task<ServiceResponseModel> PutInformationAsync<T>(string endpointKey, T model)
+        {
             try
             {
-                var endpoint = _endpointURL["ChangePassword"];
-                var requestBody = JsonSerializer.Serialize(changePassword);
+                var endpoint = _endpointURL[endpointKey];
+                var requestBody = JsonSerializer.Serialize(model);
                 var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
 
                 var response = await _httpClient.PutAsync(endpoint, content);
                 response.EnsureSuccessStatusCode();
 
                 var responseBody = await response.Content.ReadAsStringAsync();
-                var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                });
-
-                if (serviceResponse?.Status == null)
-                {
-                    return new ServiceResponseModel
-                    {
-                        Status = false,
-                        Message = "The data transmitted by the service to the gateway is in an incorrect format"
-                    };
-                }
-
-                return serviceResponse;
+                return DeserializeResponse(responseBody);
             }
-            catch (HttpRequestException httpEx)
+            catch (Exception ex) when (ex is HttpRequestException || ex is JsonException)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"HTTP request error: {httpEx.Message}"
-                };
-            }
-            catch (JsonException jsonEx)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"Error parsing service response: {jsonEx.Message}"
-                };
+                return CreateErrorResponse(ex.Message);
             }
             catch (Exception ex)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
+                return CreateErrorResponse($"An unexpected error occurred: {ex.Message}");
             }
         }
 
-        public async Task<ServiceResponseModel> DeleteAccountAsync(int accountId)
+        private async Task<ServiceResponseModel> DeleteInformationAsync(string endpointKey, int accountId)
         {
             try
             {
-                var endpoint = $"{_endpointURL["DeleteAccount"]}/{accountId}";
+                var endpoint = $"{_endpointURL[endpointKey]}/{accountId}";
                 var response = await _httpClient.DeleteAsync(endpoint);
                 response.EnsureSuccessStatusCode();
 
                 var responseBody = await response.Content.ReadAsStringAsync();
-                var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                });
-
-                if (serviceResponse?.Status == null)
-                {
-                    return new ServiceResponseModel
-                    {
-                        Status = false,
-                        Message = "The data transmitted by the service to the gateway is in an incorrect format"
-                    };
-                }
-
-                return serviceResponse;
+                return DeserializeResponse(responseBody);
             }
-            catch (HttpRequestException httpEx)
+            catch (Exception ex) when (ex is HttpRequestException || ex is JsonException)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"HTTP request error: {httpEx.Message}"
-                };
-            }
-            catch (JsonException jsonEx)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"Error parsing service response: {jsonEx.Message}"
-                };
+                return CreateErrorResponse(ex.Message);
             }
             catch (Exception ex)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
+                return CreateErrorResponse($"An unexpected error occurred: {ex.Message}");
             }
         }
 
-        public async Task<ServiceResponseModel> GetAccountInformationAsync(int accountId)
+        private async Task<ServiceResponseModel> GetInformationAsync(string endpointKey, int accountId)
         {
             try
             {
-                var endpoint = $"{_endpointURL["GetAccountInformation"]}/{accountId}";
+                var endpoint = $"{_endpointURL[endpointKey]}/{accountId}";
                 var response = await _httpClient.GetAsync(endpoint);
                 response.EnsureSuccessStatusCode();
 
                 var responseBody = await response.Content.ReadAsStringAsync();
-                var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                });
-
-                if (serviceResponse?.Status == null)
-                {
-                    return new ServiceResponseModel
-                    {
-                        Status = false,
-                        Message = "The data transmitted by the service to the gateway is in an incorrect format"
-                    };
-                }
-
-                return serviceResponse;
+                return DeserializeResponse(responseBody);
             }
-            catch (HttpRequestException httpEx)
+            catch (Exception ex) when (ex is HttpRequestException || ex is JsonException)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"HTTP request error: {httpEx.Message}"
-                };
-            }
-            catch (JsonException jsonEx)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"Error parsing service response: {jsonEx.Message}"
-                };
+                return CreateErrorResponse(ex.Message);
             }
             catch (Exception ex)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
+                return CreateErrorResponse($"An unexpected error occurred: {ex.Message}");
             }
         }
 
-        public async Task<ServiceResponseModel> GetAccountOrdersAsync(int accountId)
+        private ServiceResponseModel DeserializeResponse(string responseBody)
         {
-            try
+            var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
             {
-                var endpoint = $"{_endpointURL["GetAccountOrders"]}/{accountId}";
-                var response = await _httpClient.GetAsync(endpoint);
-                response.EnsureSuccessStatusCode();
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
 
-                var responseBody = await response.Content.ReadAsStringAsync();
-                var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                });
+            if (serviceResponse?.Status == null)
+            {
+                return CreateErrorResponse("The data transmitted by the service to the gateway is in an incorrect format");
+            }
 
-                if (serviceResponse?.Status == null)
-                {
-                    return new ServiceResponseModel
-                    {
-                        Status = false,
-                        Message = "The data transmitted by the service to the gateway is in an incorrect format"
-                    };
-                }
+            return serviceResponse;
+        }
 
-                return serviceResponse;
-            }
-            catch (HttpRequestException httpEx)
+        private ServiceResponseModel CreateErrorResponse(string message)
+        {
+            return new ServiceResponseModel
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"HTTP request error: {httpEx.Message}"
-                };
-            }
-            catch (JsonException jsonEx)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"Error parsing service response: {jsonEx.Message}"
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
-            }
+                Status = false,
+                Message = message
+            };
         }
     }
 }

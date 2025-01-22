@@ -39,17 +39,7 @@ namespace FurniroomAPI.Services
                 response.EnsureSuccessStatusCode();
 
                 var responseBody = await response.Content.ReadAsStringAsync();
-                var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                });
-
-                if (serviceResponse?.Status == null)
-                {
-                    return CreateErrorResponse("The data transmitted by the service to the gateway is in an incorrect format");
-                }
-
-                return serviceResponse;
+                return DeserializeResponse(responseBody);
             }
             catch (HttpRequestException httpEx)
             {
@@ -63,6 +53,20 @@ namespace FurniroomAPI.Services
             {
                 return CreateErrorResponse($"An unexpected error occurred: {ex.Message}");
             }
+        }
+        private ServiceResponseModel DeserializeResponse(string responseBody)
+        {
+            var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+
+            if (serviceResponse?.Status == null)
+            {
+                return CreateErrorResponse("The data transmitted by the service to the gateway is in an incorrect format");
+            }
+
+            return serviceResponse;
         }
 
         private ServiceResponseModel CreateErrorResponse(string message)
