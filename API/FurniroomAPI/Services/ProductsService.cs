@@ -17,213 +17,34 @@ namespace FurniroomAPI.Services
 
         public async Task<ServiceResponseModel> GetAllCategoriesAsync()
         {
-            try
-            {
-                var endpoint = _endpointURL["GetAllCategories"];
-                var response = await _httpClient.GetAsync(endpoint);
-                response.EnsureSuccessStatusCode();
-
-                var responseBody = await response.Content.ReadAsStringAsync();
-                var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                });
-
-                if (serviceResponse?.Status == null)
-                {
-                    return new ServiceResponseModel
-                    {
-                        Status = false,
-                        Message = "The data transmitted by the service to the gateway is in an incorrect format"
-                    };
-                }
-
-                return serviceResponse;
-            }
-            catch (HttpRequestException httpEx)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"HTTP request error: {httpEx.Message}"
-                };
-            }
-            catch (JsonException jsonEx)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"Error parsing service response: {jsonEx.Message}"
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
-            }
+            return await GetInformationAsync("GetAllCategories");
         }
 
         public async Task<ServiceResponseModel> GetAllDrawingsAsync()
         {
-            try
-            {
-                var endpoint = _endpointURL["GetAllDrawings"];
-                var response = await _httpClient.GetAsync(endpoint);
-                response.EnsureSuccessStatusCode();
-
-                var responseBody = await response.Content.ReadAsStringAsync();
-                var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                });
-
-                if (serviceResponse?.Status == null)
-                {
-                    return new ServiceResponseModel
-                    {
-                        Status = false,
-                        Message = "The data transmitted by the service to the gateway is in an incorrect format"
-                    };
-                }
-
-                return serviceResponse;
-            }
-            catch (HttpRequestException httpEx)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"HTTP request error: {httpEx.Message}"
-                };
-            }
-            catch (JsonException jsonEx)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"Error parsing service response: {jsonEx.Message}"
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
-            }
+            return await GetInformationAsync("GetAllDrawings");
         }
 
         public async Task<ServiceResponseModel> GetAllImagesAsync()
         {
-            try
-            {
-                var endpoint = _endpointURL["GetAllImages"];
-                var response = await _httpClient.GetAsync(endpoint);
-                response.EnsureSuccessStatusCode();
-
-                var responseBody = await response.Content.ReadAsStringAsync();
-                var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                });
-
-                if (serviceResponse?.Status == null)
-                {
-                    return new ServiceResponseModel
-                    {
-                        Status = false,
-                        Message = "The data transmitted by the service to the gateway is in an incorrect format"
-                    };
-                }
-
-                return serviceResponse;
-            }
-            catch (HttpRequestException httpEx)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"HTTP request error: {httpEx.Message}"
-                };
-            }
-            catch (JsonException jsonEx)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"Error parsing service response: {jsonEx.Message}"
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
-            }
+            return await GetInformationAsync("GetAllImages");
         }
 
         public async Task<ServiceResponseModel> GetAllProductsAsync()
         {
-            try
-            {
-                var endpoint = _endpointURL["GetAllProducts"];
-                var response = await _httpClient.GetAsync(endpoint);
-                response.EnsureSuccessStatusCode();
-
-                var responseBody = await response.Content.ReadAsStringAsync();
-                var serviceResponse = JsonSerializer.Deserialize<ServiceResponseModel>(responseBody, new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                });
-
-                if (serviceResponse?.Status == null)
-                {
-                    return new ServiceResponseModel
-                    {
-                        Status = false,
-                        Message = "The data transmitted by the service to the gateway is in an incorrect format"
-                    };
-                }
-
-                return serviceResponse;
-            }
-            catch (HttpRequestException httpEx)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"HTTP request error: {httpEx.Message}"
-                };
-            }
-            catch (JsonException jsonEx)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"Error parsing service response: {jsonEx.Message}"
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
-            }
+            return await GetInformationAsync("GetAllProducts");
         }
 
         public async Task<ServiceResponseModel> GetAllSubcategoriesAsync()
         {
+            return await GetInformationAsync("GetAllSubcategories");
+        }
+
+        private async Task<ServiceResponseModel> GetInformationAsync(string endpointKey)
+        {
             try
             {
-                var endpoint = _endpointURL["GetAllSubcategories"];
+                var endpoint = _endpointURL[endpointKey];
                 var response = await _httpClient.GetAsync(endpoint);
                 response.EnsureSuccessStatusCode();
 
@@ -235,39 +56,32 @@ namespace FurniroomAPI.Services
 
                 if (serviceResponse?.Status == null)
                 {
-                    return new ServiceResponseModel
-                    {
-                        Status = false,
-                        Message = "The data transmitted by the service to the gateway is in an incorrect format"
-                    };
+                    return CreateErrorResponse("The data transmitted by the service to the gateway is in an incorrect format");
                 }
 
                 return serviceResponse;
             }
             catch (HttpRequestException httpEx)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"HTTP request error: {httpEx.Message}"
-                };
+                return CreateErrorResponse($"HTTP request error: {httpEx.Message}");
             }
             catch (JsonException jsonEx)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"Error parsing service response: {jsonEx.Message}"
-                };
+                return CreateErrorResponse($"Error parsing service response: {jsonEx.Message}");
             }
             catch (Exception ex)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
+                return CreateErrorResponse($"An unexpected error occurred: {ex.Message}");
             }
+        }
+
+        private ServiceResponseModel CreateErrorResponse(string message)
+        {
+            return new ServiceResponseModel
+            {
+                Status = false,
+                Message = message
+            };
         }
     }
 }
