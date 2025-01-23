@@ -48,11 +48,7 @@ namespace AccountsService.Services
                             }
                             else
                             {
-                                return new ServiceResponseModel
-                                {
-                                    Status = false,
-                                    Message = "Account not found."
-                                };
+                                return CreateErrorResponse("Account not found.");
                             }
                         }
                     }
@@ -60,19 +56,11 @@ namespace AccountsService.Services
             }
             catch (MySqlException ex)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"A database error occurred: {ex.Message}"
-                };
+                return CreateErrorResponse($"A database error occurred: {ex.Message}");
             }
             catch (Exception ex)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
+                return CreateErrorResponse($"An unexpected error occurred: {ex.Message}");
             }
         }
 
@@ -119,11 +107,7 @@ namespace AccountsService.Services
 
                 if (orders.Count == 0)
                 {
-                    return new ServiceResponseModel
-                    {
-                        Status = false,
-                        Message = "Orders not found."
-                    };
+                    return CreateErrorResponse("Orders not found.");
                 }
 
                 return new ServiceResponseModel
@@ -135,161 +119,45 @@ namespace AccountsService.Services
             }
             catch (MySqlException ex)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"A database error occurred: {ex.Message}"
-                };
+                return CreateErrorResponse($"A database error occurred: {ex.Message}");
             }
             catch (Exception ex)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
+                return CreateErrorResponse($"An unexpected error occurred: {ex.Message}");
             }
         }
 
         public async Task<ServiceResponseModel> ChangeNameAsync(ChangeNameModel changeName)
         {
-            try
-            {
-                using (var connection = new MySqlConnection(_connectionString))
+            return await ExecuteChangeCommandAsync(
+                checkQuery: _requests["CheckAccountNames"],
+                updateQuery: _requests["ChangeAccountName"],
+                parameters: new Dictionary<string, object>
                 {
-                    await connection.OpenAsync();
-
-                    using (var commandCheck = new MySqlCommand(_requests["CheckAccountNames"], connection))
-                    {
-                        commandCheck.Parameters.AddWithValue("@OldName", changeName.OldName);
-                        commandCheck.Parameters.AddWithValue("@NewName", changeName.NewName);
-
-                        using (var reader = await commandCheck.ExecuteReaderAsync())
-                        {
-                            await reader.ReadAsync();
-
-                            var oldNameExists = reader.GetInt32("OldNameExists");
-                            var newNameExists = reader.GetInt32("NewNameExists");
-
-                            if (oldNameExists == 0)
-                                return new ServiceResponseModel
-                                {
-                                    Status = false,
-                                    Message = "Old name not found."
-                                };
-
-                            if (newNameExists > 0)
-                                return new ServiceResponseModel
-                                {
-                                    Status = false,
-                                    Message = "New name is already in use."
-                                };
-                        }
-                    }
-
-                    using (var commandUpdate = new MySqlCommand(_requests["ChangeAccountName"], connection))
-                    {
-                        commandUpdate.Parameters.AddWithValue("@OldName", changeName.OldName);
-                        commandUpdate.Parameters.AddWithValue("@NewName", changeName.NewName);
-
-                        int affectedRows = await commandUpdate.ExecuteNonQueryAsync();
-
-                        return new ServiceResponseModel
-                        {
-                            Status = true,
-                            Message = "Name successfully changed."
-                        };
-
-                    }
-                }
-            }
-            catch (MySqlException ex)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"A database error occurred: {ex.Message}"
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
-            }
+                    { "@OldName", changeName.OldName },
+                    { "@NewName", changeName.NewName }
+                },
+                checkMessage: "Old name not found.",
+                existsMessage: "New name is already in use.",
+                successMessage: "Name successfully changed."
+            );
         }
-
 
         public async Task<ServiceResponseModel> ChangeEmailAsync(ChangeEmailModel changeEmail)
         {
-            try
-            {
-                using (var connection = new MySqlConnection(_connectionString))
+            return await ExecuteChangeCommandAsync(
+                checkQuery: _requests["CheckOldEmail"],
+                updateQuery: _requests["ChangeEmail"],
+                parameters: new Dictionary<string, object>
                 {
-                    await connection.OpenAsync();
-
-                    using (var checkOldEmailCommand = new MySqlCommand(_requests["CheckOldEmail"], connection))
-                    {
-                        checkOldEmailCommand.Parameters.AddWithValue("@OldEmail", changeEmail.OldEmail);
-                        object oldEmailResult = await checkOldEmailCommand.ExecuteScalarAsync();
-                        if (oldEmailResult == null || Convert.ToInt32(oldEmailResult) == 0)
-                        {
-                            return new ServiceResponseModel
-                            {
-                                Status = false,
-                                Message = "Old email not found."
-                            };
-                        }
-                    }
-
-                    using (var checkNewEmailCommand = new MySqlCommand(_requests["CheckNewEmail"], connection))
-                    {
-                        checkNewEmailCommand.Parameters.AddWithValue("@NewEmail", changeEmail.NewEmail);
-                        object newEmailResult = await checkNewEmailCommand.ExecuteScalarAsync();
-                        if (newEmailResult != null && Convert.ToInt32(newEmailResult) > 0)
-                        {
-                            return new ServiceResponseModel
-                            {
-                                Status = false,
-                                Message = "New email is already in use."
-                            };
-                        }
-                    }
-
-                    using (var changeEmailCommand = new MySqlCommand(_requests["ChangeEmail"], connection))
-                    {
-                        changeEmailCommand.Parameters.AddWithValue("@OldEmail", changeEmail.OldEmail);
-                        changeEmailCommand.Parameters.AddWithValue("@NewEmail", changeEmail.NewEmail);
-                        int affectedRows = await changeEmailCommand.ExecuteNonQueryAsync();
-
-                        return new ServiceResponseModel
-                        {
-                            Status = true,
-                            Message = "Email successfully changed."
-                        };
-                    }
-                }
-            }
-            catch (MySqlException ex)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"A database error occurred: {ex.Message}"
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
-            }
+                    { "@OldEmail", changeEmail.OldEmail },
+                    { "@NewEmail", changeEmail.NewEmail }
+                },
+                checkMessage: "Old email not found.",
+                existsMessage: "New email is already in use.",
+                successMessage: "Email successfully changed."
+            );
         }
-
 
         public async Task<ServiceResponseModel> ChangePasswordAsync(ChangePasswordModel changePassword)
         {
@@ -298,6 +166,7 @@ namespace AccountsService.Services
                 using (var connection = new MySqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
+
                     using (var command = new MySqlCommand(_requests["ChangePassword"], connection))
                     {
                         command.Parameters.AddWithValue("@OldPasswordHash", changePassword.OldPasswordHash);
@@ -311,29 +180,17 @@ namespace AccountsService.Services
                                 Message = "Password successfully changed."
                             };
                         else
-                            return new ServiceResponseModel
-                            {
-                                Status = false,
-                                Message = "Old password not found."
-                            };
+                            return CreateErrorResponse("Old password not found.");
                     }
                 }
             }
             catch (MySqlException ex)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"A database error occurred: {ex.Message}"
-                };
+                return CreateErrorResponse($"A database error occurred: {ex.Message}");
             }
             catch (Exception ex)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
+                return CreateErrorResponse($"An unexpected error occurred: {ex.Message}");
             }
         }
 
@@ -345,17 +202,17 @@ namespace AccountsService.Services
                 {
                     await connection.OpenAsync();
 
-                    using (var command = new MySqlCommand(_requests["DeleteOrders"], connection))
+                    using (var deleteOrdersCommand = new MySqlCommand(_requests["DeleteOrders"], connection))
                     {
-                        command.Parameters.AddWithValue("@AccountId", accountId);
-                        await command.ExecuteNonQueryAsync();
+                        deleteOrdersCommand.Parameters.AddWithValue("@AccountId", accountId);
+                        await deleteOrdersCommand.ExecuteNonQueryAsync();
                     }
 
-                    using (var command = new MySqlCommand(_requests["DeleteAccount"], connection))
+                    using (var deleteAccountCommand = new MySqlCommand(_requests["DeleteAccount"], connection))
                     {
-                        command.Parameters.AddWithValue("@AccountId", accountId);
+                        deleteAccountCommand.Parameters.AddWithValue("@AccountId", accountId);
 
-                        int affectedRows = await command.ExecuteNonQueryAsync();
+                        int affectedRows = await deleteAccountCommand.ExecuteNonQueryAsync();
                         if (affectedRows > 0)
                         {
                             return new ServiceResponseModel
@@ -366,34 +223,87 @@ namespace AccountsService.Services
                         }
                         else
                         {
-                            return new ServiceResponseModel
-                            {
-                                Status = false,
-                                Message = "Account not found."
-                            };
+                            return CreateErrorResponse("Account not found.");
                         }
                     }
                 }
             }
             catch (MySqlException ex)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"A database error occurred: {ex.Message}"
-                };
+                return CreateErrorResponse($"A database error occurred: {ex.Message}");
             }
             catch (Exception ex)
             {
-                return new ServiceResponseModel
-                {
-                    Status = false,
-                    Message = $"An unexpected error occurred: {ex.Message}"
-                };
+                return CreateErrorResponse($"An unexpected error occurred: {ex.Message}");
             }
         }
 
+        private async Task<ServiceResponseModel> ExecuteChangeCommandAsync(string checkQuery, string updateQuery, Dictionary<string, object> parameters, string checkMessage, string existsMessage, string successMessage)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
 
+                    using (var checkCommand = new MySqlCommand(checkQuery, connection))
+                    {
+                        foreach (var parameter in parameters)
+                        {
+                            checkCommand.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                        }
 
+                        var existsCount = Convert.ToInt32(await checkCommand.ExecuteScalarAsync());
+                        if (existsCount == 0)
+                        {
+                            return CreateErrorResponse(checkMessage);
+                        }
+
+                        if (updateQuery == _requests["ChangeEmail"] || updateQuery == _requests["ChangeAccountName"])
+                        {
+                            var existsNewCount = Convert.ToInt32(await checkCommand.ExecuteScalarAsync());
+                            if ((updateQuery == _requests["ChangeEmail"] && existsNewCount > 0) ||
+                                (updateQuery == _requests["ChangeAccountName"] && existsNewCount > 0))
+                            {
+                                return CreateErrorResponse(existsMessage);
+                            }
+                        }
+                    }
+
+                    using (var updateCommand = new MySqlCommand(updateQuery, connection))
+                    {
+                        foreach (var parameter in parameters)
+                        {
+                            updateCommand.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                        }
+
+                        await updateCommand.ExecuteNonQueryAsync();
+                    }
+
+                    return new ServiceResponseModel
+                    {
+                        Status = true,
+                        Message = successMessage
+                    };
+                }
+            }
+            catch (MySqlException ex)
+            {
+                return CreateErrorResponse($"A database error occurred: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return CreateErrorResponse($"An unexpected error occurred: {ex.Message}");
+            }
+        }
+
+        private ServiceResponseModel CreateErrorResponse(string message)
+        {
+            return new ServiceResponseModel
+            {
+                Status = false,
+                Message = message
+            };
+        }
     }
 }

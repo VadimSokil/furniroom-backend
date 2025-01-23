@@ -38,7 +38,9 @@ namespace AccountsService.Services
                     { "@ApartmentNumber", order.ApartmentNumber },
                     { "@OrderText", order.OrderText },
                     { "@DeliveryType", order.DeliveryType }
-                });
+                },
+                name: "Order"
+                );
         }
 
         public async Task<ServiceResponseModel> AddQuestionAsync(QuestionModel question)
@@ -54,14 +56,12 @@ namespace AccountsService.Services
                     { "@UserName", question.UserName },
                     { "@PhoneNumber", question.PhoneNumber },
                     { "@QuestionText", question.QuestionText }
-                });
+                },
+                name: "Question"
+                );
         }
 
-        private async Task<ServiceResponseModel> ExecuteAddCommandAsync(
-            string uniqueCheckQuery,
-            string addQuery,
-            KeyValuePair<string, object> uniqueParameter,
-            Dictionary<string, object> parameters)
+        private async Task<ServiceResponseModel> ExecuteAddCommandAsync(string uniqueCheckQuery, string addQuery, KeyValuePair<string, object> uniqueParameter, Dictionary<string, object> parameters, string name)
         {
             try
             {
@@ -69,7 +69,6 @@ namespace AccountsService.Services
                 {
                     await connection.OpenAsync();
 
-                    // Проверка уникальности
                     using (var checkCommand = new MySqlCommand(uniqueCheckQuery, connection))
                     {
                         checkCommand.Parameters.AddWithValue(uniqueParameter.Key, uniqueParameter.Value);
@@ -78,11 +77,10 @@ namespace AccountsService.Services
 
                         if (exists)
                         {
-                            return CreateErrorResponse($"This ID ({uniqueParameter.Value}) is already in use.");
+                            return CreateErrorResponse($"This ID is already in use.");
                         }
                     }
 
-                    // Выполнение команды добавления
                     using (var command = new MySqlCommand(addQuery, connection))
                     {
                         foreach (var parameter in parameters)
@@ -97,7 +95,7 @@ namespace AccountsService.Services
                 return new ServiceResponseModel
                 {
                     Status = true,
-                    Message = "Entity successfully added."
+                    Message = $"{name} successfully added."
                 };
             }
             catch (MySqlException ex)
