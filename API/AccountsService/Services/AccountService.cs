@@ -2,7 +2,6 @@
 using AccountsService.Models.Response;
 using AccountsService.Models.Account;
 using MySql.Data.MySqlClient;
-using System.Data;
 
 namespace AccountsService.Services
 {
@@ -17,105 +16,91 @@ namespace AccountsService.Services
             _requests = requests;
         }
 
-        public async Task<ServiceResponseModel> GetAccountInformationAsync(int? accountId)
+        public async Task<ServiceResponseModel> GetAccountInformationAsync(int accountId)
         {
+            return await ExecuteGetCommandAsync(
+                query: _requests["GetAccountInformation"],
+                parameterName: "@AccountId",
+                parameterValue: accountId,
+                readAction: reader => new AccountInformationModel
+                {
+                    AccountName = reader.GetString("AccountName"),
+                    Email = reader.GetString("Email")
+                },
+                notFoundMessage: "Account not found.",
+                successMessage: "Account information successfully retrieved."
+            );
+        }
+
+        public async Task<ServiceResponseModel> GetAccountOrdersAsync(int accountId)
+        {
+            return await ExecuteGetCommandAsync(
+                query: _requests["GetOrders"],
+                parameterName: "@AccountId",
+                parameterValue: accountId,
+                readAction: reader => new AccountOrdersModel
+                {
+                    OrderId = reader.GetInt32("OrderId"),
+                    OrderDate = reader.GetString("OrderDate"),
+                    AccountId = reader.GetInt32("AccountId"),
+                    PhoneNumber = reader.GetString("PhoneNumber"),
+                    Country = reader.GetString("Country"),
+                    Region = reader.GetString("Region"),
+                    District = reader.GetString("District"),
+                    City = reader.GetString("City"),
+                    Village = reader.GetString("Village"),
+                    Street = reader.GetString("Street"),
+                    HouseNumber = reader.GetString("HouseNumber"),
+                    ApartmentNumber = reader.GetString("ApartmentNumber"),
+                    OrderText = reader.GetString("OrderText"),
+                    DeliveryType = reader.GetString("DeliveryType"),
+                    OrderStatus = reader.GetString("OrderStatus")
+                },
+                notFoundMessage: "Orders not found.",
+                successMessage: "Orders information successfully retrieved."
+            );
+        }
+
+        private async Task<ServiceResponseModel> ExecuteGetCommandAsync<T>(
+            string query,
+            string parameterName,
+            object parameterValue,
+            Func<MySqlDataReader, T> readAction,
+            string notFoundMessage,
+            string successMessage)
+        {
+            if (parameterValue == null)
+            {
+                return CreateErrorResponse($"{parameterName} cannot be null.");
+            }
+
             try
             {
                 using (var connection = new MySqlConnection(_connectionString))
                 {
                     await connection.OpenAsync();
 
-                    using (var command = new MySqlCommand(_requests["GetAccountInformation"], connection))
+                    using (var command = new MySqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@AccountId", accountId);
+                        command.Parameters.AddWithValue(parameterName, parameterValue);
 
                         using (var reader = await command.ExecuteReaderAsync())
                         {
                             if (await reader.ReadAsync())
                             {
-                                var accountInformation = new AccountInformationModel
-                                {
-                                    AccountName = reader.GetString("AccountName"),
-                                    Email = reader.GetString("Email")
-                                };
-
+                                var resultData = readAction((MySqlDataReader)reader);
                                 return new ServiceResponseModel
                                 {
                                     Status = true,
-                                    Message = "Account information successfully retrieved.",
-                                    Data = accountInformation
+                                    Message = successMessage,
+                                    Data = resultData
                                 };
                             }
-                            else
-                            {
-                                return CreateErrorResponse("Account not found.");
-                            }
-                        }
-                    }
-                }
-            }
-            catch (MySqlException ex)
-            {
-                return CreateErrorResponse($"A database error occurred: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                return CreateErrorResponse($"An unexpected error occurred: {ex.Message}");
-            }
-        }
-
-        public async Task<ServiceResponseModel> GetAccountOrdersAsync(int? accountId)
-        {
-            try
-            {
-                var orders = new List<AccountOrdersModel>();
-
-                using (var connection = new MySqlConnection(_connectionString))
-                {
-                    await connection.OpenAsync();
-
-                    using (var command = new MySqlCommand(_requests["GetOrders"], connection))
-                    {
-                        command.Parameters.AddWithValue("@AccountId", accountId);
-
-                        using (var reader = await command.ExecuteReaderAsync())
-                        {
-                            while (await reader.ReadAsync())
-                            {
-                                orders.Add(new AccountOrdersModel
-                                {
-                                    OrderId = reader.GetInt32("OrderId"),
-                                    OrderDate = reader.GetString("OrderDate"),
-                                    AccountId = reader.GetInt32("AccountId"),
-                                    PhoneNumber = reader.GetString("PhoneNumber"),
-                                    Country = reader.GetString("Country"),
-                                    Region = reader.GetString("Region"),
-                                    District = reader.GetString("District"),
-                                    City = reader.GetString("City"),
-                                    Village = reader.GetString("Village"),
-                                    Street = reader.GetString("Street"),
-                                    HouseNumber = reader.GetString("HouseNumber"),
-                                    ApartmentNumber = reader.GetString("ApartmentNumber"),
-                                    OrderText = reader.GetString("OrderText"),
-                                    DeliveryType = reader.GetString("DeliveryType"),
-                                    OrderStatus = reader.GetString("OrderStatus")
-                                });
-                            }
                         }
                     }
                 }
 
-                if (orders.Count == 0)
-                {
-                    return CreateErrorResponse("Orders not found.");
-                }
-
-                return new ServiceResponseModel
-                {
-                    Status = true,
-                    Message = "Orders information successfully retrieved.",
-                    Data = orders
-                };
+                return CreateErrorResponse(notFoundMessage);
             }
             catch (MySqlException ex)
             {
@@ -194,7 +179,7 @@ namespace AccountsService.Services
             }
         }
 
-        public async Task<ServiceResponseModel> DeleteAccountAsync(int? accountId)
+        public async Task<ServiceResponseModel> DeleteAccountAsync(int accountId)
         {
             try
             {

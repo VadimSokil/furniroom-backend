@@ -1,16 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace AccountsService.Models.Authorization
+﻿namespace AccountsService.Models.Authorization
 {
     public class RegisterModel
     {
-        [Required]
-        public int? AccountId { get; set; }
-        [Required]
-        public string? AccountName { get; set; }
-        [Required]
-        public string? Email { get; set; }
-        [Required]
-        public string? PasswordHash { get; set; }
+        public int AccountId { get; set; }
+        public string AccountName { get; set; }
+        public string Email { get; set; }
+        public string PasswordHash { get; set; }
     }
 }
