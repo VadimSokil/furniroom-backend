@@ -148,24 +148,6 @@ namespace FurniroomAPI.Controllers
                     Message = "District cannot exceed 100 characters in length."
                 };
             }
-            else if (!validationMethods.IsValidLength(order.City, 100))
-            {
-                return new GatewayResponseModel
-                {
-                    Date = currentDateTime,
-                    Status = false,
-                    Message = "City cannot exceed 100 characters in length."
-                };
-            }
-            else if (!validationMethods.IsValidLength(order.Village, 100))
-            {
-                return new GatewayResponseModel
-                {
-                    Date = currentDateTime,
-                    Status = false,
-                    Message = "Village cannot exceed 100 characters in length."
-                };
-            }
             else if (!validationMethods.IsNotEmptyValue(order.Street))
             {
                 return new GatewayResponseModel
@@ -200,15 +182,6 @@ namespace FurniroomAPI.Controllers
                     Date = currentDateTime,
                     Status = false,
                     Message = "House number cannot exceed 20 characters in length."
-                };
-            }
-            else if (!validationMethods.IsValidLength(order.ApartmentNumber, 20))
-            {
-                return new GatewayResponseModel
-                {
-                    Date = currentDateTime,
-                    Status = false,
-                    Message = "Apartment number cannot exceed 20 characters in length."
                 };
             }
             else if (!validationMethods.IsNotEmptyValue(order.OrderText))
