@@ -9,11 +9,11 @@
         public string Country { get; set; }
         public string Region { get; set; }
         public string District { get; set; }
-        public string? City { get; set; }
-        public string? Village { get; set; }
+        public string City { get; set; }
+        public string Village { get; set; }
         public string Street { get; set; }
         public string HouseNumber { get; set; }
-        public string? ApartmentNumber { get; set; }
+        public string ApartmentNumber { get; set; }
         public string OrderText { get; set; }
         public string DeliveryType { get; set; }
     }

@@ -18,12 +18,15 @@ namespace FurniroomAPI.Models.Request
         public string? Region { get; set; }
         [Required]
         public string? District { get; set; }
+        [Required]
         public string? City { get; set; }
+        [Required]
         public string? Village { get; set; }
         [Required]
         public string? Street { get; set; }
         [Required]
         public string? HouseNumber { get; set; }
+        [Required]
         public string? ApartmentNumber { get; set; }
         [Required]
         public string? OrderText { get; set; }
