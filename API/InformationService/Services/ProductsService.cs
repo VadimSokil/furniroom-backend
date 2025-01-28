@@ -61,11 +61,11 @@ namespace InformationService.Services
         {
             return await GetInformationAsync<ModuleModel>("GetAllModules", reader => new ModuleModel
             {
-                ModuleId = reader.GetInt32("DrawingId"),
+                ModuleId = reader.GetInt32("ModuleId"),
                 ProductId = reader.GetInt32("ProductId"),
-                ModuleName = reader.GetString("DrawingName"),
-                ModuleDescription = reader.GetString("DrawingDescription"),
-                ModuleImageUrl = reader.GetString("DrawingImageUrl")
+                ModuleName = reader.GetString("ModuleName"),
+                ModuleDescription = reader.GetString("ModuleDescription"),
+                ModuleImageUrl = reader.GetString("ModuleImageUrl")
             });
         }
 
