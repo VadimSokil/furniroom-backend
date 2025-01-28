@@ -40,6 +40,15 @@ namespace FurniroomAPI.Services
             return await GetInformationAsync("GetAllSubcategories");
         }
 
+        public async Task<ServiceResponseModel> GetAllSizesAsync()
+        {
+            return await GetInformationAsync("GetAllSizes");
+        }
+        public async Task<ServiceResponseModel> GetAllColorsAsync()
+        {
+            return await GetInformationAsync("GetAllColors");
+        }
+
         private async Task<ServiceResponseModel> GetInformationAsync(string endpointKey)
         {
             try

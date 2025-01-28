@@ -69,6 +69,29 @@ namespace InformationService.Services
             });
         }
 
+        public async Task<ServiceResponseModel> GetAllSizesAsync()
+        {
+            return await GetInformationAsync<SizeModel>("GetAllSizes", reader => new SizeModel
+            {
+                SizeId = reader.GetInt32("SizeId"),
+                ModuleId = reader.GetInt32("ModuleId"),
+                SizeValue = reader.GetString("SizeValue")
+            });
+        }
+
+        public async Task<ServiceResponseModel> GetAllColorsAsync()
+        {
+            return await GetInformationAsync<ColorModel>("GetAllColors", reader => new ColorModel
+            {
+                ColorId = reader.GetInt32("ColorId"),
+                ModuleId = reader.GetInt32("ModuleId"),
+                FacadeColorName = reader.GetString("FacadeColorName"),
+                FacadeColorImageUrl = reader.GetString("FacadeColorImageUrl"),
+                BodyColorName = reader.GetString("BodyColorName"),
+                BodyColorImageUrl = reader.GetString("BodyColorImageUrl"),
+            });
+        }
+
         private async Task<ServiceResponseModel> GetInformationAsync<T>(string requestKey, Func<MySqlDataReader, T> mapFunc)
         {
             var items = new List<T>();

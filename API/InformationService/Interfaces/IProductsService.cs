@@ -9,5 +9,7 @@ namespace InformationService.Interfaces
         public Task<ServiceResponseModel> GetAllProductsAsync();
         public Task<ServiceResponseModel> GetAllImagesAsync();
         public Task<ServiceResponseModel> GetAllModulesAsync();
+        public Task<ServiceResponseModel> GetAllSizesAsync();
+        public Task<ServiceResponseModel> GetAllColorsAsync();
     }
 }

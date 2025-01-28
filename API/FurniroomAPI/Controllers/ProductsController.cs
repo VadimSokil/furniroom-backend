@@ -84,5 +84,33 @@ namespace FurniroomAPI.Controllers
             };
             return Ok(gatewayResponse);
         }
+
+        [HttpGet("sizes-list")]
+        public async Task<ActionResult<GatewayResponseModel>> GetSizes()
+        {
+            var serviceResponse = await _productsService.GetAllSizesAsync();
+            var gatewayResponse = new GatewayResponseModel
+            {
+                Date = currentDateTime,
+                Status = serviceResponse.Status,
+                Message = serviceResponse.Message,
+                Data = serviceResponse.Data
+            };
+            return Ok(gatewayResponse);
+        }
+
+        [HttpGet("colors-list")]
+        public async Task<ActionResult<GatewayResponseModel>> GetColors()
+        {
+            var serviceResponse = await _productsService.GetAllColorsAsync();
+            var gatewayResponse = new GatewayResponseModel
+            {
+                Date = currentDateTime,
+                Status = serviceResponse.Status,
+                Message = serviceResponse.Message,
+                Data = serviceResponse.Data
+            };
+            return Ok(gatewayResponse);
+        }
     }
 }

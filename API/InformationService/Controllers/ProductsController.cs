@@ -49,5 +49,19 @@ namespace InformationService.Controllers
             var result = await _productsService.GetAllModulesAsync();
             return Ok(result);
         }
+
+        [HttpGet("sizes-list")]
+        public async Task<ActionResult<List<SizeModel>>> GetAllSizes()
+        {
+            var result = await _productsService.GetAllSizesAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("colors-list")]
+        public async Task<ActionResult<List<SizeModel>>> GetAllColors()
+        {
+            var result = await _productsService.GetAllColorsAsync();
+            return Ok(result);
+        }
     }
 }
