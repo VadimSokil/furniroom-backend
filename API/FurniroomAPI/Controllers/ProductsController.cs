@@ -71,10 +71,10 @@ namespace FurniroomAPI.Controllers
             return Ok(gatewayResponse);
         }
 
-        [HttpGet("drawings-list")]
-        public async Task<ActionResult<GatewayResponseModel>> GetDrawingss()
+        [HttpGet("modules-list")]
+        public async Task<ActionResult<GatewayResponseModel>> GetModules()
         {
-            var serviceResponse = await _productsService.GetAllDrawingsAsync();
+            var serviceResponse = await _productsService.GetAllModulesAsync();
             var gatewayResponse = new GatewayResponseModel
             {
                 Date = currentDateTime,

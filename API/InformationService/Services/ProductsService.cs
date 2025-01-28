@@ -57,15 +57,15 @@ namespace InformationService.Services
             });
         }
 
-        public async Task<ServiceResponseModel> GetAllDrawingsAsync()
+        public async Task<ServiceResponseModel> GetAllModulesAsync()
         {
-            return await GetInformationAsync<DrawingModel>("GetAllDrawings", reader => new DrawingModel
+            return await GetInformationAsync<ModuleModel>("GetAllModules", reader => new ModuleModel
             {
-                DrawingId = reader.GetInt32("DrawingId"),
+                ModuleId = reader.GetInt32("DrawingId"),
                 ProductId = reader.GetInt32("ProductId"),
-                DrawingName = reader.GetString("DrawingName"),
-                DrawingDescription = reader.GetString("DrawingDescription"),
-                DrawingImageUrl = reader.GetString("DrawingImageUrl")
+                ModuleName = reader.GetString("DrawingName"),
+                ModuleDescription = reader.GetString("DrawingDescription"),
+                ModuleImageUrl = reader.GetString("DrawingImageUrl")
             });
         }
 

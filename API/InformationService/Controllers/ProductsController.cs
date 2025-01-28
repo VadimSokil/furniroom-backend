@@ -43,10 +43,10 @@ namespace InformationService.Controllers
             return Ok(result);
         }
 
-        [HttpGet("drawings-list")]
-        public async Task<ActionResult<List<DrawingModel>>> GetAllDrawings()
+        [HttpGet("modules-list")]
+        public async Task<ActionResult<List<ModuleModel>>> GetAllModules()
         {
-            var result = await _productsService.GetAllDrawingsAsync();
+            var result = await _productsService.GetAllModulesAsync();
             return Ok(result);
         }
     }

@@ -8,6 +8,6 @@ namespace FurniroomAPI.Interfaces
         public Task<ServiceResponseModel> GetAllSubcategoriesAsync();
         public Task<ServiceResponseModel> GetAllProductsAsync();
         public Task<ServiceResponseModel> GetAllImagesAsync();
-        public Task<ServiceResponseModel> GetAllDrawingsAsync();
+        public Task<ServiceResponseModel> GetAllModulesAsync();
     }
 }
