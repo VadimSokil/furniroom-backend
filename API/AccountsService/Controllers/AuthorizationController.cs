@@ -31,7 +31,7 @@ namespace AccountsService.Controllers
         }
 
         [HttpPost("reset-password")]
-        public async Task<ActionResult<ServiceResponseModel>> ResetPassword([FromQuery]string email)
+        public async Task<ActionResult<ServiceResponseModel>> ResetPassword([FromBody]string email)
         {
             var result = await _authorizationService.ResetPasswordAsync(email);
             return Ok(result);
