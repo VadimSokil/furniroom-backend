@@ -115,8 +115,8 @@ namespace AccountsService.Services
         public async Task<ServiceResponseModel> ChangeNameAsync(ChangeNameModel changeName)
         {
             return await ExecuteChangeCommandAsync(
-                checkOldValueQuery: _requests["CheckAccountNames"],
-                checkNewValueQuery: _requests["CheckAccountNames"], 
+                checkOldValueQuery: _requests["CheckOldAccountName"],
+                checkNewValueQuery: _requests["CheckNewAccountName"],
                 updateQuery: _requests["ChangeAccountName"],
                 parameters: new Dictionary<string, object>
                 {
@@ -133,7 +133,7 @@ namespace AccountsService.Services
         {
             return await ExecuteChangeCommandAsync(
                 checkOldValueQuery: _requests["CheckOldEmail"],
-                checkNewValueQuery: _requests["CheckEmail"], 
+                checkNewValueQuery: _requests["CheckNewEmail"],
                 updateQuery: _requests["ChangeEmail"],
                 parameters: new Dictionary<string, object>
                 {
@@ -145,6 +145,7 @@ namespace AccountsService.Services
                 successMessage: "Email successfully changed."
             );
         }
+
 
 
         public async Task<ServiceResponseModel> ChangePasswordAsync(ChangePasswordModel changePassword)
@@ -282,6 +283,7 @@ namespace AccountsService.Services
                 return CreateErrorResponse($"An unexpected error occurred: {ex.Message}");
             }
         }
+
 
 
         private ServiceResponseModel CreateErrorResponse(string message)
