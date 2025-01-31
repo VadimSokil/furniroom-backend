@@ -71,11 +71,11 @@ namespace FurniroomAPI.Services
             }
         }
 
-        private async Task<ServiceResponseModel> DeleteInformationAsync(string endpointKey, int accountId)
+        private async Task<ServiceResponseModel> DeleteInformationAsync(string endpointKey, int parameter)
         {
             try
             {
-                var endpoint = $"{_endpointURL[endpointKey]}/{accountId}";
+                var endpoint = $"{_endpointURL[endpointKey]}?accountId={Uri.EscapeDataString(parameter.ToString())}";
                 var response = await _httpClient.DeleteAsync(endpoint);
                 response.EnsureSuccessStatusCode();
 
@@ -92,11 +92,11 @@ namespace FurniroomAPI.Services
             }
         }
 
-        private async Task<ServiceResponseModel> GetInformationAsync(string endpointKey, int accountId)
+        private async Task<ServiceResponseModel> GetInformationAsync(string endpointKey, int parameter)
         {
             try
             {
-                var endpoint = $"{_endpointURL[endpointKey]}/{accountId}";
+                var endpoint = $"{_endpointURL[endpointKey]}?accountId={Uri.EscapeDataString(parameter.ToString())}";
                 var response = await _httpClient.GetAsync(endpoint);
                 response.EnsureSuccessStatusCode();
 
