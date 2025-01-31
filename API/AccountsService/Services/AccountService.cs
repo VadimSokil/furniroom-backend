@@ -115,12 +115,13 @@ namespace AccountsService.Services
         public async Task<ServiceResponseModel> ChangeNameAsync(ChangeNameModel changeName)
         {
             return await ExecuteChangeCommandAsync(
-                checkQuery: _requests["CheckAccountNames"],
+                checkOldValueQuery: _requests["CheckAccountNames"],
+                checkNewValueQuery: _requests["CheckAccountNames"], 
                 updateQuery: _requests["ChangeAccountName"],
                 parameters: new Dictionary<string, object>
                 {
-                    { "@OldName", changeName.OldName },
-                    { "@NewName", changeName.NewName }
+            { "@OldValue", changeName.OldName },
+            { "@NewValue", changeName.NewName }
                 },
                 checkMessage: "Old name not found.",
                 existsMessage: "New name is already in use.",
@@ -131,18 +132,20 @@ namespace AccountsService.Services
         public async Task<ServiceResponseModel> ChangeEmailAsync(ChangeEmailModel changeEmail)
         {
             return await ExecuteChangeCommandAsync(
-                checkQuery: _requests["CheckOldEmail"],
+                checkOldValueQuery: _requests["CheckOldEmail"],
+                checkNewValueQuery: _requests["CheckEmail"], 
                 updateQuery: _requests["ChangeEmail"],
                 parameters: new Dictionary<string, object>
                 {
-                    { "@OldEmail", changeEmail.OldEmail },
-                    { "@NewEmail", changeEmail.NewEmail }
+            { "@OldValue", changeEmail.OldEmail },
+            { "@NewValue", changeEmail.NewEmail }
                 },
                 checkMessage: "Old email not found.",
                 existsMessage: "New email is already in use.",
                 successMessage: "Email successfully changed."
             );
         }
+
 
         public async Task<ServiceResponseModel> ChangePasswordAsync(ChangePasswordModel changePassword)
         {
@@ -223,7 +226,7 @@ namespace AccountsService.Services
             }
         }
 
-        private async Task<ServiceResponseModel> ExecuteChangeCommandAsync(string checkQuery, string updateQuery, Dictionary<string, object> parameters, string checkMessage, string existsMessage, string successMessage)
+        private async Task<ServiceResponseModel> ExecuteChangeCommandAsync(string checkOldValueQuery, string checkNewValueQuery, string updateQuery, Dictionary<string, object> parameters, string checkMessage, string existsMessage, string successMessage)
         {
             try
             {
@@ -231,27 +234,25 @@ namespace AccountsService.Services
                 {
                     await connection.OpenAsync();
 
-                    using (var checkCommand = new MySqlCommand(checkQuery, connection))
+                    using (var checkOldValueCommand = new MySqlCommand(checkOldValueQuery, connection))
                     {
-                        foreach (var parameter in parameters)
-                        {
-                            checkCommand.Parameters.AddWithValue(parameter.Key, parameter.Value);
-                        }
+                        checkOldValueCommand.Parameters.AddWithValue("@OldValue", parameters["@OldValue"]);
+                        var oldValueExists = Convert.ToInt32(await checkOldValueCommand.ExecuteScalarAsync()) > 0;
 
-                        var existsCount = Convert.ToInt32(await checkCommand.ExecuteScalarAsync());
-                        if (existsCount == 0)
+                        if (!oldValueExists)
                         {
                             return CreateErrorResponse(checkMessage);
                         }
+                    }
 
-                        if (updateQuery == _requests["ChangeEmail"] || updateQuery == _requests["ChangeAccountName"])
+                    using (var checkNewValueCommand = new MySqlCommand(checkNewValueQuery, connection))
+                    {
+                        checkNewValueCommand.Parameters.AddWithValue("@NewValue", parameters["@NewValue"]);
+                        var newValueExists = Convert.ToInt32(await checkNewValueCommand.ExecuteScalarAsync()) > 0;
+
+                        if (newValueExists && parameters["@OldValue"].ToString() != parameters["@NewValue"].ToString())
                         {
-                            var existsNewCount = Convert.ToInt32(await checkCommand.ExecuteScalarAsync());
-                            if ((updateQuery == _requests["ChangeEmail"] && existsNewCount > 0) ||
-                                (updateQuery == _requests["ChangeAccountName"] && existsNewCount > 0))
-                            {
-                                return CreateErrorResponse(existsMessage);
-                            }
+                            return CreateErrorResponse(existsMessage);
                         }
                     }
 
@@ -281,6 +282,7 @@ namespace AccountsService.Services
                 return CreateErrorResponse($"An unexpected error occurred: {ex.Message}");
             }
         }
+
 
         private ServiceResponseModel CreateErrorResponse(string message)
         {
