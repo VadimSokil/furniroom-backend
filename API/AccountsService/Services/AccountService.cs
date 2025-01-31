@@ -120,14 +120,15 @@ namespace AccountsService.Services
                 updateQuery: _requests["ChangeAccountName"],
                 parameters: new Dictionary<string, object>
                 {
-            { "@OldValue", changeName.OldName },
-            { "@NewValue", changeName.NewName }
+            { "@OldName", changeName.OldName },
+            { "@NewName", changeName.NewName }
                 },
                 checkMessage: "Old name not found.",
                 existsMessage: "New name is already in use.",
                 successMessage: "Name successfully changed."
             );
         }
+
 
         public async Task<ServiceResponseModel> ChangeEmailAsync(ChangeEmailModel changeEmail)
         {
@@ -137,14 +138,15 @@ namespace AccountsService.Services
                 updateQuery: _requests["ChangeEmail"],
                 parameters: new Dictionary<string, object>
                 {
-            { "@OldValue", changeEmail.OldEmail },
-            { "@NewValue", changeEmail.NewEmail }
+            { "@OldEmail", changeEmail.OldEmail },
+            { "@NewEmail", changeEmail.NewEmail }
                 },
                 checkMessage: "Old email not found.",
                 existsMessage: "New email is already in use.",
                 successMessage: "Email successfully changed."
             );
         }
+
 
 
 
@@ -227,6 +229,7 @@ namespace AccountsService.Services
             }
         }
 
+
         private async Task<ServiceResponseModel> ExecuteChangeCommandAsync(string checkOldValueQuery, string checkNewValueQuery, string updateQuery, Dictionary<string, object> parameters, string checkMessage, string existsMessage, string successMessage)
         {
             try
@@ -237,7 +240,9 @@ namespace AccountsService.Services
 
                     using (var checkOldValueCommand = new MySqlCommand(checkOldValueQuery, connection))
                     {
-                        checkOldValueCommand.Parameters.AddWithValue("@OldValue", parameters["@OldValue"]);
+                        checkOldValueCommand.Parameters.AddWithValue("@OldName", parameters.ContainsKey("@OldName") ? parameters["@OldName"] : DBNull.Value);
+                        checkOldValueCommand.Parameters.AddWithValue("@OldEmail", parameters.ContainsKey("@OldEmail") ? parameters["@OldEmail"] : DBNull.Value);
+
                         var oldValueExists = Convert.ToInt32(await checkOldValueCommand.ExecuteScalarAsync()) > 0;
 
                         if (!oldValueExists)
@@ -248,20 +253,23 @@ namespace AccountsService.Services
 
                     using (var checkNewValueCommand = new MySqlCommand(checkNewValueQuery, connection))
                     {
-                        checkNewValueCommand.Parameters.AddWithValue("@NewValue", parameters["@NewValue"]);
+                        checkNewValueCommand.Parameters.AddWithValue("@NewName", parameters.ContainsKey("@NewName") ? parameters["@NewName"] : DBNull.Value);
+                        checkNewValueCommand.Parameters.AddWithValue("@NewEmail", parameters.ContainsKey("@NewEmail") ? parameters["@NewEmail"] : DBNull.Value);
+
                         var newValueExists = Convert.ToInt32(await checkNewValueCommand.ExecuteScalarAsync()) > 0;
 
-                        if (newValueExists && parameters["@OldValue"].ToString() != parameters["@NewValue"].ToString())
+                        if (newValueExists &&
+                            ((parameters.ContainsKey("@OldName") && parameters["@OldName"].ToString() != parameters["@NewName"].ToString()) ||
+                             (parameters.ContainsKey("@OldEmail") && parameters["@OldEmail"].ToString() != parameters["@NewEmail"].ToString())))
                         {
                             return CreateErrorResponse(existsMessage);
                         }
                     }
-
                     using (var updateCommand = new MySqlCommand(updateQuery, connection))
                     {
                         foreach (var parameter in parameters)
                         {
-                            updateCommand.Parameters.AddWithValue(parameter.Key, parameter.Value);
+                            updateCommand.Parameters.AddWithValue(parameter.Key, parameter.Value ?? DBNull.Value);
                         }
 
                         await updateCommand.ExecuteNonQueryAsync();
