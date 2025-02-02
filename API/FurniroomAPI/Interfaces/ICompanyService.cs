@@ -4,8 +4,8 @@ namespace FurniroomAPI.Interfaces
 {
     public interface ICompanyService
     {
-        public Task<ServiceResponseModel> GetCompanyInformationAsync();
-        public Task<ServiceResponseModel> GetDeliveryInformationAsync();
-        public Task<ServiceResponseModel> GetPaymentInformationAsync();
+        public Task<ServiceResponseModel> GetCompanyInformationAsync(string requestId);
+        public Task<ServiceResponseModel> GetDeliveryInformationAsync(string requestId);
+        public Task<ServiceResponseModel> GetPaymentInformationAsync(string requestId);
     }
 }

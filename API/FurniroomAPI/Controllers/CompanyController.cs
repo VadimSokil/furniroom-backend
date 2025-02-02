@@ -17,10 +17,10 @@ namespace FurniroomAPI.Controllers
         }
 
         [HttpGet("company-information")]
-        public async Task<ActionResult<string>> GetCompany()
+        public async Task<ActionResult<string>> GetCompany(string requestId)
         {
-            Console.WriteLine($"[{currentDateTime}]: Получен новый запрос, айди: {requestId} , тип: GET , эндпоинт: company-information");
-            var serviceResponse = await _companyService.GetCompanyInformationAsync();
+            Console.WriteLine($"[FURNIROOM API LOGS]: Дата: {currentDateTime}, Получен новый запрос, Id запроса: {requestId}, Тип: GET, Эндпоинт: company-information");
+            var serviceResponse = await _companyService.GetCompanyInformationAsync(requestId);
             var gatewayResponse = new GatewayResponseModel
             {
                 Date = currentDateTime,
@@ -32,10 +32,10 @@ namespace FurniroomAPI.Controllers
         }
 
         [HttpGet("delivery-information")]
-        public async Task<ActionResult<string>> GetDelivery()
+        public async Task<ActionResult<string>> GetDelivery(string requestId)
         {
-            Console.WriteLine($"[{currentDateTime}]: Получен новый запрос, айди: {requestId}, тип: GET, эндпоинт: delivery-information");
-            var serviceResponse = await _companyService.GetDeliveryInformationAsync();
+            Console.WriteLine($"[FURNIROOM API LOGS]: Дата: {currentDateTime}, Получен новый запрос, Id запроса: {requestId}, Тип: GET, Эндпоинт: delivery-information");
+            var serviceResponse = await _companyService.GetDeliveryInformationAsync(requestId);
             var gatewayResponse = new GatewayResponseModel
             {
                 Date = currentDateTime,
@@ -47,10 +47,10 @@ namespace FurniroomAPI.Controllers
         }
 
         [HttpGet("payment-information")]
-        public async Task<ActionResult<string>> GetPayment()
+        public async Task<ActionResult<string>> GetPayment(string requestId)
         {
-            Console.WriteLine($"[{currentDateTime}]: Получен новый запрос, айди: {requestId}, тип: GET, эндпоинт: payment-information");
-            var serviceResponse = await _companyService.GetPaymentInformationAsync();
+            Console.WriteLine($"[FURNIROOM API LOGS]: Дата:  {currentDateTime} , Получен новый запрос, Id запроса:  {requestId} , Тип: GET, Эндпоинт: payment-information");
+            var serviceResponse = await _companyService.GetPaymentInformationAsync(requestId);
             var gatewayResponse = new GatewayResponseModel
             {
                 Date = currentDateTime,
