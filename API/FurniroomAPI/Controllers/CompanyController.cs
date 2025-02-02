@@ -10,6 +10,7 @@ namespace FurniroomAPI.Controllers
     {
         private readonly ICompanyService _companyService;
         public string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
+        public string requestId = Guid.NewGuid().ToString();
         public CompanyController(ICompanyService companyService)
         {
             _companyService = companyService;
@@ -18,6 +19,7 @@ namespace FurniroomAPI.Controllers
         [HttpGet("company-information")]
         public async Task<ActionResult<string>> GetCompany()
         {
+            Console.WriteLine($"[{currentDateTime}]: Получен новый запрос, айди: {requestId} , тип: GET , эндпоинт: company-information");
             var serviceResponse = await _companyService.GetCompanyInformationAsync();
             var gatewayResponse = new GatewayResponseModel
             {
@@ -32,6 +34,7 @@ namespace FurniroomAPI.Controllers
         [HttpGet("delivery-information")]
         public async Task<ActionResult<string>> GetDelivery()
         {
+            Console.WriteLine($"[{currentDateTime}]: Получен новый запрос, айди: {requestId}, тип: GET, эндпоинт: delivery-information");
             var serviceResponse = await _companyService.GetDeliveryInformationAsync();
             var gatewayResponse = new GatewayResponseModel
             {
@@ -46,6 +49,7 @@ namespace FurniroomAPI.Controllers
         [HttpGet("payment-information")]
         public async Task<ActionResult<string>> GetPayment()
         {
+            Console.WriteLine($"[{currentDateTime}]: Получен новый запрос, айди: {requestId}, тип: GET, эндпоинт: payment-information");
             var serviceResponse = await _companyService.GetPaymentInformationAsync();
             var gatewayResponse = new GatewayResponseModel
             {
