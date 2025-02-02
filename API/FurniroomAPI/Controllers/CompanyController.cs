@@ -17,7 +17,7 @@ namespace FurniroomAPI.Controllers
         }
 
         [HttpGet("company-information")]
-        public async Task<ActionResult<string>> GetCompany(string requestId)
+        public async Task<ActionResult<string>> GetCompany()
         {
             Console.WriteLine($"[FURNIROOM API LOGS]: Дата: {currentDateTime}, Получен новый запрос, Id запроса: {requestId}, Тип: GET, Эндпоинт: company-information");
             var serviceResponse = await _companyService.GetCompanyInformationAsync(requestId);
@@ -32,7 +32,7 @@ namespace FurniroomAPI.Controllers
         }
 
         [HttpGet("delivery-information")]
-        public async Task<ActionResult<string>> GetDelivery(string requestId)
+        public async Task<ActionResult<string>> GetDelivery()
         {
             Console.WriteLine($"[FURNIROOM API LOGS]: Дата: {currentDateTime}, Получен новый запрос, Id запроса: {requestId}, Тип: GET, Эндпоинт: delivery-information");
             var serviceResponse = await _companyService.GetDeliveryInformationAsync(requestId);
@@ -47,7 +47,7 @@ namespace FurniroomAPI.Controllers
         }
 
         [HttpGet("payment-information")]
-        public async Task<ActionResult<string>> GetPayment(string requestId)
+        public async Task<ActionResult<string>> GetPayment()
         {
             Console.WriteLine($"[FURNIROOM API LOGS]: Дата:  {currentDateTime} , Получен новый запрос, Id запроса:  {requestId} , Тип: GET, Эндпоинт: payment-information");
             var serviceResponse = await _companyService.GetPaymentInformationAsync(requestId);
