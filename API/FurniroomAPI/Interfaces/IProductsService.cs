@@ -4,12 +4,12 @@ namespace FurniroomAPI.Interfaces
 {
     public interface IProductsService
     {
-        public Task<ServiceResponseModel> GetAllCategoriesAsync();
-        public Task<ServiceResponseModel> GetAllSubcategoriesAsync();
-        public Task<ServiceResponseModel> GetAllProductsAsync();
-        public Task<ServiceResponseModel> GetAllImagesAsync();
-        public Task<ServiceResponseModel> GetAllModulesAsync();
-        public Task<ServiceResponseModel> GetAllSizesAsync();
-        public Task<ServiceResponseModel> GetAllColorsAsync();
+        public Task<ServiceResponseModel> GetAllCategoriesAsync(string requestId);
+        public Task<ServiceResponseModel> GetAllSubcategoriesAsync(string requestId);
+        public Task<ServiceResponseModel> GetAllProductsAsync(string requestId);
+        public Task<ServiceResponseModel> GetAllImagesAsync(string requestId);
+        public Task<ServiceResponseModel> GetAllModulesAsync(string requestId);
+        public Task<ServiceResponseModel> GetAllSizesAsync(string requestId);
+        public Task<ServiceResponseModel> GetAllColorsAsync(string requestId);
     }
 }

@@ -10,6 +10,8 @@ namespace FurniroomAPI.Controllers
     {
         private readonly IProductsService _productsService;
         public string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
+        public string requestId = Guid.NewGuid().ToString();
+
         public ProductsController(IProductsService productsService)
         {
             _productsService = productsService;
@@ -18,7 +20,8 @@ namespace FurniroomAPI.Controllers
         [HttpGet("categories-list")]
         public async Task<ActionResult<GatewayResponseModel>> GetCategories()
         {
-            var serviceResponse = await _productsService.GetAllCategoriesAsync();
+            Console.WriteLine($"[FURNIROOM API LOGS]: Дата: {currentDateTime}, Получен новый запрос, Id запроса: {requestId}, Тип: GET, Эндпоинт: categories-list");
+            var serviceResponse = await _productsService.GetAllCategoriesAsync(requestId);
             var gatewayResponse = new GatewayResponseModel
             {
                 Date = currentDateTime,
@@ -32,7 +35,8 @@ namespace FurniroomAPI.Controllers
         [HttpGet("subcategories-list")]
         public async Task<ActionResult<GatewayResponseModel>> GetSubcategories()
         {
-            var serviceResponse = await _productsService.GetAllSubcategoriesAsync();
+            Console.WriteLine($"[FURNIROOM API LOGS]: Дата: {currentDateTime}, Получен новый запрос, Id запроса: {requestId}, Тип: GET, Эндпоинт: subcategories-list");
+            var serviceResponse = await _productsService.GetAllSubcategoriesAsync(requestId);
             var gatewayResponse = new GatewayResponseModel
             {
                 Date = currentDateTime,
@@ -46,7 +50,8 @@ namespace FurniroomAPI.Controllers
         [HttpGet("products-list")]
         public async Task<ActionResult<GatewayResponseModel>> GetProducts()
         {
-            var serviceResponse = await _productsService.GetAllProductsAsync();
+            Console.WriteLine($"[FURNIROOM API LOGS]: Дата: {currentDateTime}, Получен новый запрос, Id запроса: {requestId}, Тип: GET, Эндпоинт: products-list");
+            var serviceResponse = await _productsService.GetAllProductsAsync(requestId);
             var gatewayResponse = new GatewayResponseModel
             {
                 Date = currentDateTime,
@@ -60,7 +65,8 @@ namespace FurniroomAPI.Controllers
         [HttpGet("images-list")]
         public async Task<ActionResult<GatewayResponseModel>> GetImages()
         {
-            var serviceResponse = await _productsService.GetAllImagesAsync();
+            Console.WriteLine($"[FURNIROOM API LOGS]: Дата: {currentDateTime}, Получен новый запрос, Id запроса: {requestId}, Тип: GET, Эндпоинт: images-list");
+            var serviceResponse = await _productsService.GetAllImagesAsync(requestId);
             var gatewayResponse = new GatewayResponseModel
             {
                 Date = currentDateTime,
@@ -74,7 +80,8 @@ namespace FurniroomAPI.Controllers
         [HttpGet("modules-list")]
         public async Task<ActionResult<GatewayResponseModel>> GetModules()
         {
-            var serviceResponse = await _productsService.GetAllModulesAsync();
+            Console.WriteLine($"[FURNIROOM API LOGS]: Дата: {currentDateTime}, Получен новый запрос, Id запроса: {requestId}, Тип: GET, Эндпоинт: modules-list");
+            var serviceResponse = await _productsService.GetAllModulesAsync(requestId);
             var gatewayResponse = new GatewayResponseModel
             {
                 Date = currentDateTime,
@@ -88,7 +95,8 @@ namespace FurniroomAPI.Controllers
         [HttpGet("sizes-list")]
         public async Task<ActionResult<GatewayResponseModel>> GetSizes()
         {
-            var serviceResponse = await _productsService.GetAllSizesAsync();
+            Console.WriteLine($"[FURNIROOM API LOGS]: Дата: {currentDateTime}, Получен новый запрос, Id запроса: {requestId}, Тип: GET, Эндпоинт: sizes-list");
+            var serviceResponse = await _productsService.GetAllSizesAsync(requestId);
             var gatewayResponse = new GatewayResponseModel
             {
                 Date = currentDateTime,
@@ -102,7 +110,8 @@ namespace FurniroomAPI.Controllers
         [HttpGet("colors-list")]
         public async Task<ActionResult<GatewayResponseModel>> GetColors()
         {
-            var serviceResponse = await _productsService.GetAllColorsAsync();
+            Console.WriteLine($"[FURNIROOM API LOGS]: Дата: {currentDateTime}, Получен новый запрос, Id запроса: {requestId}, Тип: GET, Эндпоинт: colors-list");
+            var serviceResponse = await _productsService.GetAllColorsAsync(requestId);
             var gatewayResponse = new GatewayResponseModel
             {
                 Date = currentDateTime,

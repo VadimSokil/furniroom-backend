@@ -5,10 +5,10 @@ namespace FurniroomAPI.Interfaces
 {
     public interface IAuthorizationService
     {
-        public Task<ServiceResponseModel> CheckEmailAsync(string email);
-        public Task<ServiceResponseModel> GenerateCodeAsync(string email);
-        public Task<ServiceResponseModel> ResetPasswordAsync(string email);
-        public Task<ServiceResponseModel> RegisterAsync(RegisterModel register);
-        public Task<ServiceResponseModel> LoginAsync(LoginModel login);
+        public Task<ServiceResponseModel> CheckEmailAsync(string email, string requestId);
+        public Task<ServiceResponseModel> GenerateCodeAsync(string email, string requestId);
+        public Task<ServiceResponseModel> ResetPasswordAsync(string email, string requestId);
+        public Task<ServiceResponseModel> RegisterAsync(RegisterModel register, string requestId);
+        public Task<ServiceResponseModel> LoginAsync(LoginModel login, string requestId);
     }
 }
