@@ -1,13 +1,13 @@
 ﻿using AccountsService.Models.Response;
-using FurniroomAPI.Models.Authorization;
+using static FurniroomAPI.Models.Authorization.AuthorizationModels;
 
 namespace FurniroomAPI.Interfaces
 {
     public interface IAuthorizationService
     {
-        public Task<ServiceResponseModel> CheckEmailAsync(string email, string requestId);
-        public Task<ServiceResponseModel> GenerateCodeAsync(string email, string requestId);
-        public Task<ServiceResponseModel> ResetPasswordAsync(string email, string requestId);
+        public Task<ServiceResponseModel> CheckEmailAsync(EmailModel email, string requestId);
+        public Task<ServiceResponseModel> GenerateCodeAsync(EmailModel email, string requestId);
+        public Task<ServiceResponseModel> ResetPasswordAsync(EmailModel email, string requestId);
         public Task<ServiceResponseModel> RegisterAsync(RegisterModel register, string requestId);
         public Task<ServiceResponseModel> LoginAsync(LoginModel login, string requestId);
     }

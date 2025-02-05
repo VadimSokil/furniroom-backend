@@ -1,8 +1,8 @@
 ﻿using AccountsService.Models.Response;
 using FurniroomAPI.Interfaces;
-using FurniroomAPI.Models.Authorization;
 using System.Text;
 using System.Text.Json;
+using static FurniroomAPI.Models.Authorization.AuthorizationModels;
 
 namespace FurniroomAPI.Services
 {
@@ -18,14 +18,14 @@ namespace FurniroomAPI.Services
             _endpointURL = endpointURL;
         }
 
-        public async Task<ServiceResponseModel> CheckEmailAsync(string email, string requestId)
+        public async Task<ServiceResponseModel> CheckEmailAsync(EmailModel email, string requestId)
         {
-            return await GetInformationAsync("CheckEmail", email, requestId);
+            return await GetInformationAsync("CheckEmail", email.Email, requestId);
         }
 
-        public async Task<ServiceResponseModel> GenerateCodeAsync(string email, string requestId)
+        public async Task<ServiceResponseModel> GenerateCodeAsync(EmailModel email, string requestId)
         {
-            return await GetInformationAsync("GenerateCode", email, requestId);
+            return await GetInformationAsync("GenerateCode", email.Email, requestId);
         }
 
         public async Task<ServiceResponseModel> LoginAsync(LoginModel login, string requestId)
@@ -38,9 +38,9 @@ namespace FurniroomAPI.Services
             return await PostInformationAsync("Register", register, requestId);
         }
 
-        public async Task<ServiceResponseModel> ResetPasswordAsync(string email, string requestId)
+        public async Task<ServiceResponseModel> ResetPasswordAsync(EmailModel email, string requestId)
         {
-            return await PostInformationAsync("ResetPassword", email, requestId);
+            return await PostInformationAsync("ResetPassword", email.Email, requestId);
         }
 
         private async Task<ServiceResponseModel> GetInformationAsync(string endpointKey, string parameter, string requestId)
