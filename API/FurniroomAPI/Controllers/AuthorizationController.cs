@@ -1,8 +1,7 @@
 ﻿using FurniroomAPI.Interfaces;
 using FurniroomAPI.Models.Response;
-using FurniroomAPI.Validation;
 using Microsoft.AspNetCore.Mvc;
-using static FurniroomAPI.Models.Authorization.AuthorizationModels;
+using static FurniroomAPI.Models.AuthorizationModels;
 
 namespace FurniroomAPI.Controllers
 {
@@ -13,7 +12,6 @@ namespace FurniroomAPI.Controllers
         private readonly IAuthorizationService _authorizationService;
         public string currentDateTime = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss") + " UTC";
         public string requestId = Guid.NewGuid().ToString();
-        public ValidationMethods validationMethods = new ValidationMethods();
 
         public AuthorizationController(IAuthorizationService authorizationService)
         {
@@ -65,7 +63,7 @@ namespace FurniroomAPI.Controllers
                 {
                     Date = currentDateTime,
                     Status = false,
-                    Message = "Your query is missing some fields."
+                    Message = errorMessage
                 };
             }
             

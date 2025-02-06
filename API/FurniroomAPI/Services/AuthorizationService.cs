@@ -2,7 +2,7 @@
 using FurniroomAPI.Interfaces;
 using System.Text;
 using System.Text.Json;
-using static FurniroomAPI.Models.Authorization.AuthorizationModels;
+using static FurniroomAPI.Models.AuthorizationModels;
 
 namespace FurniroomAPI.Services
 {

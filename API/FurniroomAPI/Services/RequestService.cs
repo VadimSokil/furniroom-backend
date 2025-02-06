@@ -1,8 +1,8 @@
 ﻿using AccountsService.Models.Response;
 using FurniroomAPI.Interfaces;
-using FurniroomAPI.Models.Request;
 using System.Text;
 using System.Text.Json;
+using static FurniroomAPI.Models.RequestModels;
 
 namespace FurniroomAPI.Services
 {

@@ -1,8 +1,8 @@
-﻿using AccountsService.Models.Account;
-using AccountsService.Models.Response;
+﻿using AccountsService.Models.Response;
 using FurniroomAPI.Interfaces;
 using System.Text;
 using System.Text.Json;
+using static FurniroomAPI.Models.AccountModels;
 
 namespace FurniroomAPI.Services
 {
@@ -33,19 +33,19 @@ namespace FurniroomAPI.Services
             return await PutInformationAsync("ChangePassword", changePassword, requestId);
         }
 
-        public async Task<ServiceResponseModel> DeleteAccountAsync(int accountId, string requestId)
+        public async Task<ServiceResponseModel> DeleteAccountAsync(AccountIdModel accountId, string requestId)
         {
-            return await DeleteInformationAsync("DeleteAccount", accountId, requestId);
+            return await DeleteInformationAsync("DeleteAccount", accountId.AccountId, requestId);
         }
 
-        public async Task<ServiceResponseModel> GetAccountInformationAsync(int accountId, string requestId)
+        public async Task<ServiceResponseModel> GetAccountInformationAsync(AccountIdModel accountId, string requestId)
         {
-            return await GetInformationAsync("GetAccountInformation", accountId, requestId);
+            return await GetInformationAsync("GetAccountInformation", accountId.AccountId, requestId);
         }
 
-        public async Task<ServiceResponseModel> GetAccountOrdersAsync(int accountId, string requestId)
+        public async Task<ServiceResponseModel> GetAccountOrdersAsync(AccountIdModel accountId, string requestId)
         {
-            return await GetInformationAsync("GetAccountOrders", accountId, requestId);
+            return await GetInformationAsync("GetAccountOrders", accountId.AccountId, requestId);
         }
 
         private async Task<ServiceResponseModel> PutInformationAsync<T>(string endpointKey, T model, string requestId)

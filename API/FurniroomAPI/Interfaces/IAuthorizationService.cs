@@ -1,5 +1,5 @@
 ﻿using AccountsService.Models.Response;
-using static FurniroomAPI.Models.Authorization.AuthorizationModels;
+using static FurniroomAPI.Models.AuthorizationModels;
 
 namespace FurniroomAPI.Interfaces
 {
